@@ -387,23 +387,40 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   box-shadow: 0 10px 24px -5px rgba(130, 200, 229, 0.55);
 }
 
-/* Animations: Drawer Slide-down */
+/* Animations: Drawer Slide-down & Smooth Backdrop */
 @keyframes drawerSlideDown {
   0% {
     opacity: 0;
-    transform: translateY(-14px);
-    max-height: 0;
+    transform: translateY(-12px) scale(0.985);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
-    max-height: 600px;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes drawerBackdropFade {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
   }
 }
 
 .animate-drawer {
-  animation: drawerSlideDown 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  overflow: hidden;
+  background-color: #ffffff;
+  animation: drawerSlideDown 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+
+.animate-drawer-backdrop {
+  background-color: rgba(15, 23, 42, 0.45);
+  animation: drawerBackdropFade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, backdrop-filter;
 }
 
 /* Animations: Modal Backdrop & Modal Content Pop-in */
