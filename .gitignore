@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production build output (Vercel generates this on deploy)
+dist/
+dist-ssr/
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Development scratch files, temporary test scripts & Chrome automation dirs
+chrome_*
+screenshots/
+extracted_frames/
+new_uploaded_zip/
+uploaded_content/
+*.cjs
+capture_*.js
+diagnose.js
+fix_symbols.js
+get_offsets.js
+get_section_coords.js
+server.js
+verify_*.js
+copy_artifacts.js
+app.js
+react-app.jsx
+section_coords.json
+*.ps1
+inspect_wave.html
+preview_perfect.html
+standalone.html
+test_transition.html
