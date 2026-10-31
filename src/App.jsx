@@ -165,7 +165,7 @@ export default function App() {
       'EMAIL;TYPE=INTERNET,WORK:smitadesai1821@gmail.com',
       'ADR;TYPE=WORK:;;Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road;Sangli;Maharashtra;416416;India',
       'NOTE:7+ Years Financial Excellence. Life & Health Insurance, Mutual Funds SIP, Home & Business Loans. Certified NJ Wealth Partner (Code: 28795). "Your Trust, Our Commitment."',
-      'URL:https://smitasfinancial.com',
+      'URL:https://smitasfinancialconsultancyservices.vercel.app/',
       'END:VCARD'
     ].join('\r\n');
 
@@ -827,15 +827,17 @@ export default function App() {
             <div className="hidden xl:flex items-center gap-2 border-r border-slate-200 pr-3">
               <button 
                 onClick={shareProfile} 
-                className="touch-target p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 transition-all shadow-xs" 
+                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 transition-all shadow-xs flex items-center justify-center active:scale-95" 
                 title="Share Digital vCard"
+                aria-label="Share Website"
               >
                 <i data-lucide="share-2" className="w-4 h-4"></i>
               </button>
               <button 
                 onClick={() => setQrModalOpen(true)} 
-                className="touch-target p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 transition-all shadow-xs" 
+                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 transition-all shadow-xs flex items-center justify-center active:scale-95" 
                 title="Show QR Code"
+                aria-label="Show Website QR Code"
               >
                 <i data-lucide="qr-code" className="w-4 h-4 text-[#0047AB]"></i>
               </button>
@@ -854,11 +856,11 @@ export default function App() {
           <div className="flex items-center gap-2 lg:hidden shrink-0">
             <button 
               onClick={() => setQrModalOpen(true)} 
-              className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 flex items-center justify-center shadow-xs active:scale-95 transition-all focus:outline-none" 
+              className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-[#0047AB] flex items-center justify-center shadow-xs active:scale-95 transition-all focus:outline-none" 
               title="Show QR Code"
               aria-label="Show QR Code"
             >
-              <i data-lucide="qr-code" className="w-5 h-5 text-amber-600"></i>
+              <i data-lucide="qr-code" className="w-5 h-5 text-[#0047AB]"></i>
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
@@ -2556,12 +2558,20 @@ export default function App() {
               <h3 className="text-xl font-bold text-slate-900 font-heading">Official Connect QR</h3>
               <p className="text-xs text-slate-500">Scan to open or share Smita's Financial Consultancy</p>
             </div>
-            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200 flex items-center justify-center">
+            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200 flex flex-col items-center justify-center space-y-2">
               <img 
-                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smitasfinancial.com" 
-                alt="Website QR Code"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=https%3A%2F%2Fsmitasfinancialconsultancyservices.vercel.app%2F" 
+                alt="Website QR Code - https://smitasfinancialconsultancyservices.vercel.app/"
                 className="w-48 h-48 rounded-xl shadow-xs"
               />
+              <a 
+                href="https://smitasfinancialconsultancyservices.vercel.app/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-[11px] font-bold text-[#0047AB] hover:underline text-center break-all"
+              >
+                smitasfinancialconsultancyservices.vercel.app
+              </a>
             </div>
             <div className="flex gap-2">
               <a 
