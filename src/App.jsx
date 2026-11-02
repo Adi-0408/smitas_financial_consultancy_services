@@ -303,45 +303,88 @@ export default function App() {
     triggerToast('Your review has been successfully removed from the website.', 'info');
   };
 
-  // SIP Math Calculation (Monthly compounding)
+  // SIP Math Calculation (Monthly compounding, Annuity Due - standard for mutual fund SIPs)
   const sipResult = useMemo(() => {
     const P = parseFloat(sipAmount);
-    const r = parseFloat(sipRate) / 100 / 12;
-    const n = parseFloat(sipYears) * 12;
+    const rAnnual = parseFloat(sipRate);
+    const years = parseFloat(sipYears);
 
-    if (isNaN(P) || isNaN(r) || isNaN(n) || P <= 0 || r <= 0 || n <= 0) {
-      return { totalInvested: 0, maturityValue: 0, wealthGained: 0 };
+    if (isNaN(P) || P <= 0 || isNaN(years) || years <= 0) {
+      return { totalInvested: 0, maturityValue: 0, wealthGained: 0, investedPercent: 0, gainPercent: 0 };
     }
 
-    const maturity = P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
-    const totalInvested = P * n;
-    const wealthGained = maturity - totalInvested;
+    const n = Math.round(years * 12);
+    const totalInvested = Math.round(P * n);
+
+    if (isNaN(rAnnual) || rAnnual <= 0) {
+      return {
+        totalInvested,
+        maturityValue: totalInvested,
+        wealthGained: 0,
+        investedPercent: 100,
+        gainPercent: 0
+      };
+    }
+
+    const i = rAnnual / 100 / 12;
+    // Standard AMFI / Groww / Zerodha annuity due formula: M = P * [ ((1 + i)^n - 1) / i ] * (1 + i)
+    const maturity = P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+    const maturityValue = Math.round(maturity);
+    const wealthGained = Math.max(0, maturityValue - totalInvested);
+
+    const investedPercent = maturityValue > 0 ? Math.min(100, Math.max(0, Math.round((totalInvested / maturityValue) * 100))) : 50;
+    const gainPercent = 100 - investedPercent;
 
     return {
-      totalInvested: Math.round(totalInvested),
-      maturityValue: Math.round(maturity),
-      wealthGained: Math.round(wealthGained)
+      totalInvested,
+      maturityValue,
+      wealthGained,
+      investedPercent,
+      gainPercent
     };
   }, [sipAmount, sipRate, sipYears]);
 
-  // EMI Math Calculation
+  // EMI Math Calculation (Standard Reducing Balance Method used by Indian Banks / RBI)
   const emiResult = useMemo(() => {
     const P = parseFloat(emiAmount);
-    const r = parseFloat(emiRate) / 12 / 100;
-    const n = parseFloat(emiYears) * 12;
+    const rAnnual = parseFloat(emiRate);
+    const years = parseFloat(emiYears);
 
-    if (isNaN(P) || isNaN(r) || isNaN(n) || P <= 0 || r <= 0 || n <= 0) {
-      return { monthlyEmi: 0, totalPayment: 0, totalInterest: 0 };
+    if (isNaN(P) || P <= 0 || isNaN(years) || years <= 0) {
+      return { monthlyEmi: 0, totalPayment: 0, totalInterest: 0, principalPercent: 0, interestPercent: 0 };
     }
 
-    const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    const totalPayment = emi * n;
-    const totalInterest = totalPayment - P;
+    const n = Math.round(years * 12);
+
+    if (isNaN(rAnnual) || rAnnual <= 0) {
+      const emi = Math.round(P / n);
+      return {
+        monthlyEmi: emi,
+        totalPayment: P,
+        totalInterest: 0,
+        principalPercent: 100,
+        interestPercent: 0
+      };
+    }
+
+    const r = rAnnual / 100 / 12;
+    // Standard reducing balance formula: E = P * r * (1 + r)^n / ((1 + r)^n - 1)
+    const emiExact = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const monthlyEmi = Math.round(emiExact);
+    // Crucial for 100% mathematical consistency:
+    // Total amount the borrower actually pays across n installments is monthlyEmi * n
+    const totalPayment = monthlyEmi * n;
+    const totalInterest = Math.max(0, totalPayment - P);
+
+    const principalPercent = totalPayment > 0 ? Math.min(100, Math.max(0, Math.round((P / totalPayment) * 100))) : 50;
+    const interestPercent = 100 - principalPercent;
 
     return {
-      monthlyEmi: Math.round(emi),
-      totalPayment: Math.round(totalPayment),
-      totalInterest: Math.round(totalInterest)
+      monthlyEmi,
+      totalPayment,
+      totalInterest,
+      principalPercent,
+      interestPercent
     };
   }, [emiAmount, emiRate, emiYears]);
 
@@ -396,23 +439,27 @@ export default function App() {
       message = [
         '*SIP Investment Inquiry - Website*',
         '----------------------------------',
-        `*Monthly SIP:* ${formatINR(sipAmount)}`,
-        `*Expected Return:* ${sipRate}% p.a.`,
-        `*Time Horizon:* ${sipYears} Years`,
-        `*Est. Maturity:* ${formatINR(sipResult.maturityValue)}`,
+        `*Monthly SIP Amount:* ${formatINR(sipAmount)}`,
+        `*Expected Annual Return:* ${sipRate}% p.a.`,
+        `*Investment Tenure:* ${sipYears} Years (${sipYears * 12} Installments)`,
+        `*Total Invested:* ${formatINR(sipResult.totalInvested)}`,
+        `*Estimated Wealth Gain:* ${formatINR(sipResult.wealthGained)}`,
+        `*Estimated Maturity Value:* ${formatINR(sipResult.maturityValue)}`,
         '----------------------------------',
-        'Hello Smita Desai, I would like to set up a personalized SIP portfolio based on this simulation.'
+        'Hello Smita Desai, I would like to set up a personalized mutual fund SIP portfolio based on this simulation.'
       ].join('\n');
     } else {
       message = [
         '*Loan EMI Inquiry - Website*',
         '----------------------------------',
-        `*Loan Amount:* ${formatINR(emiAmount)}`,
+        `*Loan Amount (Principal):* ${formatINR(emiAmount)}`,
         `*Interest Rate:* ${emiRate}% p.a.`,
-        `*Tenure:* ${emiYears} Years`,
-        `*Estimated Monthly EMI:* ${formatINR(emiResult.monthlyEmi)}`,
+        `*Loan Tenure:* ${emiYears} Years (${emiYears * 12} Months)`,
+        `*Estimated Monthly EMI:* ${formatINR(emiResult.monthlyEmi)}/month`,
+        `*Total Interest Payable:* ${formatINR(emiResult.totalInterest)}`,
+        `*Total Amount Payable:* ${formatINR(emiResult.totalPayment)}`,
         '----------------------------------',
-        'Hello Smita Desai, I want to check my eligibility and lowest interest rates for this loan requirement.'
+        'Hello Smita Desai, I want to check my loan eligibility, lowest interest rates, and required documents for this requirement.'
       ].join('\n');
     }
 
@@ -1352,32 +1399,35 @@ export default function App() {
             
             <div className="text-center max-w-2xl mx-auto mb-10">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
-                Smart Financial Planner
+                <i data-lucide="calculator" className="w-3.5 h-3.5"></i>
+                <span>Smart Financial Planner</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-heading">
                 Calculate Your Wealth or Loan EMI in Real–Time
               </h2>
               <p className="text-slate-600 text-xs sm:text-sm mt-2">
-                Simulate your expected returns or calculate exact monthly installments, then discuss your goals directly with Smita Desai.
+                Simulate your expected returns or calculate exact monthly installments with standard Indian financial compounding formulas, then discuss your goals directly with Smita Desai.
               </p>
 
               {/* Tab Selector */}
               <div className="inline-flex p-1.5 rounded-full glass-card border border-white/80 mt-6 shadow-xs">
                 <button
                   onClick={() => setCalcTab('sip')}
-                  className={`btn-pill px-6 py-2 text-xs font-bold transition-all ${
+                  className={`btn-pill px-6 py-2.5 text-xs font-bold transition-all flex items-center gap-2 ${
                     calcTab === 'sip' ? 'btn-pill-cobalt shadow-md' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  SIP Wealth Calculator
+                  <i data-lucide="trending-up" className="w-3.5 h-3.5"></i>
+                  <span>SIP Wealth Calculator</span>
                 </button>
                 <button
                   onClick={() => setCalcTab('emi')}
-                  className={`btn-pill px-6 py-2 text-xs font-bold transition-all ${
+                  className={`btn-pill px-6 py-2.5 text-xs font-bold transition-all flex items-center gap-2 ${
                     calcTab === 'emi' ? 'btn-pill-cobalt shadow-md' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  Loan EMI Calculator
+                  <i data-lucide="home" className="w-3.5 h-3.5"></i>
+                  <span>Loan EMI Calculator</span>
                 </button>
               </div>
             </div>
@@ -1385,15 +1435,52 @@ export default function App() {
             {/* Calculator Card */}
             {calcTab === 'sip' ? (
               <div key="sip" className="max-w-4xl mx-auto glass-panel rounded-3xl p-6 sm:p-10 border border-white/95 shadow-2xl animate-tab-content">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
                   
                   <div className="md:col-span-7 space-y-6">
+
+                    {/* Quick Amount Presets */}
+                    <div>
+                      <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                        Quick Investment Presets
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {[2500, 5000, 10000, 25000, 50000].map((amt) => (
+                          <button
+                            key={amt}
+                            type="button"
+                            onClick={() => setSipAmount(amt)}
+                            className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${
+                              sipAmount === amt
+                                ? 'bg-[#0047AB] text-white border-[#0047AB] shadow-xs'
+                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                            }`}
+                          >
+                            ₹{Number(amt).toLocaleString('en-IN')}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Monthly Investment */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Monthly Investment (₹)</label>
-                        <span className="px-3 py-1 rounded-xl bg-slate-100 font-bold text-slate-900 text-sm">
-                          {formatINR(sipAmount)}
-                        </span>
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Monthly Investment Amount
+                        </label>
+                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
+                          <span className="text-slate-500 font-bold text-xs">₹</span>
+                          <input 
+                            type="number"
+                            min="500"
+                            max="500000"
+                            step="500"
+                            value={sipAmount || ''}
+                            onChange={(e) => setSipAmount(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            className="w-24 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
+                            aria-label="Monthly investment amount in Rupees"
+                          />
+                        </div>
                       </div>
                       <input 
                         type="range" 
@@ -1402,44 +1489,72 @@ export default function App() {
                         step="500" 
                         value={sipAmount} 
                         onChange={(e) => setSipAmount(Number(e.target.value))}
-                        className="w-full"
+                        className="w-full cursor-pointer"
+                        aria-label="Monthly investment amount slider"
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
-                        <span>₹1,000</span>
+                        <span>₹500 (Min)</span>
                         <span>₹50,000</span>
-                        <span>₹1,00,000</span>
+                        <span>₹1,00,000 (Max)</span>
                       </div>
                     </div>
 
+                    {/* Expected Return Rate */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Expected Annual Return (% CAGR)</label>
-                        <span className="px-3 py-1 rounded-xl bg-slate-100 font-bold text-slate-900 text-sm">
-                          {sipRate} %
-                        </span>
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Expected Annual Return (% CAGR)
+                        </label>
+                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
+                          <input 
+                            type="number"
+                            min="1"
+                            max="30"
+                            step="0.1"
+                            value={sipRate || ''}
+                            onChange={(e) => setSipRate(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            className="w-14 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
+                            aria-label="Expected annual return percentage"
+                          />
+                          <span className="text-slate-500 font-bold text-xs">%</span>
+                        </div>
                       </div>
                       <input 
                         type="range" 
-                        min="8" 
+                        min="6" 
                         max="20" 
                         step="0.5" 
                         value={sipRate} 
                         onChange={(e) => setSipRate(Number(e.target.value))}
-                        className="w-full"
+                        className="w-full cursor-pointer"
+                        aria-label="Expected return rate slider"
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
-                        <span>8%</span>
-                        <span>13% (Historic Equity CAGR)</span>
-                        <span>20%</span>
+                        <span>6% (Conservative)</span>
+                        <span>13% (Avg Equity CAGR)</span>
+                        <span>20% (Aggressive)</span>
                       </div>
                     </div>
 
+                    {/* Time Horizon */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Time Horizon (Years)</label>
-                        <span className="px-3 py-1 rounded-xl bg-slate-100 font-bold text-slate-900 text-sm">
-                          {sipYears} Yrs
-                        </span>
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Investment Tenure (Years)
+                        </label>
+                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
+                          <input 
+                            type="number"
+                            min="1"
+                            max="40"
+                            step="1"
+                            value={sipYears || ''}
+                            onChange={(e) => setSipYears(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            className="w-12 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
+                            aria-label="Investment tenure in years"
+                          />
+                          <span className="text-slate-500 font-bold text-xs">Yrs</span>
+                        </div>
                       </div>
                       <input 
                         type="range" 
@@ -1448,16 +1563,38 @@ export default function App() {
                         step="1" 
                         value={sipYears} 
                         onChange={(e) => setSipYears(Number(e.target.value))}
-                        className="w-full"
+                        className="w-full cursor-pointer"
+                        aria-label="Investment tenure slider"
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
                         <span>1 Year</span>
                         <span>15 Years</span>
                         <span>30 Years</span>
                       </div>
+
+                      {/* Quick Tenure Presets */}
+                      <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase mr-1">Tenure:</span>
+                        {[5, 10, 15, 20, 25].map((yr) => (
+                          <button
+                            key={yr}
+                            type="button"
+                            onClick={() => setSipYears(yr)}
+                            className={`px-2.5 py-0.5 rounded-md text-[11px] font-bold transition-all border ${
+                              sipYears === yr
+                                ? 'bg-slate-800 text-white border-slate-800'
+                                : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200'
+                            }`}
+                          >
+                            {yr} Yrs
+                          </button>
+                        ))}
+                      </div>
                     </div>
+
                   </div>
 
+                  {/* Results Panel */}
                   <div className="md:col-span-5 rounded-2xl bg-gradient-to-b from-[#82C8E5]/15 to-white p-6 border border-[#82C8E5]/50 text-center space-y-4 shadow-sm">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">
                       Estimated Maturity Value
@@ -1465,40 +1602,120 @@ export default function App() {
                     <div className="text-3xl sm:text-4xl font-black text-[#0047AB] font-heading">
                       {formatINR(sipResult.maturityValue)}
                     </div>
+                    <p className="text-[11px] text-slate-500 font-medium">
+                      Total {sipYears * 12} monthly installments of {formatINR(sipAmount)}
+                    </p>
 
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-amber-200/80 text-left">
+                    {/* Proportional Wealth Distribution Bar */}
+                    <div className="space-y-1.5 text-left pt-1">
+                      <div className="flex justify-between text-[11px] font-bold text-slate-600">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#0047AB] inline-block"></span>
+                          Invested ({sipResult.investedPercent}%)
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                          Gain ({sipResult.gainPercent}%)
+                        </span>
+                      </div>
+                      <div className="w-full h-3 rounded-full bg-slate-200 overflow-hidden flex shadow-inner">
+                        <div 
+                          style={{ width: `${sipResult.investedPercent}%` }} 
+                          className="bg-[#0047AB] transition-all duration-300"
+                          title={`Invested: ${sipResult.investedPercent}%`}
+                        />
+                        <div 
+                          style={{ width: `${sipResult.gainPercent}%` }} 
+                          className="bg-emerald-500 transition-all duration-300"
+                          title={`Estimated Gain: ${sipResult.gainPercent}%`}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-left">
                       <div className="p-2.5 rounded-xl bg-white border border-slate-200">
                         <span className="text-[10px] text-slate-400 block font-semibold">Total Invested</span>
                         <span className="text-xs font-bold text-slate-800">{formatINR(sipResult.totalInvested)}</span>
                       </div>
                       <div className="p-2.5 rounded-xl bg-white border border-slate-200">
                         <span className="text-[10px] text-slate-400 block font-semibold">Estimated Gain</span>
-                        <span className="text-xs font-bold text-emerald-700">{formatINR(sipResult.wealthGained)}</span>
+                        <span className="text-xs font-bold text-emerald-700">+{formatINR(sipResult.wealthGained)}</span>
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleInquirePlan('sip')}
-                      className="w-full btn-pill py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-md touch-target"
+                      className="w-full btn-pill py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-md touch-target flex items-center justify-center gap-2"
                     >
                       <i data-lucide="message-circle" className="w-4 h-4"></i>
                       <span>Enquire This Plan on WhatsApp</span>
                     </button>
+
+                    <p className="text-[10px] text-slate-400 italic text-center pt-1 leading-tight">
+                      *Compounded monthly at expected CAGR using standard AMFI annuity-due formula. Mutual funds are subject to market risks.
+                    </p>
                   </div>
 
                 </div>
               </div>
             ) : (
               <div key="emi" className="max-w-4xl mx-auto glass-panel rounded-3xl p-6 sm:p-10 border border-white/95 shadow-2xl animate-tab-content">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
                   
                   <div className="md:col-span-7 space-y-6">
+
+                    {/* Loan Category Presets */}
+                    <div>
+                      <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                        Popular Loan Presets
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          { label: '🏠 Home (8.5% • 20Y)', amt: 3000000, rate: 8.5, yrs: 20 },
+                          { label: '🚗 Car (9.0% • 5Y)', amt: 800000, rate: 9.0, yrs: 5 },
+                          { label: '💼 Business (11.5% • 5Y)', amt: 1500000, rate: 11.5, yrs: 5 },
+                          { label: '👤 Personal (12% • 3Y)', amt: 500000, rate: 12.0, yrs: 3 },
+                          { label: '🏢 Mortgage (9.5% • 15Y)', amt: 2500000, rate: 9.5, yrs: 15 }
+                        ].map((preset) => (
+                          <button
+                            key={preset.label}
+                            type="button"
+                            onClick={() => {
+                              setEmiAmount(preset.amt);
+                              setEmiRate(preset.rate);
+                              setEmiYears(preset.yrs);
+                            }}
+                            className={`px-3 py-1 rounded-full text-xs font-bold transition-all border ${
+                              emiAmount === preset.amt && emiRate === preset.rate && emiYears === preset.yrs
+                                ? 'bg-[#0047AB] text-white border-[#0047AB] shadow-xs'
+                                : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                            }`}
+                          >
+                            {preset.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Loan Amount */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Loan Amount (₹)</label>
-                        <span className="px-3 py-1 rounded-xl bg-slate-100 font-bold text-slate-900 text-sm">
-                          {formatINR(emiAmount)}
-                        </span>
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Loan Amount (Principal ₹)
+                        </label>
+                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
+                          <span className="text-slate-500 font-bold text-xs">₹</span>
+                          <input 
+                            type="number"
+                            min="25000"
+                            max="50000000"
+                            step="25000"
+                            value={emiAmount || ''}
+                            onChange={(e) => setEmiAmount(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            className="w-28 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
+                            aria-label="Loan amount in Rupees"
+                          />
+                        </div>
                       </div>
                       <input 
                         type="range" 
@@ -1507,44 +1724,91 @@ export default function App() {
                         step="50000" 
                         value={emiAmount} 
                         onChange={(e) => setEmiAmount(Number(e.target.value))}
-                        className="w-full"
+                        className="w-full cursor-pointer"
+                        aria-label="Loan amount slider"
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
                         <span>₹1 Lakh</span>
-                        <span>₹50 Lakh</span>
+                        <span>₹1 Crore (Midpoint)</span>
                         <span>₹2 Crore</span>
+                      </div>
+
+                      {/* Quick Amount Presets */}
+                      <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase mr-1">Quick:</span>
+                        {[500000, 1000000, 2500000, 5000000, 10000000].map((amt) => (
+                          <button
+                            key={amt}
+                            type="button"
+                            onClick={() => setEmiAmount(amt)}
+                            className={`px-2 py-0.5 rounded-md text-[11px] font-bold transition-all border ${
+                              emiAmount === amt
+                                ? 'bg-slate-800 text-white border-slate-800'
+                                : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200'
+                            }`}
+                          >
+                            {amt >= 10000000 ? `₹${amt / 10000000} Cr` : `₹${amt / 100000} Lakh`}
+                          </button>
+                        ))}
                       </div>
                     </div>
 
+                    {/* Interest Rate */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Interest Rate (% p.a.)</label>
-                        <span className="px-3 py-1 rounded-xl bg-slate-100 font-bold text-slate-900 text-sm">
-                          {emiRate} %
-                        </span>
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Annual Interest Rate (% p.a.)
+                        </label>
+                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
+                          <input 
+                            type="number"
+                            min="1"
+                            max="30"
+                            step="0.05"
+                            value={emiRate || ''}
+                            onChange={(e) => setEmiRate(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            className="w-14 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
+                            aria-label="Annual interest rate percentage"
+                          />
+                          <span className="text-slate-500 font-bold text-xs">%</span>
+                        </div>
                       </div>
                       <input 
                         type="range" 
-                        min="7" 
+                        min="6" 
                         max="18" 
                         step="0.25" 
                         value={emiRate} 
                         onChange={(e) => setEmiRate(Number(e.target.value))}
-                        className="w-full"
+                        className="w-full cursor-pointer"
+                        aria-label="Interest rate slider"
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
-                        <span>7%</span>
-                        <span>8.75% (Home Loan ROI)</span>
-                        <span>18%</span>
+                        <span>6% (Lowest ROI)</span>
+                        <span>12% (Midpoint)</span>
+                        <span>18% (Unsecured Max)</span>
                       </div>
                     </div>
 
+                    {/* Loan Tenure */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">Loan Tenure (Years)</label>
-                        <span className="px-3 py-1 rounded-xl bg-slate-100 font-bold text-slate-900 text-sm">
-                          {emiYears} Yrs
-                        </span>
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                          Loan Tenure (Years)
+                        </label>
+                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
+                          <input 
+                            type="number"
+                            min="1"
+                            max="35"
+                            step="1"
+                            value={emiYears || ''}
+                            onChange={(e) => setEmiYears(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            className="w-12 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
+                            aria-label="Loan tenure in years"
+                          />
+                          <span className="text-slate-500 font-bold text-xs">Yrs</span>
+                        </div>
                       </div>
                       <input 
                         type="range" 
@@ -1553,42 +1817,104 @@ export default function App() {
                         step="1" 
                         value={emiYears} 
                         onChange={(e) => setEmiYears(Number(e.target.value))}
-                        className="w-full"
+                        className="w-full cursor-pointer"
+                        aria-label="Loan tenure slider"
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
                         <span>1 Year</span>
                         <span>15 Years</span>
                         <span>30 Years</span>
                       </div>
+
+                      {/* Quick Tenure Presets */}
+                      <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                        <span className="text-[10px] text-slate-400 font-bold uppercase mr-1">Tenure:</span>
+                        {[3, 5, 10, 15, 20].map((yr) => (
+                          <button
+                            key={yr}
+                            type="button"
+                            onClick={() => setEmiYears(yr)}
+                            className={`px-2.5 py-0.5 rounded-md text-[11px] font-bold transition-all border ${
+                              emiYears === yr
+                                ? 'bg-slate-800 text-white border-slate-800'
+                                : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200'
+                            }`}
+                          >
+                            {yr} Yrs
+                          </button>
+                        ))}
+                      </div>
                     </div>
+
                   </div>
 
+                  {/* Results Panel */}
                   <div className="md:col-span-5 rounded-2xl bg-gradient-to-b from-blue-50/60 to-white p-6 border border-blue-200/90 text-center space-y-4 shadow-sm">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest block">
                       Estimated Monthly EMI
                     </span>
                     <div className="text-3xl sm:text-4xl font-black text-slate-900 font-heading">
                       {formatINR(emiResult.monthlyEmi)}
+                      <span className="text-sm font-semibold text-slate-500 block sm:inline sm:ml-1">/ month</span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-500 font-medium">
+                      {formatINR(emiResult.monthlyEmi)} × {emiYears * 12} Mos = {formatINR(emiResult.totalPayment)}
+                    </p>
+
+                    {/* Proportional Loan Distribution Bar */}
+                    <div className="space-y-1.5 text-left pt-1">
+                      <div className="flex justify-between text-[11px] font-bold text-slate-600">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#0047AB] inline-block"></span>
+                          Principal ({emiResult.principalPercent}%)
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-slate-500 inline-block"></span>
+                          Interest ({emiResult.interestPercent}%)
+                        </span>
+                      </div>
+                      <div className="w-full h-3 rounded-full bg-slate-200 overflow-hidden flex shadow-inner">
+                        <div 
+                          style={{ width: `${emiResult.principalPercent}%` }} 
+                          className="bg-[#0047AB] transition-all duration-300"
+                          title={`Principal: ${emiResult.principalPercent}%`}
+                        />
+                        <div 
+                          style={{ width: `${emiResult.interestPercent}%` }} 
+                          className="bg-slate-500 transition-all duration-300"
+                          title={`Interest: ${emiResult.interestPercent}%`}
+                        />
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-left">
                       <div className="p-2.5 rounded-xl bg-white border border-slate-200">
+                        <span className="text-[10px] text-slate-400 block font-semibold">Principal Loan</span>
+                        <span className="text-xs font-bold text-slate-800">{formatINR(emiAmount)}</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-white border border-slate-200">
                         <span className="text-[10px] text-slate-400 block font-semibold">Total Interest</span>
                         <span className="text-xs font-bold text-[#0047AB]">{formatINR(emiResult.totalInterest)}</span>
                       </div>
-                      <div className="p-2.5 rounded-xl bg-white border border-slate-200">
-                        <span className="text-[10px] text-slate-400 block font-semibold">Total Payable</span>
-                        <span className="text-xs font-bold text-slate-800">{formatINR(emiResult.totalPayment)}</span>
-                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-left flex justify-between items-center">
+                      <span className="text-xs font-bold text-slate-600">Total Amount Payable</span>
+                      <span className="text-sm font-black text-slate-900">{formatINR(emiResult.totalPayment)}</span>
                     </div>
 
                     <button
                       onClick={() => handleInquirePlan('emi')}
-                      className="w-full btn-pill py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-md touch-target"
+                      className="w-full btn-pill py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-md touch-target flex items-center justify-center gap-2"
                     >
                       <i data-lucide="message-circle" className="w-4 h-4"></i>
                       <span>Check Loan Eligibility on WhatsApp</span>
                     </button>
+
+                    <p className="text-[10px] text-slate-400 italic text-center pt-1 leading-tight">
+                      *Calculated using standard RBI/bank reducing-balance formula. Exact monthly installments, ROI and processing charges depend on bank underwriting.
+                    </p>
                   </div>
 
                 </div>
