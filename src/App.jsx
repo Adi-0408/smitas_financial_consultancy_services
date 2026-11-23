@@ -271,7 +271,7 @@ export default function App() {
       'TEL;TYPE=WORK,VOICE;VALUE=uri:tel:+917776977171',
       'EMAIL;TYPE=INTERNET,WORK:smitadesai1821@gmail.com',
       'ADR;TYPE=WORK:;;Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road;Sangli;Maharashtra;416416;India',
-      'NOTE:Alternate phone +91 77769 77171 is for calls only and is not available on WhatsApp. WhatsApp: +91 70571 32237. 7+ Years Financial Excellence. Life & Health Insurance, Mutual Funds SIP, Home & Business Loans. Certified NJ Wealth Partner (Code: 28795). "Your Trust, Our Commitment."',
+      'NOTE:Alternate phone +91 77769 77171 is for calls only and is not available on WhatsApp. WhatsApp: +91 70571 32237. 8+ Years Financial Excellence. Life & Health Insurance, Mutual Funds SIP, Home & Business Loans. Certified NJ Wealth Partner (Code: 28795). "Your Trust, Our Commitment."',
       'URL:https://smitasfinancialconsultancyservices.vercel.app/',
       'END:VCARD'
     ].join('\r\n');
@@ -293,7 +293,7 @@ export default function App() {
   const shareProfile = () => {
     const shareData = {
       title: "Smita's Financial Consultancy Services",
-      text: "“Your Trust, Our Commitment.” Personalized financial planning, Insurance, SIP & Loans from 7+ yrs experienced financial consultant Smita Desai in Sangli.",
+      text: "“Your Trust, Our Commitment.” Personalized financial planning, Insurance, SIP & Loans from 8+ yrs experienced financial consultant Smita Desai in Sangli.",
       url: window.location.href
     };
 
@@ -1166,7 +1166,7 @@ export default function App() {
                 {/* Verified Trust Pill */}
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#82C8E5]/15 border border-[#82C8E5]/60 text-[#000080] text-xs font-bold tracking-wide shadow-xs">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span>7+ Years Experience • Sangli, Maharashtra</span>
+                  <span>8+ Years Experience • Sangli, Maharashtra</span>
                 </div>
 
                 {/* Main Headline */}
@@ -1225,7 +1225,7 @@ export default function App() {
                 {/* Metrics Strip */}
                 <div className="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto lg:mx-0">
                   <div className="p-3.5 rounded-2xl bg-white/80 backdrop-blur-md border border-white/90 text-center shadow-xs hover:shadow-md hover:-translate-y-1 hover:border-[#82C8E5]/80 hover:bg-white/95 transition-all duration-300">
-                    <div className="text-2xl font-black text-slate-900 font-heading">7+</div>
+                    <div className="text-2xl font-black text-slate-900 font-heading">8+</div>
                     <div className="text-[11px] text-slate-600 font-semibold mt-0.5">Years Experience</div>
                   </div>
                   <div className="p-3.5 rounded-2xl bg-white/80 backdrop-blur-md border border-white/90 text-center shadow-xs hover:shadow-md hover:-translate-y-1 hover:border-[#82C8E5]/80 hover:bg-white/95 transition-all duration-300">
@@ -1298,7 +1298,7 @@ export default function App() {
                       </div>
                     </div>
                     <p className="text-xs text-slate-500">
-                      Smita's Financial Consultancy Services • 7+ Years of Financial Excellence
+                      Smita's Financial Consultancy Services • 8+ Years of Financial Excellence
                     </p>
                   </div>
 
@@ -2160,7 +2160,7 @@ export default function App() {
                       <span>About Smita's Financial Consultancy Services</span>
                     </div>
                     <p>
-                      Smita's Financial Consultancy Services is a trusted financial consultancy based in Sangli, Maharashtra, providing personalized financial solutions to individuals, professionals, and businesses. With 7+ years of experience in the financial services sector, we focus on understanding our clients' financial needs and helping them choose suitable solutions with transparency and professional guidance.
+                      Smita's Financial Consultancy Services is a trusted financial consultancy based in Sangli, Maharashtra, providing personalized financial solutions to individuals, professionals, and businesses. With 8+ years of experience in the financial services sector, we focus on understanding our clients' financial needs and helping them choose suitable solutions with transparency and professional guidance.
                     </p>
                     <p>
                       Our aim is to provide simple, transparent, and customer-focused financial assistance while building long-term relationships based on trust.
