@@ -714,7 +714,6 @@ export default function App() {
       description: 'Drive home your preferred car today. Up to 100% on-road funding on new cars and attractive refinancing options on certified pre-owned vehicles.',
       bullets: [
         'Lowest processing fees & customized EMI schedules',
-        'Tie-ups with leading automobile dealerships in Sangli',
         'Quick sanctioning with pre-approved options'
       ],
       flyer: 'assets/flyer_all_loans_hq.png',
@@ -1289,13 +1288,13 @@ export default function App() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-center sm:justify-end gap-1 text-yellow-400">
-                        <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                        <span className="text-xs font-bold text-slate-700 ml-1">5.0</span>
+                      <div className="flex shrink-0 flex-nowrap items-center justify-center sm:justify-end gap-1 whitespace-nowrap text-yellow-400">
+                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
+                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
+                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
+                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
+                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
+                        <span className="shrink-0 text-xs font-bold text-slate-700 ml-1">5.0</span>
                       </div>
                     </div>
                     <p className="text-xs text-slate-500">
