@@ -3,6 +3,12 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 const STORAGE_KEY_REVIEWS = 'sfcs_client_reviews_v1';
 const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
 const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
+const SCHEME_CATEGORIES = [
+  { tag: 'Loans', icon: 'landmark', description: 'Funding for homes, businesses and personal goals' },
+  { tag: 'Insurance', icon: 'shield-check', description: 'Health, life, motor and retirement protection' },
+  { tag: 'Investments', icon: 'trending-up', description: 'SIP ideas and long-term wealth planning' },
+  { tag: 'Careers', icon: 'briefcase-business', description: 'Opportunities in financial services' }
+];
 
 const INITIAL_REVIEWS = [
   {
@@ -43,11 +49,104 @@ const INITIAL_REVIEWS = [
   }
 ];
 
+function SchemeFlyerCarousel({ category, items, onOpen }) {
+  const panelRef = useRef(null);
+  const touchStartX = useRef(null);
+  const suppressOpen = useRef(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const activeFlyer = items[activeIndex];
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || !window.IntersectionObserver) {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.25 });
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!visible || paused || items.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden) setActiveIndex(index => (index + 1) % items.length);
+    }, 2000);
+    return () => window.clearInterval(timer);
+  }, [visible, paused, items.length]);
+
+  const move = (direction) => setActiveIndex(index => (index + direction + items.length) % items.length);
+
+  return (
+    <article
+      ref={panelRef}
+      className="glass-card group relative w-[min(82vw,320px)] shrink-0 snap-start overflow-hidden rounded-3xl border border-white/95 p-3.5 shadow-lg transition-shadow duration-300 hover:shadow-2xl lg:w-auto lg:min-w-0 lg:flex-1"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
+      aria-label={`${category.tag} flyers`}
+    >
+      <div className="flex min-h-20 items-start gap-2.5 px-1 pb-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#0047AB]/10 text-[#0047AB]">
+          <i data-lucide={category.icon} className="h-5 w-5" aria-hidden="true"></i>
+        </span>
+        <div className="min-w-0">
+          <h3 className="font-heading text-base font-black text-slate-900">{category.tag}</h3>
+          <p className="mt-0.5 text-[11px] leading-snug text-slate-500">{category.description}</p>
+        </div>
+      </div>
+
+      <div
+        className="relative flex h-[355px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2.5"
+        onClick={() => {
+          if (suppressOpen.current) { suppressOpen.current = false; return; }
+          onOpen(activeFlyer);
+        }}
+        onTouchStart={(event) => { touchStartX.current = event.touches[0].clientX; }}
+        onTouchEnd={(event) => {
+          if (touchStartX.current === null || items.length < 2) return;
+          const distance = event.changedTouches[0].clientX - touchStartX.current;
+          if (Math.abs(distance) > 45) {
+            suppressOpen.current = true;
+            window.setTimeout(() => { suppressOpen.current = false; }, 400);
+            move(distance < 0 ? 1 : -1);
+          }
+          touchStartX.current = null;
+        }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onOpen(activeFlyer); } }}
+        aria-label={`View ${activeFlyer.title} flyer in full size`}
+      >
+        <img key={activeFlyer.id} src={activeFlyer.src} alt={activeFlyer.title} className="scheme-flyer-enter h-full w-full rounded-xl object-contain transition-transform duration-500 group-hover:scale-[1.02]" loading="lazy" />
+        <span className="absolute left-3 top-3 max-w-[75%] truncate rounded-full bg-[#000080]/90 px-2.5 py-1 text-[10px] font-extrabold text-white shadow-md">{activeFlyer.badgeMetric || category.tag}</span>
+        {items.length > 1 && (
+          <div className="absolute inset-x-2 bottom-3 flex items-center justify-between" onClick={event => event.stopPropagation()}>
+            <button type="button" onClick={() => move(-1)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#0047AB] shadow-md transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB]" aria-label={`Previous ${category.tag} flyer`}><i data-lucide="chevron-left" className="h-5 w-5" aria-hidden="true"></i></button>
+            <span className="rounded-full bg-slate-900/75 px-2.5 py-1 text-[11px] font-bold text-white">{activeIndex + 1} / {items.length}</span>
+            <button type="button" onClick={() => move(1)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#0047AB] shadow-md transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB]" aria-label={`Next ${category.tag} flyer`}><i data-lucide="chevron-right" className="h-5 w-5" aria-hidden="true"></i></button>
+          </div>
+        )}
+      </div>
+
+      <div className="flex min-h-24 flex-col justify-between px-1 pt-3">
+        <div>
+          <h4 className="line-clamp-2 font-heading text-sm font-black leading-snug text-slate-900">{activeFlyer.title}</h4>
+          <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-slate-500">{activeFlyer.subtitle}</p>
+        </div>
+        <a href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${activeFlyer.title}" and would like to get more information.`)}`} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex w-fit items-center gap-1.5 text-xs font-bold text-emerald-700 transition-colors hover:text-emerald-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700"><i data-lucide="message-circle" className="h-3.5 w-3.5" aria-hidden="true"></i>Enquire on WhatsApp</a>
+      </div>
+    </article>
+  );
+}
+
 export default function App() {
   // Navigation & UI States
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activeSchemeTab, setActiveSchemeTab] = useState('all');
   const [activeGalleryTab, setActiveGalleryTab] = useState('all');
   const [activeAboutTab, setActiveAboutTab] = useState('about');
   const [calcTab, setCalcTab] = useState('sip');
@@ -143,7 +242,7 @@ export default function App() {
       if (window.lucide) window.lucide.createIcons();
     }, 50);
     return () => clearTimeout(timer);
-  }, [mobileMenuOpen, activeCategory, activeSchemeTab, activeGalleryTab, calcTab, activeAboutTab, reviewModalOpen, qrModalOpen, lightboxData, deleteConfirmModal, myReviewIds, reviews]);
+  }, [mobileMenuOpen, activeCategory, activeGalleryTab, calcTab, activeAboutTab, reviewModalOpen, qrModalOpen, lightboxData, deleteConfirmModal, myReviewIds, reviews]);
 
   // Close mobile drawer on Escape key or on window resize to desktop
   useEffect(() => {
@@ -912,11 +1011,6 @@ export default function App() {
       highlights: ['Life cover options as described in the flyer', 'Review plan options and rider details', 'Read the insurer brochure for terms and exclusions']
     }
   ];
-
-  const filteredSchemeFlyers = useMemo(() => {
-    if (activeSchemeTab === 'all') return schemeFlyers;
-    return schemeFlyers.filter(item => item.tag.toLowerCase() === activeSchemeTab.toLowerCase());
-  }, [activeSchemeTab, schemeFlyers]);
 
   // Photo Gallery Data (Awards, Certificates & Visiting Cards)
   const photoGalleryItems = [
@@ -2329,88 +2423,18 @@ export default function App() {
                 Authentic Scheme Catalogues & Flyers
               </h2>
               <p className="text-slate-600 text-xs sm:text-sm mt-2">
-                Browse loan, insurance, investment and career flyers in full size.
+                Explore four collections. Sets with multiple flyers advance every two seconds; use the arrows or swipe to browse at your own pace.
               </p>
-
-              {/* Scheme Filter Tabs */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-                {['all', 'loans', 'insurance', 'investments', 'careers'].map(tab => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveSchemeTab(tab)}
-                    className={`btn-pill px-4 py-1.5 text-xs font-bold capitalize transition-all ${
-                      activeSchemeTab === tab ? 'btn-pill-cobalt shadow-xs' : 'btn-pill-outline text-slate-600'
-                    }`}
-                  >
-                    {tab === 'all' ? 'All Schemes' : tab}
-                  </button>
-                ))}
-              </div>
             </div>
 
-            {/* Scheme Cards Grid - Perfectly aligned uniform heights & frames */}
-            <div key={activeSchemeTab} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch animate-tab-content">
-              {filteredSchemeFlyers.map((item) => (
-                <div 
-                  key={item.id}
-                  onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                  className="glass-card rounded-3xl p-4 sm:p-5 border border-white/95 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col justify-between h-full"
-                >
-                  {/* Uniform Aligned Flyer Image Container */}
-                  <div className="w-full h-[460px] sm:h-[500px] lg:h-[520px] relative rounded-2xl overflow-hidden bg-slate-50/90 border border-slate-200/90 shadow-sm group-hover:border-[#0047AB]/60 transition-colors flex items-center justify-center p-2.5">
-                    <img 
-                      src={item.src} 
-                      alt={item.title} 
-                      className="w-full h-full object-contain rounded-xl group-hover:scale-[1.02] transition-transform duration-500"
-                      loading="lazy"
-                    />
-
-                    {/* Floating Info Pill from Flyer */}
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#000080]/90 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-md border border-white/20">
-                      {item.badgeMetric || item.tag}
-                    </div>
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#000080] text-[10px] font-extrabold uppercase tracking-wider shadow-xs border border-white/70">
-                      {item.tag}
-                    </div>
-
-                    {/* Quick WhatsApp Button Floating on Image */}
-                    <a
-                      href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${item.title}" and would like to get more information.`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="absolute bottom-3 right-3 btn-pill px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg active:scale-95 z-10"
-                      title="Enquire Scheme on WhatsApp"
-                    >
-                      <i data-lucide="message-circle" className="w-3.5 h-3.5"></i>
-                      <span>WhatsApp</span>
-                    </a>
-
-                    {/* Smooth Zoom Hover Overlay */}
-                    <div className="absolute inset-0 bg-slate-900/35 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                      <span className="btn-pill px-4 py-2 bg-white text-[#000080] font-black text-xs shadow-xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
-                        <i data-lucide="zoom-in" className="w-4 h-4 text-[#0047AB]"></i>
-                        <span>Inspect Full Flyer</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Aligned Scheme Info Header below Flyer */}
-                  <div className="pt-3.5 px-1 flex items-center justify-between gap-3 border-t border-slate-100/90 mt-2">
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-black text-slate-900 truncate font-heading group-hover:text-[#0047AB] transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="text-[11px] text-slate-500 font-semibold truncate mt-0.5">
-                        {item.badgeMetric} • {item.tag}
-                      </p>
-                    </div>
-                    <span className="shrink-0 text-xs font-bold text-[#0047AB] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      <span>Enlarge</span>
-                      <i data-lucide="arrow-right" className="w-3.5 h-3.5"></i>
-                    </span>
-                  </div>
-                </div>
+            <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-5 lg:overflow-visible" aria-label="Scheme flyer collections">
+              {SCHEME_CATEGORIES.map(category => (
+                <SchemeFlyerCarousel
+                  key={category.tag}
+                  category={category}
+                  items={schemeFlyers.filter(item => item.tag === category.tag)}
+                  onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
+                />
               ))}
             </div>
 
