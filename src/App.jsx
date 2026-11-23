@@ -87,7 +87,7 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
       aria-label={`${category.tag} flyers`}
     >
-      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="hidden">
         <div className="flex items-center gap-3">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0047AB] to-[#000080] text-white shadow-md">
             <i data-lucide={category.icon} className="h-6 w-6" aria-hidden="true"></i>
