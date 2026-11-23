@@ -579,7 +579,7 @@ export default function App() {
         'Married Women\'s Property Act (MWPA) protection',
         'Immediate claim assistance & policy servicing'
       ],
-      flyer: 'assets/flyer_kotak_signature_hq.jpg',
+      flyer: 'assets/flyer_life_insurance.svg',
       flyerTitle: 'Kotak Signature Term Plan Flyer'
     },
     {
@@ -596,7 +596,7 @@ export default function App() {
         'Tata AIG Medicare Select & Super Top-Up plans',
         'Tax saving benefit under Section 80D'
       ],
-      flyer: 'assets/flyer_health_insurance_hq.png',
+      flyer: 'assets/flyer_health_insurance.svg',
       flyerTitle: 'Family Health Insurance & Mediclaim Scheme Flyer'
     },
     {
@@ -614,7 +614,7 @@ export default function App() {
         'Risk-profile matched equity & hybrid funds',
         'Seamless digital portfolio tracking & rebalancing'
       ],
-      flyer: 'assets/flyer_sip_topup_hq.png',
+      flyer: 'assets/flyer_investments.svg',
       flyerTitle: 'Top-Up SIP ₹11.78 Cr Compounding Guide'
     },
     {
@@ -631,7 +631,7 @@ export default function App() {
         'Best rates for 2-Wheelers, Private Cars & Commercial',
         'Zero-Depreciation & Cashless network garages'
       ],
-      flyer: 'assets/flyer_vehicle_insurance_hq.png',
+      flyer: 'assets/flyer_motor_insurance.svg',
       flyerTitle: 'All Types of Vehicle Online Insurance Flyer'
     },
     {
