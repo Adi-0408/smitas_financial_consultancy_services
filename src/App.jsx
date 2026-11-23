@@ -50,6 +50,7 @@ export default function App() {
   const [activeGalleryTab, setActiveGalleryTab] = useState('all');
   const [activeAboutTab, setActiveAboutTab] = useState('about');
   const [calcTab, setCalcTab] = useState('sip');
+  const [showAllReviews, setShowAllReviews] = useState(false);
 
   // Reviews State (with LocalStorage persistence for user-submitted reviews)
   const [reviews, setReviews] = useState(() => {
@@ -2720,13 +2721,14 @@ export default function App() {
           </div>
 
           {/* Dynamic Grid of Reviews */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {reviews.map((rev) => {
+          <div id="reviews-list" key={showAllReviews ? 'all-reviews' : 'featured-reviews'} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-tab-content">
+            {(showAllReviews ? reviews : reviews.slice(0, 4)).map((rev, reviewIndex) => {
               const isMyReview = myReviewIds.includes(rev.id);
               return (
                 <div 
                   key={rev.id} 
-                  className={`glass-card rounded-3xl p-6 border shadow-xl hover:shadow-2xl flex flex-col justify-between relative group transition-all ${
+                  style={{ animationDelay: `${Math.min(reviewIndex, 8) * 70}ms` }}
+                  className={`glass-card rounded-3xl p-6 border shadow-xl hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between relative group transition-all duration-300 ${
                     isMyReview 
                       ? 'border-amber-300/90 bg-gradient-to-b from-amber-50/30 to-white/95 hover:border-amber-400 ring-1 ring-amber-200/50' 
                       : 'border-white/90 hover:border-[#82C8E5]'
@@ -2818,6 +2820,24 @@ export default function App() {
               );
             })}
           </div>
+
+          {reviews.length > 4 && (
+            <div className="mt-9 flex flex-col items-center gap-2 animate-tab-content">
+              <button
+                type="button"
+                onClick={() => setShowAllReviews((currentlyShowingAll) => !currentlyShowingAll)}
+                aria-expanded={showAllReviews}
+                aria-controls="reviews-list"
+                className="group inline-flex items-center gap-2 rounded-full border border-[#0047AB]/20 bg-white px-6 py-3 text-sm font-bold text-[#0047AB] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0047AB]/50 hover:bg-[#0047AB] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#82C8E5]/50"
+              >
+                <span>{showAllReviews ? 'Show fewer reviews' : `Show all ${reviews.length} reviews`}</span>
+                <i data-lucide="chevron-down" className={`h-4 w-4 transition-transform duration-300 ${showAllReviews ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}></i>
+              </button>
+              <span className="text-xs text-slate-500" aria-live="polite">
+                {showAllReviews ? `Showing all ${reviews.length} client reviews` : `Showing 4 of ${reviews.length} client reviews`}
+              </span>
+            </div>
+          )}
 
         </section>
 
