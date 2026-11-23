@@ -115,8 +115,8 @@ export default function App() {
 
   // SIP Calculator State
   const [sipAmount, setSipAmount] = useState(10000);
-  const [sipRate, setSipRate] = useState(13);
-  const [sipYears, setSipYears] = useState(15);
+  const [sipRate, setSipRate] = useState(12);
+  const [sipYears, setSipYears] = useState(10);
 
   // EMI Calculator State
   const [emiAmount, setEmiAmount] = useState(2500000);
@@ -391,7 +391,8 @@ export default function App() {
     triggerToast('Your review has been successfully removed from the website.', 'info');
   };
 
-  // SIP future value using the financial-calculator END mode (ordinary annuity).
+  // Treat the entered annual return as an effective annual rate (CAGR).
+  // SIP installments are invested at the start of each month (annuity due).
   const sipResult = useMemo(() => {
     const P = parseFloat(sipAmount);
     const rAnnual = parseFloat(sipRate);
@@ -408,7 +409,7 @@ export default function App() {
       return { totalInvested, maturityValue: 0, wealthGained: 0, investedPercent: 0, gainPercent: 0 };
     }
 
-    const i = rAnnual / 100 / 12;
+    const i = Math.expm1(Math.log1p(rAnnual / 100) / 12);
     if (i === 0) {
       return {
         totalInvested,
@@ -419,10 +420,9 @@ export default function App() {
       };
     }
 
-    // Ordinary-annuity FV: deposits are made at the end of each month.
     // expm1/log1p keep the annuity factor accurate for small monthly rates.
     const annuityFactor = Math.expm1(n * Math.log1p(i)) / i;
-    const maturity = P * annuityFactor;
+    const maturity = P * annuityFactor * (1 + i);
     if (!Number.isFinite(maturity)) {
       return { totalInvested, maturityValue: 0, wealthGained: 0, investedPercent: 0, gainPercent: 0 };
     }
@@ -1677,7 +1677,7 @@ export default function App() {
                     <div>
                       <div className="flex justify-between items-center mb-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                          Expected Annual Return (p.a., compounded monthly)
+                          Expected Annual Return (p.a., CAGR)
                         </label>
                         <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
                           <input 
@@ -1838,7 +1838,7 @@ export default function App() {
                     </a>
 
                     <p className="text-[10px] text-slate-400 italic text-center pt-1 leading-tight">
-                      *Financial-calculator END mode: monthly rate = annual rate ÷ 12, with each SIP added at month-end. Returns are estimates, not guaranteed; mutual funds are subject to market risks.
+                      *The annual return is converted to an equivalent monthly rate, with each SIP invested at the start of the month. Returns are estimates, not guaranteed; mutual funds are subject to market risks.
                     </p>
                   </div>
 
