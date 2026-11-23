@@ -3,13 +3,6 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 const STORAGE_KEY_REVIEWS = 'sfcs_client_reviews_v1';
 const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
 const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
-const SCHEME_CATEGORIES = [
-  { tag: 'Loans', icon: 'landmark', description: 'Funding for homes, businesses and personal goals' },
-  { tag: 'Insurance', icon: 'shield-check', description: 'Health, life, motor and retirement protection' },
-  { tag: 'Investments', icon: 'trending-up', description: 'SIP ideas and long-term wealth planning' },
-  { tag: 'Careers', icon: 'briefcase-business', description: 'Opportunities in financial services' }
-];
-
 const INITIAL_REVIEWS = [
   {
     id: 'rev-1',
@@ -156,6 +149,85 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function SchemeFlyerSlideshow({ items, onOpen }) {
+  const panelRef = useRef(null);
+  const touchStartX = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || !window.IntersectionObserver) { setVisible(true); return; }
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.25 });
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!visible || paused || items.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden) setActiveIndex(index => (index + 1) % items.length);
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, [visible, paused, items.length, activeIndex]);
+
+  const move = direction => setActiveIndex(index => (index + direction + items.length) % items.length);
+
+  return (
+    <div
+      ref={panelRef}
+      className="group relative mx-auto w-full max-w-6xl overflow-hidden rounded-[2rem] bg-slate-950 shadow-2xl ring-1 ring-slate-900/10"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
+      onKeyDown={event => {
+        if (event.key === 'ArrowRight') { event.preventDefault(); move(1); }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1); }
+      }}
+      aria-label="Scheme flyer slideshow"
+      aria-roledescription="carousel"
+    >
+      <div
+        className="relative h-[62vh] min-h-[360px] max-h-[760px] overflow-hidden sm:h-[74vh]"
+        onTouchStart={event => { touchStartX.current = event.touches[0].clientX; }}
+        onTouchEnd={event => {
+          if (touchStartX.current === null || items.length < 2) return;
+          const distance = event.changedTouches[0].clientX - touchStartX.current;
+          if (Math.abs(distance) > 45) move(distance < 0 ? 1 : -1);
+          touchStartX.current = null;
+        }}
+        aria-label="Flyer slides"
+      >
+        <div className="scheme-slide-track flex h-full" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+          {items.map((item, index) => (
+            <button
+              key={item.id}
+              type="button"
+              tabIndex={index === activeIndex ? 0 : -1}
+              onClick={() => onOpen(item)}
+              className="flex h-full w-full shrink-0 items-center justify-center bg-slate-950 p-3 outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-[#82C8E5] sm:p-6"
+              aria-label={`Open flyer ${index + 1} of ${items.length}`}
+              aria-roledescription="slide"
+              aria-hidden={index !== activeIndex}
+            >
+              <img src={item.src} alt={item.title} className="h-full w-full select-none object-contain" draggable="false" loading={index < 2 ? 'eager' : 'lazy'} />
+            </button>
+          ))}
+        </div>
+        {items.length > 1 && <>
+          <button type="button" onClick={() => move(-1)} className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#0047AB] shadow-lg backdrop-blur transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white sm:left-5" aria-label="Previous flyer"><i data-lucide="arrow-left" className="h-5 w-5" aria-hidden="true"></i></button>
+          <button type="button" onClick={() => move(1)} className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#0047AB] shadow-lg backdrop-blur transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white sm:right-5" aria-label="Next flyer"><i data-lucide="arrow-right" className="h-5 w-5" aria-hidden="true"></i></button>
+        </>}
+      </div>
+      {items.length > 1 && <nav className="absolute bottom-3 left-1/2 flex max-w-[85%] -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-slate-950/50 px-3 py-2 backdrop-blur" aria-label="Choose a flyer">
+        {items.map((item, index) => <button key={item.id} type="button" onClick={() => setActiveIndex(index)} className={`h-2.5 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${index === activeIndex ? 'w-7 bg-white' : 'w-2.5 bg-white/55 hover:bg-white/85'}`} aria-label={`Show flyer ${index + 1}`} aria-current={index === activeIndex ? 'true' : undefined} />)}
+      </nav>}
+    </div>
   );
 }
 
@@ -2428,32 +2500,13 @@ export default function App() {
 
         {/* 5. AUTHENTIC SCHEME CATALOGUES & FLYERS (Dedicated Section for Verified Product Flyers) */}
         <section id="schemes" className="py-16 bg-white/50 backdrop-blur-md border-t border-slate-200/80">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#82C8E5]/20 border border-[#82C8E5]/60 text-[#000080] text-xs font-bold uppercase tracking-wider mb-3">
-                <i data-lucide="file-text" className="w-3.5 h-3.5 text-[#0047AB]"></i>
-                <span>Official Scheme Catalogues & Verified Flyers</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-heading">
-                Authentic Scheme Catalogues & Flyers
-              </h2>
-              <p className="text-slate-600 text-xs sm:text-sm mt-2">
-                Explore four collections below. Galleries with multiple flyers slide every two seconds; use the arrows, dots or a swipe to browse.
-              </p>
+          <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+            <div aria-label="Scheme flyers">
+              <SchemeFlyerSlideshow
+                items={schemeFlyers}
+                onOpen={item => setLightboxData({ open: true, src: item.src, caption: '' })}
+              />
             </div>
-
-            <div className="space-y-8" aria-label="Scheme flyer collections">
-              {SCHEME_CATEGORIES.map(category => (
-                <SchemeFlyerCarousel
-                  key={category.tag}
-                  category={category}
-                  items={schemeFlyers.filter(item => item.tag === category.tag)}
-                  onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                />
-              ))}
-            </div>
-
           </div>
         </section>
 
@@ -3274,9 +3327,9 @@ export default function App() {
               <i data-lucide="x" className="w-5 h-5"></i>
             </button>
             <div className="w-full flex-1 overflow-auto rounded-2xl bg-slate-50/80 p-3 flex items-center justify-center min-h-[300px]">
-              <img src={lightboxData.src} alt={lightboxData.caption} className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-xs" />
+              <img src={lightboxData.src} alt={lightboxData.caption || 'Scheme flyer'} className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-xs" />
             </div>
-            <div className="w-full pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            {lightboxData.caption && <div className="w-full pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <span className="font-bold text-slate-800 text-center sm:text-left">{lightboxData.caption}</span>
               <a 
                 href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${lightboxData.caption}" and would like to get more information.`)}`}
@@ -3287,7 +3340,7 @@ export default function App() {
                 <i data-lucide="message-circle" className="w-3.5 h-3.5"></i>
                 <span>Enquire on WhatsApp</span>
               </a>
-            </div>
+            </div>}
           </div>
         </div>
       )}
