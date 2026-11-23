@@ -80,7 +80,7 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
   return (
     <article
       ref={panelRef}
-      className="glass-card group relative overflow-hidden rounded-3xl border border-white/95 p-4 shadow-xl transition-shadow duration-300 hover:shadow-2xl sm:p-6"
+      className="group relative py-3"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -97,7 +97,6 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
               <h3 className="font-heading text-xl font-black text-slate-900">{category.tag}</h3>
               <span className="rounded-full bg-[#0047AB]/10 px-2 py-0.5 text-[10px] font-extrabold text-[#0047AB]">{items.length} {items.length === 1 ? 'flyer' : 'flyers'}</span>
             </div>
-            <p className="mt-0.5 text-xs text-slate-500">{category.description}</p>
           </div>
         </div>
         <div className="flex items-center justify-between gap-4 sm:justify-end">
@@ -110,7 +109,7 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
       </div>
 
       <div
-        className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
+        className="overflow-hidden"
         onTouchStart={(event) => { touchStartX.current = event.touches[0].clientX; }}
         onTouchEnd={(event) => {
           if (touchStartX.current === null || items.length < 2) return;
@@ -126,12 +125,11 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
       >
         <div className="scheme-slide-track flex" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
           {items.map((item, index) => (
-            <div key={item.id} className="grid w-full shrink-0 gap-5 bg-gradient-to-br from-slate-50 via-white to-[#82C8E5]/10 p-4 sm:p-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:items-center" aria-hidden={index !== activeIndex}>
-              <button type="button" tabIndex={index === activeIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image relative flex h-[280px] w-full items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-md transition-shadow hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[340px]" aria-label={`View ${item.title} flyer in full size`}>
-                <img src={item.src} alt={item.title} className="h-full w-full object-contain transition-transform duration-500 group-hover/image:scale-[1.04]" loading="lazy" />
-                <span className="absolute bottom-3 right-3 rounded-full bg-[#000080]/90 px-3 py-1.5 text-[10px] font-bold text-white shadow-md">View full flyer ↗</span>
+            <div key={item.id} className="w-full shrink-0" aria-hidden={index !== activeIndex}>
+              <button type="button" tabIndex={index === activeIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image flex h-[360px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[500px] lg:h-[560px]" aria-label={`View ${item.title} flyer in full size`}>
+                <img src={item.src} alt={item.title} className="h-full w-full object-contain transition-transform duration-500 group-hover/image:scale-[1.02]" loading="lazy" />
               </button>
-              <div className="flex flex-col justify-center py-1">
+              <div className="hidden">
                 <span className="w-fit rounded-full border border-[#82C8E5]/50 bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0047AB]">{item.badgeMetric || category.tag}</span>
                 <h4 className="mt-3 font-heading text-xl font-black leading-tight text-slate-900 sm:text-2xl">{item.title}</h4>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.subtitle}</p>
@@ -145,12 +143,8 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
         </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-3">
-        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-slate-500">{items.length > 1 ? 'Auto slide · 2 sec' : 'More flyers coming'}</span>
-        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200" aria-hidden="true">
-          {items.length > 1 && <div key={`${activeIndex}-${visible}`} className="scheme-autoplay-progress h-full rounded-full bg-gradient-to-r from-[#0047AB] to-[#82C8E5]" style={{ animationPlayState: paused || !visible ? 'paused' : 'running' }} />}
-        </div>
-        <div className="flex max-w-[40%] gap-1.5 overflow-hidden" aria-label="Choose flyer">
+      <div className="mt-3 flex justify-center">
+        <div className="flex max-w-full gap-1.5 overflow-x-auto px-2 py-1" aria-label="Choose flyer">
           {items.map((item, index) => <button key={item.id} type="button" onClick={() => setActiveIndex(index)} className={`h-2 shrink-0 rounded-full transition-all ${index === activeIndex ? 'w-6 bg-[#0047AB]' : 'w-2 bg-slate-300 hover:bg-[#82C8E5]'}`} aria-label={`Show ${item.title}`} aria-current={index === activeIndex ? 'true' : undefined} />)}
         </div>
       </div>
