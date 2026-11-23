@@ -649,8 +649,8 @@ export default function App() {
         'End-to-end legal & valuation document assistance',
         'Flexible tenure up to 30 years with easy EMI'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
-      flyerTitle: 'Complete Loan Portfolio Overview Guide'
+      flyer: 'assets/flyer_home_loan_hq.png',
+      flyerTitle: 'Home Loan Financing Guide'
     },
     {
       id: 6,
@@ -683,8 +683,8 @@ export default function App() {
         'Special schemes for Doctors, CA, Architects',
         'Hospital / clinic setup financing without friction'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
-      flyerTitle: 'Professional Loan Portfolio Guide'
+      flyer: 'assets/flyer_professional_loan_hq.png',
+      flyerTitle: 'Professional Loan Financing Guide'
     },
     {
       id: 8,
@@ -700,7 +700,7 @@ export default function App() {
         'Zero collateral requirement & flexible repayment',
         'Disbursement within 24 to 48 working hours'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
+      flyer: 'assets/flyer_personal_loan_hq.png',
       flyerTitle: 'Personal Loan for Salaried Individuals Guide'
     },
     {
@@ -716,8 +716,8 @@ export default function App() {
         'Lowest processing fees & customized EMI schedules',
         'Quick sanctioning with pre-approved options'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
-      flyerTitle: 'Car Loan Financing Guide'
+      flyer: 'assets/flyer_car_loan_hq.png',
+      flyerTitle: 'New and Used Car Loan Financing Guide'
     }
   ];
 
@@ -727,7 +727,7 @@ export default function App() {
     return services.filter(s => s.category === activeCategory);
   }, [activeCategory]);
 
-    // Authentic High-Res Scheme Flyers Catalog Data (8 items, verified market flyers)
+    // Client-provided flyers for schemes and the financial services opportunity.
   const schemeFlyers = [
     {
       id: 1,
@@ -735,7 +735,7 @@ export default function App() {
       tag: 'Loans',
       badgeMetric: 'Up to ₹5 Cr Limit',
       subtitle: 'Saturday Club Global Trust Member verified flyer • Unsecured & Secured',
-      src: 'assets/flyer_business_loan_hq.png',
+      src: 'assets/flyer_business_loan_whatsapp.jpeg',
       caption: 'Business Loan (Up to ₹5 Cr) Scheme Flyer - Saturday Club Global Trust Regn E-26480, Sangli Office',
       highlights: [
         'Unsecured MSME loans up to ₹50 Lakh & Secured credit lines up to ₹5 Cr',
@@ -749,7 +749,7 @@ export default function App() {
       tag: 'Loans',
       badgeMetric: 'Multi-Bank Tie-ups',
       subtitle: 'Home, Business, Professional, Personal & Car Loans • Smitaa R Desai',
-      src: 'assets/flyer_all_loans_hq.png',
+      src: 'assets/flyer_all_loan_portfolio_whatsapp.jpeg',
       caption: 'Complete Loan Portfolio Overview Flyer - Smitaa R Desai (+91 70571 32237)',
       highlights: [
         'Comparative ROI check across all major Indian banks for lowest interest rates',
@@ -763,7 +763,7 @@ export default function App() {
       tag: 'Investments',
       badgeMetric: '₹11.78 Cr Target',
       subtitle: '₹11.78 Crore Wealth Creation Case Study • Smita Desai Financial Consultancy',
-      src: 'assets/flyer_sip_topup_hq.png',
+      src: 'assets/flyer_sip_topup_marathi.jpeg',
       caption: 'Top-Up SIP ₹11.78 Cr Compounding Guide - Smita Desai (+91 70571 32237)',
       highlights: [
         'Disciplined 10% - 15% annual step-up compounding strategy model',
@@ -777,7 +777,7 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: '10,000+ Hospitals',
       subtitle: 'Comprehensive Hospitalization & Cashless Network Protection',
-      src: 'assets/flyer_health_insurance_hq.png',
+      src: 'assets/flyer_health_insurance_marathi.jpeg',
       caption: 'Family Health Insurance Scheme Flyer - Smita Desai (+91 70571 32237)',
       highlights: [
         'Cashless admission & claims settlement across 10,000+ top Indian hospitals',
@@ -791,7 +791,7 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: '₹5L to ₹3 Cr Cover',
       subtitle: 'Cashless Hospitalization • ₹5 Lakh to ₹3 Crore Coverage on EMI',
-      src: 'assets/flyer_tata_aig_medicare_hq.png',
+      src: 'assets/flyer_tata_aig_medicare_marathi.jpeg',
       caption: 'Tata AIG Medicare Select Policy Flyer - Official Partner Network',
       highlights: [
         'Zero room rent capping with automatic restoration benefit for unrelated illnesses',
@@ -805,7 +805,7 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: 'Instant WhatsApp Quote',
       subtitle: 'Instant Online Policy for Bikes, Cars, Commercial Vehicles & Buses',
-      src: 'assets/flyer_vehicle_insurance_hq.png',
+      src: 'assets/flyer_vehicle_insurance_marathi.jpeg',
       caption: 'Vehicle Online Insurance Flyer - Fast Paperless Process & Best Rates',
       highlights: [
         'Instant quotes generated directly by sharing RC Book photo on WhatsApp',
@@ -819,7 +819,7 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: '100% Creditor-Proof',
       subtitle: 'Senior Agency Associate Smita Desai • Protect Wife & Children',
-      src: 'assets/flyer_kotak_mwpa_hq.jpg',
+      src: 'assets/flyer_kotak_mwpa_marathi.jpeg',
       caption: 'Kotak Life MWPA Wife & Children Protection Flyer - Associate Smita Desai (Call only: +91 77769 77171; no WhatsApp)',
       highlights: [
         'Married Women’s Property Act (MWPA 1874) legal ring-fencing protection',
@@ -833,13 +833,83 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: '16% Women Discount',
       subtitle: 'High Life Cover • Special Exit Option • 16% Women Discount',
-      src: 'assets/flyer_kotak_signature_hq.jpg',
+      src: 'assets/flyer_kotak_signature_marathi.jpeg',
       caption: 'Kotak Signature Term Plan High Cover Flyer',
       highlights: [
         'High life cover with special exit benefit and return of premium option',
         'Exclusive 16% premium rate discount for female policyholders',
         'Comprehensive critical illness rider & whole life cover options up to 99 years'
       ]
+    },
+    {
+      id: 9,
+      title: 'Mutual Funds for Every Family',
+      tag: 'Investments',
+      badgeMetric: 'Start from ₹500',
+      subtitle: 'Marathi guide to mutual funds and disciplined SIP investing',
+      src: 'assets/flyer_mutual_funds_marathi.jpeg',
+      caption: 'Mutual Funds for Every Family • Marathi Flyer',
+      highlights: ['Start investing through SIPs from ₹500', 'Build long-term savings with disciplined investing', 'Understand mutual fund risks before investing']
+    },
+    {
+      id: 10,
+      title: 'Financial Services Career Opportunity',
+      tag: 'Careers',
+      badgeMetric: 'Career Opportunity',
+      subtitle: 'A financial services opportunity for homemakers, retirees and part-time workers',
+      src: 'assets/flyer_financial_career.jpeg',
+      caption: 'Financial Services Career Opportunity • Marathi Flyer',
+      highlights: ['Training and guidance', 'Flexible work opportunity', 'Contact Smita Desai for details']
+    },
+    {
+      id: 11,
+      title: 'SIP for Life Goals',
+      tag: 'Investments',
+      badgeMetric: 'Goal-Based SIP',
+      subtitle: 'Plan for education, weddings and retirement',
+      src: 'assets/flyer_sip_life_goals.jpeg',
+      caption: 'SIP for Life Goals • Education, Wedding and Retirement',
+      highlights: ['Illustrative examples for different life goals', 'Choose a contribution suited to your timeline', 'Mutual fund returns are market-linked and not guaranteed']
+    },
+    {
+      id: 12,
+      title: 'Top-Up SIP Retirement Plan',
+      tag: 'Investments',
+      badgeMetric: '₹11.78 Cr Illustration',
+      subtitle: 'Marathi top-up SIP retirement illustration',
+      src: 'assets/flyer_sip_topup_retirement.jpeg',
+      caption: 'Top-Up SIP Retirement Plan • Marathi Illustration',
+      highlights: ['Shows an example of annual SIP increases', 'Illustrative figures are not guaranteed', 'Mutual fund investments are subject to market risks']
+    },
+    {
+      id: 13,
+      title: 'Kotak Assured Pension',
+      tag: 'Insurance',
+      badgeMetric: 'Retirement Income',
+      subtitle: 'Kotak Life pension plan flyer',
+      src: 'assets/flyer_kotak_assured_pension.jpeg',
+      caption: 'Kotak Assured Pension • Flyer',
+      highlights: ['Retirement income product information', 'Review policy terms and annuity rates', 'Please read the insurer brochure before purchase']
+    },
+    {
+      id: 14,
+      title: 'Kotak Confident Retirement Savings Plan',
+      tag: 'Insurance',
+      badgeMetric: 'Retirement Savings',
+      subtitle: 'Savings plan with life cover',
+      src: 'assets/flyer_kotak_retirement_savings.jpeg',
+      caption: 'Kotak Confident Retirement Savings Plan • Flyer',
+      highlights: ['Plan information for retirement savings', 'Includes life cover as described in the flyer', 'Review the official policy terms before purchase']
+    },
+    {
+      id: 15,
+      title: 'Kotak Gen2Gen Protect',
+      tag: 'Insurance',
+      badgeMetric: 'Generational Protection',
+      subtitle: 'Kotak Life protection plan flyer',
+      src: 'assets/flyer_kotak_gen2gen.jpeg',
+      caption: 'Kotak Gen2Gen Protect • Flyer',
+      highlights: ['Life cover options as described in the flyer', 'Review plan options and rider details', 'Read the insurer brochure for terms and exclusions']
     }
   ];
 
@@ -2259,12 +2329,12 @@ export default function App() {
                 Authentic Scheme Catalogues & Flyers
               </h2>
               <p className="text-slate-600 text-xs sm:text-sm mt-2">
-                Click any verified loan, insurance or SIP scheme flyer to inspect in full high-resolution.
+                Browse loan, insurance, investment and career flyers in full size.
               </p>
 
               {/* Scheme Filter Tabs */}
               <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-                {['all', 'loans', 'insurance', 'investments'].map(tab => (
+                {['all', 'loans', 'insurance', 'investments', 'careers'].map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveSchemeTab(tab)}
