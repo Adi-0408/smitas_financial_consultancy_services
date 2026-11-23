@@ -712,7 +712,7 @@ export default function App() {
         'Tata AIG Medicare Select & Super Top-Up plans',
         'Tax saving benefit under Section 80D'
       ],
-      flyer: 'assets/flyer_health_insurance_hq.png',
+      flyer: 'assets/flyer_health_insurance_service.png',
       flyerTitle: 'Family Health Insurance & Mediclaim Scheme Flyer'
     },
     {
@@ -730,7 +730,7 @@ export default function App() {
         'Risk-profile matched equity & hybrid funds',
         'Seamless digital portfolio tracking & rebalancing'
       ],
-      flyer: 'assets/flyer_sip_topup_hq.png',
+      flyer: 'assets/flyer_sip_service.png',
       flyerTitle: 'Top-Up SIP ₹11.78 Cr Compounding Guide'
     },
     {
@@ -747,7 +747,7 @@ export default function App() {
         'Best rates for 2-Wheelers, Private Cars & Commercial',
         'Zero-Depreciation & Cashless network garages'
       ],
-      flyer: 'assets/flyer_vehicle_insurance_hq.png',
+      flyer: 'assets/flyer_motor_insurance_service.png',
       flyerTitle: 'All Types of Vehicle Online Insurance Flyer'
     },
     {
@@ -764,7 +764,7 @@ export default function App() {
         'End-to-end legal & valuation document assistance',
         'Flexible tenure up to 30 years with easy EMI'
       ],
-      flyer: 'assets/flyer_home_loan_hq.png',
+      flyer: 'assets/flyer_home_loan_service.png',
       flyerTitle: 'Home Loan Financing Guide'
     },
     {
@@ -781,7 +781,7 @@ export default function App() {
         'Authorised channel partner of leading Banks & NBFCs',
         'Minimum documentation & quick disbursement'
       ],
-      flyer: 'assets/flyer_business_loan_hq.png',
+      flyer: 'assets/flyer_business_loan_service.png',
       flyerTitle: 'Business Loan (Up to ₹5 Cr) Saturday Club Global Trust Flyer'
     },
     {
@@ -798,7 +798,7 @@ export default function App() {
         'Special schemes for Doctors, CA, Architects',
         'Hospital / clinic setup financing without friction'
       ],
-      flyer: 'assets/flyer_professional_loan_hq.png',
+      flyer: 'assets/flyer_professional_loan_service.png',
       flyerTitle: 'Professional Loan Financing Guide'
     },
     {
@@ -815,7 +815,7 @@ export default function App() {
         'Zero collateral requirement & flexible repayment',
         'Disbursement within 24 to 48 working hours'
       ],
-      flyer: 'assets/flyer_personal_loan_hq.png',
+      flyer: 'assets/flyer_personal_loan_service.png',
       flyerTitle: 'Personal Loan for Salaried Individuals Guide'
     },
     {
