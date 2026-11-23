@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 const STORAGE_KEY_REVIEWS = 'sfcs_client_reviews_v1';
 const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
+const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
 
 const INITIAL_REVIEWS = [
   {
@@ -1514,6 +1515,30 @@ export default function App() {
                       </li>
                     ))}
                   </ul>
+
+                  {service.category === 'investments' && (
+                    <a
+                      href={SIP_ACCOUNT_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/sip relative mb-6 block overflow-hidden rounded-2xl border border-[#82C8E5]/70 bg-gradient-to-br from-sky-50 via-white to-emerald-50 p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0047AB]/50 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0047AB]"
+                      aria-label="Create an NJ Wealth SIP account with Smita Desai's partner reference 28795 (opens in a new tab)"
+                    >
+                      <span className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#82C8E5]/25 blur-2xl transition-transform duration-500 group-hover/sip:scale-150" aria-hidden="true" />
+                      <span className="relative inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0047AB] shadow-xs">
+                        <i data-lucide="badge-check" className="h-3.5 w-3.5" aria-hidden="true"></i>
+                        NJ Wealth Partner #28795
+                      </span>
+                      <span className="relative mt-3 block text-base font-bold text-slate-900 font-heading">Create your SIP account</span>
+                      <span className="relative mt-1.5 block text-xs leading-relaxed text-slate-600">
+                        Open the NJ Wealth account page with Smita Desai's partner reference. Complete your account setup there to get started with SIPs.
+                      </span>
+                      <span className="relative mt-3 inline-flex items-center gap-1.5 text-xs font-extrabold text-[#0047AB]">
+                        Open account page
+                        <i data-lucide="arrow-up-right" className="h-4 w-4 transition-transform duration-300 group-hover/sip:-translate-y-0.5 group-hover/sip:translate-x-0.5" aria-hidden="true"></i>
+                      </span>
+                    </a>
+                  )}
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center gap-2">
@@ -1799,6 +1824,18 @@ export default function App() {
                       <i data-lucide="message-circle" className="w-4 h-4"></i>
                       <span>Enquire This Plan on WhatsApp</span>
                     </button>
+
+                    <a
+                      href={SIP_ACCOUNT_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/sip flex w-full items-center justify-center gap-2 rounded-full border border-[#0047AB]/25 bg-white px-4 py-3 text-center text-xs font-bold text-[#0047AB] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0047AB] hover:bg-sky-50 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0047AB]"
+                      aria-label="Create an NJ Wealth SIP account with Smita Desai's partner reference 28795 (opens in a new tab)"
+                    >
+                      <i data-lucide="user-round-plus" className="h-4 w-4" aria-hidden="true"></i>
+                      <span>Create SIP Account · Partner #28795</span>
+                      <i data-lucide="arrow-up-right" className="h-3.5 w-3.5 transition-transform duration-300 group-hover/sip:-translate-y-0.5 group-hover/sip:translate-x-0.5" aria-hidden="true"></i>
+                    </a>
 
                     <p className="text-[10px] text-slate-400 italic text-center pt-1 leading-tight">
                       *Financial-calculator END mode: monthly rate = annual rate ÷ 12, with each SIP added at month-end. Returns are estimates, not guaranteed; mutual funds are subject to market risks.
