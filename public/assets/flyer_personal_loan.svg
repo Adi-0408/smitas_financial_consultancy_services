@@ -2,7 +2,7 @@
   <title id="title">Personal Loan | Smita's Financial Consultancy Services</title><desc id="desc">Unsecured personal loan assistance for salaried individuals.</desc>
   <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#fff7ef"/><stop offset="1" stop-color="#fff"/></linearGradient><linearGradient id="orange" x2="1" y2="1"><stop stop-color="#d46b21"/><stop offset="1" stop-color="#8d3d25"/></linearGradient></defs>
   <rect width="800" height="1000" rx="36" fill="url(#bg)"/><path d="M0 0h800v180H0z" fill="url(#orange)"/>
-  <rect x="38" y="35" width="96" height="108" rx="18" fill="#fff"/><image href="sfcs_logo_emblem.png" x="46" y="40" width="80" height="94" preserveAspectRatio="xMidYMid meet"/>
+  <rect x="38" y="35" width="96" height="108" rx="18" fill="#fff"/><image href="/assets/sfcs_logo_emblem.png" x="46" y="40" width="80" height="94" preserveAspectRatio="xMidYMid meet"/>
   <text x="158" y="66" fill="#fff" font-family="Arial,sans-serif" font-size="29" font-weight="700">SMITA'S FINANCIAL</text><text x="158" y="103" fill="#ffe4d0" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="2">CONSULTANCY SERVICES</text><text x="158" y="135" fill="#fff" font-family="Arial,sans-serif" font-size="16" letter-spacing="2">SANGLI, MAHARASHTRA</text>
   <rect x="44" y="210" width="205" height="38" rx="19" fill="#ffeadb"/><text x="146" y="236" text-anchor="middle" fill="#a75020" font-family="Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="1.5">LOAN ASSISTANCE</text>
   <text x="44" y="320" fill="#4a2b20" font-family="Arial,sans-serif" font-size="61" font-weight="700">Personal Loan</text><text x="47" y="365" fill="#765b4e" font-family="Arial,sans-serif" font-size="23">Flexible support for life's plans.</text>
