@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 const STORAGE_KEY_REVIEWS = 'sfcs_client_reviews_v1';
 const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
@@ -11,7 +11,7 @@ const INITIAL_REVIEWS = [
     rating: 5,
     service: 'Health Insurance',
     date: '2 weeks ago',
-    text: "I was guided so thoroughly regarding my family's health insurance. Smita ma'am analyzed our medical requirements and suggested a Tata AIG plan that saved us taxes under 80D and gives cashless cover across all top hospitals. Truly committed advisor!"
+    text: "I was guided so thoroughly regarding my family's health insurance. Smita ma'am analyzed our medical requirements and suggested a Tata AIG plan that saved us taxes under 80D and gives cashless cover across all top hospitals. Truly committed financial consultant!"
   },
   {
     id: 'rev-2',
@@ -36,7 +36,7 @@ const INITIAL_REVIEWS = [
     name: 'Sunil Patil',
     role: 'Government Service, Sangli',
     rating: 5,
-    service: 'Mutual Funds & SIP',
+    service: 'Mutual Funds & SIP / SWP',
     date: '2 months ago',
     text: "Started systematic mutual fund SIPs through NJ Wealth platform under Smita Desai's guidance. The top-up strategy and periodic reviews give me total peace of mind for wealth creation."
   }
@@ -103,7 +103,7 @@ export default function App() {
   const [reviewAuthor, setReviewAuthor] = useState('');
   const [reviewRole, setReviewRole] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
-  const [reviewService, setReviewService] = useState('Mutual Funds & SIP');
+  const [reviewService, setReviewService] = useState('Mutual Funds & SIP / SWP');
   const [reviewText, setReviewText] = useState('');
 
   // Modals & Toasts
@@ -163,6 +163,92 @@ export default function App() {
     };
   }, [mobileMenuOpen]);
 
+  // Mobile Hardware / Gesture Back Button Handling
+  // Prevents exiting the browser when an image lightbox, drawer, or modal is open on a mobile phone
+  const isAnyOverlayOpen = Boolean(
+    lightboxData.open ||
+    qrModalOpen ||
+    reviewModalOpen ||
+    deleteConfirmModal.open ||
+    mobileMenuOpen
+  );
+
+  const isAnyOverlayOpenRef = useRef(isAnyOverlayOpen);
+  isAnyOverlayOpenRef.current = isAnyOverlayOpen;
+
+  const historyPushedRef = useRef(false);
+  const isProgrammaticBackRef = useRef(false);
+
+  // Close the highest priority open overlay
+  const closeTopOverlay = () => {
+    if (deleteConfirmModal.open) {
+      setDeleteConfirmModal({ open: false, reviewId: null, reviewName: '' });
+      return true;
+    }
+    if (lightboxData.open) {
+      setLightboxData({ open: false, src: '', caption: '' });
+      return true;
+    }
+    if (reviewModalOpen) {
+      setReviewModalOpen(false);
+      return true;
+    }
+    if (qrModalOpen) {
+      setQrModalOpen(false);
+      return true;
+    }
+    if (mobileMenuOpen) {
+      setMobileMenuOpen(false);
+      return true;
+    }
+    return false;
+  };
+
+  const closeTopOverlayRef = useRef(closeTopOverlay);
+  closeTopOverlayRef.current = closeTopOverlay;
+
+  // Sync browser history state when overlays open / close
+  useEffect(() => {
+    if (isAnyOverlayOpen) {
+      if (!historyPushedRef.current) {
+        historyPushedRef.current = true;
+        try {
+          window.history.pushState({ sfcsOverlayOpen: true }, '');
+        } catch {}
+      }
+    } else {
+      if (historyPushedRef.current) {
+        historyPushedRef.current = false;
+        isProgrammaticBackRef.current = true;
+        try {
+          window.history.back();
+        } catch {}
+      }
+    }
+  }, [isAnyOverlayOpen]);
+
+  // Intercept the browser/phone back button (popstate event)
+  useEffect(() => {
+    const handlePopState = () => {
+      // If this popstate was triggered by our programmatic history cleanup, ignore it
+      if (isProgrammaticBackRef.current) {
+        isProgrammaticBackRef.current = false;
+        return;
+      }
+
+      // If any modal/drawer/image was open when the user pressed back:
+      if (isAnyOverlayOpenRef.current) {
+        // The browser already popped the history entry
+        historyPushedRef.current = false;
+        // Close the open overlay so the user stays on the page instead of exiting the browser
+        closeTopOverlayRef.current();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Toast Helper
   const triggerToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
@@ -179,7 +265,7 @@ export default function App() {
       'N:Desai;Smita;Rahul;;',
       'FN:Smita Rahul Desai',
       'ORG:Smita\'s Financial Consultancy Services',
-      'TITLE:Founder & Principal Wealth Advisor',
+      'TITLE:Founder & Principal Financial Consultant',
       'TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+917057132237',
       'TEL;TYPE=WORK,VOICE;VALUE=uri:tel:+917776977171',
       'EMAIL;TYPE=INTERNET,WORK:smitadesai1821@gmail.com',
@@ -206,7 +292,7 @@ export default function App() {
   const shareProfile = () => {
     const shareData = {
       title: "Smita's Financial Consultancy Services",
-      text: "“Your Trust, Our Commitment.” Personalized financial planning, Insurance, SIP & Loans from 7+ yrs experienced advisor Smita Desai in Sangli.",
+      text: "“Your Trust, Our Commitment.” Personalized financial planning, Insurance, SIP & Loans from 7+ yrs experienced financial consultant Smita Desai in Sangli.",
       url: window.location.href
     };
 
@@ -505,15 +591,16 @@ export default function App() {
     },
     {
       id: 3,
-      title: 'Mutual Funds & SIP',
+      title: 'Mutual Funds & SIP / SWP',
       category: 'investments',
       badge: 'Investments',
       icon: 'trending-up',
       iconBg: 'bg-sky-50 text-cobalt border-sky-200',
       oneLiner: 'Goal-based wealth creation and systematic investments.',
-      description: 'Harness the power of compounding with curated mutual fund portfolios through NJ Wealth network. Disciplined monthly SIP, step-up SIPs, and ELSS funds.',
+      description: 'Harness the power of compounding with curated mutual fund portfolios through NJ Wealth network. Disciplined monthly SIP, step-up SIPs, SWP, and ELSS funds.',
       bullets: [
         'Top-up SIP strategy for accelerated wealth',
+        'SWP regular monthly cashflow & pension planning',
         'Risk-profile matched equity & hybrid funds',
         'Seamless digital portfolio tracking & rebalancing'
       ],
@@ -665,7 +752,7 @@ export default function App() {
       title: 'Top-Up SIP Compounding Model',
       tag: 'Investments',
       badgeMetric: '₹11.78 Cr Target',
-      subtitle: '₹11.78 Crore Wealth Creation Case Study • Smita Desai Advisory',
+      subtitle: '₹11.78 Crore Wealth Creation Case Study • Smita Desai Financial Consultancy',
       src: 'assets/flyer_sip_topup_hq.jpg',
       caption: 'Top-Up SIP ₹11.78 Cr Compounding Guide - Smita Desai (+91 70571 32237)',
       highlights: [
@@ -759,12 +846,12 @@ export default function App() {
       category: 'awards',
       tag: 'Tata AIG Honor',
       badgeMetric: 'Stage Felicitation',
-      subtitle: 'National Partner Meet • Recognized for Outstanding General Insurance Advisory',
+      subtitle: 'National Partner Meet • Recognized for Outstanding General Insurance Consulting',
       src: 'assets/award_tata_aig.jpg',
       caption: 'Smita Desai receiving the prestigious recognition award on stage at Tata AIG Insurance partner conference',
       highlights: [
         'Felicitated by senior leadership at Tata AIG Insurance national partner meet',
-        'Recognized for exceptional general insurance advisory across health & motor portfolios',
+        'Recognized for exceptional general insurance consultancy across health & motor portfolios',
         'Commitment to zero-friction claim settlements and proactive client advocacy'
       ]
     },
@@ -778,7 +865,7 @@ export default function App() {
       src: 'assets/award_kotak_life.jpg',
       caption: 'Smita Desai receiving the "Set New Benchmarks & Drive Excellence" trophy on stage at Kotak Life Insurance Annual Conference',
       highlights: [
-        'Awarded for extraordinary advisory in long-term life cover & MWPA estate protection',
+        'Awarded for extraordinary consultancy in long-term life cover & MWPA estate protection',
         'Honored on stage by regional leadership for setting new performance benchmark standards',
         'Senior Agency Associate driving tailored long-term financial security for families'
       ]
@@ -793,9 +880,9 @@ export default function App() {
       src: 'assets/award_felicitation.jpg',
       caption: 'Smita Desai honored on stage with the prestigious leadership trophy and gift hamper during the annual partner excellence ceremony',
       highlights: [
-        'Prestigious recognition for milestone advisory across wealth management & loan consultancy',
+        'Prestigious recognition for milestone consultancy across wealth management & loan services',
         'Honored for cultivating multi-decade trust and tailored financial strategies across Western Maharashtra',
-        'Special tribute to client-centric advisory ethics, professional diligence, and community impact'
+        'Special tribute to client-centric consulting ethics, professional diligence, and community impact'
       ]
     },
     {
@@ -825,7 +912,7 @@ export default function App() {
       highlights: [
         'Official Certificate of Membership presented to Smita Rahul Desai by SCGT Leadership',
         'Active member of Saturday Club Global Trust - Yellow City Sangli Chapter (Regn E-26480)',
-        'Membership valid upto 24th June 2027 fostering trusted enterprise financial advisory'
+        'Membership valid upto 24th June 2027 fostering trusted enterprise financial consultancy'
       ]
     }
   ];
@@ -1108,22 +1195,22 @@ export default function App() {
                   </div>
                   <div className="p-3.5 rounded-2xl bg-white/80 backdrop-blur-md border border-white/90 text-center shadow-xs hover:shadow-md hover:-translate-y-1 hover:border-[#82C8E5]/80 hover:bg-white/95 transition-all duration-300">
                     <div className="text-2xl font-black text-[#0047AB] font-heading">100%</div>
-                    <div className="text-[11px] text-slate-600 font-semibold mt-0.5">Direct Advisory</div>
+                    <div className="text-[11px] text-slate-600 font-semibold mt-0.5">Direct Consultation</div>
                   </div>
                 </div>
 
               </div>
 
-              {/* Right Column: BIGGER SHOWCASE CARD FOR SMITA DESAI (Using the new high-res image) */}
+              {/* Right Column: BIGGER SHOWCASE CARD FOR SMITA DESAI (Using pure high-res full image) */}
               <div className="lg:col-span-6 flex justify-center">
                 <div className="w-full max-w-lg hero-photo-card rounded-3xl p-5 sm:p-7 space-y-6">
                   
-                  {/* Clean Portrait Image Container (Zero Floating Banners, Pure High-Res Image) */}
-                  <div className="rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/90 shadow-md group">
+                  {/* Clean Portrait Image Container - Display full image without cropping */}
+                  <div className="rounded-2xl overflow-hidden bg-white/70 backdrop-blur-md border border-slate-200/90 shadow-md group p-1.5 flex items-center justify-center">
                     <img 
                       src="assets/smita_profile.jpg" 
                       alt="Smita Rahul Desai - Principal Financial Consultant" 
-                      className="w-full h-80 sm:h-96 md:h-[440px] object-cover object-top group-hover:scale-[1.01] transition-transform duration-500"
+                      className="w-full h-auto block rounded-xl object-contain group-hover:scale-[1.01] transition-transform duration-500"
                     />
                   </div>
 
@@ -1131,7 +1218,7 @@ export default function App() {
                   <div className="flex flex-wrap items-center justify-between gap-2 px-1">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-xs">
                       <i data-lucide="badge-check" className="w-4 h-4 text-emerald-600"></i>
-                      <span>Verified Wealth Advisor</span>
+                      <span>Verified Financial Consultant</span>
                     </span>
                     <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
                       NJ Wealth Partner: <strong className="text-slate-900">#28795</strong> • Sangli, MH
@@ -1214,7 +1301,7 @@ export default function App() {
                       className="btn-pill btn-pill-cobalt py-3 text-xs tracking-wider uppercase shadow-xs touch-target"
                     >
                       <i data-lucide="phone-call" className="w-4 h-4"></i>
-                      <span>Call Advisor</span>
+                      <span>Call Consultant</span>
                     </a>
                     <a 
                       href="https://wa.me/917057132237?text=Hello%20Smita%20Desai,%20I%20am%20connecting%20from%20your%20website."
@@ -1312,17 +1399,17 @@ export default function App() {
                 className="card-light rounded-3xl p-6 sm:p-7 flex flex-col justify-between group relative overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
               >
                 <div>
-                  {/* Fitted Scheme Flyer Preview Header */}
+                  {/* Full Scheme Flyer Preview Header - Display complete image */}
                   {service.flyer && (
                     <div 
                       onClick={() => setLightboxData({ open: true, src: service.flyer, caption: service.flyerTitle })}
-                      className="w-full aspect-[16/9] rounded-2xl overflow-hidden relative mb-5 bg-slate-100 border border-slate-200/90 shadow-sm cursor-pointer group/img"
+                      className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden relative mb-5 bg-slate-50/90 border border-slate-200/90 shadow-sm cursor-pointer group/img flex items-center justify-center p-2"
                       title="Click to inspect official scheme flyer"
                     >
                       <img 
                         src={service.flyer} 
                         alt={service.title} 
-                        className="card-img-fit"
+                        className="w-full h-full object-contain rounded-xl group-hover/img:scale-[1.02] transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-[1px] opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="btn-pill px-3.5 py-1.5 bg-white text-[#000080] font-black text-xs shadow-lg flex items-center gap-1.5 transform group-hover/img:scale-105 transition-transform">
@@ -1942,7 +2029,7 @@ export default function App() {
                   <img 
                     src="assets/sfcs_official_logo.jpg" 
                     alt="Smita's Financial Consultancy Services Official Brand Identity" 
-                    className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                    className="w-full h-auto block rounded-xl object-contain group-hover:scale-[1.02] transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/10 transition-colors flex items-center justify-center">
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-slate-800 text-xs font-bold shadow-md flex items-center gap-1.5">
@@ -2092,82 +2179,49 @@ export default function App() {
             </div>
 
             {/* Scheme Cards Grid */}
-            <div key={activeSchemeTab} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-tab-content">
+            <div key={activeSchemeTab} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-start animate-tab-content">
               {filteredSchemeFlyers.map((item) => (
                 <div 
                   key={item.id}
-                  className="glass-card rounded-3xl p-5 sm:p-6 border border-white/95 shadow-xl hover:shadow-2xl transition-all flex flex-col justify-between group"
+                  onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
+                  className="glass-card rounded-3xl p-3 sm:p-4 border border-white/95 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col"
                 >
-                  {/* Flyer Image Container */}
-                  <div 
-                    onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                    className="w-full aspect-[4/3] rounded-2xl overflow-hidden relative bg-slate-100 border border-slate-200/90 shadow-md group-hover:border-[#0047AB]/50 transition-colors cursor-pointer"
-                  >
+                  {/* Full Flyer Image Container */}
+                  <div className="w-full relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/90 shadow-sm group-hover:border-[#0047AB]/60 transition-colors">
                     <img 
                       src={item.src} 
                       alt={item.title} 
-                      className="card-img-fit"
+                      className="w-full h-auto block rounded-2xl object-contain group-hover:scale-[1.02] transition-transform duration-500"
+                      loading="lazy"
                     />
+
                     {/* Floating Info Pill from Flyer */}
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#000080]/85 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-md border border-white/20">
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#000080]/90 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-md border border-white/20">
                       {item.badgeMetric || item.tag}
                     </div>
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[#000080] text-[10px] font-extrabold uppercase tracking-wider shadow-xs border border-white/60">
+                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#000080] text-[10px] font-extrabold uppercase tracking-wider shadow-xs border border-white/70">
                       {item.tag}
                     </div>
+
+                    {/* Quick WhatsApp Button Floating on Image */}
+                    <a
+                      href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${item.title}" and would like to get more information.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute bottom-3 right-3 btn-pill px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg active:scale-95 z-10"
+                      title="Enquire Scheme on WhatsApp"
+                    >
+                      <i data-lucide="message-circle" className="w-3.5 h-3.5"></i>
+                      <span>WhatsApp</span>
+                    </a>
+
                     {/* Smooth Zoom Hover Overlay */}
-                    <div className="absolute inset-0 bg-slate-900/35 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="absolute inset-0 bg-slate-900/35 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                       <span className="btn-pill px-4 py-2 bg-white text-[#000080] font-black text-xs shadow-xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
                         <i data-lucide="zoom-in" className="w-4 h-4 text-[#0047AB]"></i>
                         <span>Inspect Full Flyer</span>
                       </span>
-                    </div>
-                  </div>
-
-                  {/* Information Extracted According to Flyer */}
-                  <div className="pt-5 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-base group-hover:text-[#0047AB] transition-colors font-heading">
-                        {item.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-1">{item.subtitle}</p>
-
-                      {/* Information Bullets */}
-                      {item.highlights && item.highlights.length > 0 && (
-                        <div className="mt-4 pt-3.5 border-t border-slate-100 space-y-2">
-                          {item.highlights.map((bullet, idx) => (
-                            <div key={idx} className="flex items-start gap-2 text-xs text-slate-600">
-                              <i data-lucide="check-circle-2" className="w-3.5 h-3.5 text-[#0047AB] shrink-0 mt-0.5"></i>
-                              <span className="leading-snug">{bullet}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Dual Action Buttons */}
-                    <div className="pt-4 mt-4 border-t border-slate-100 flex items-center gap-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setLightboxData({ open: true, src: item.src, caption: item.caption });
-                        }}
-                        className="flex-1 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-[#0047AB] hover:text-white text-slate-800 text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs hover:shadow-md"
-                      >
-                        <i data-lucide="zoom-in" className="w-3.5 h-3.5"></i>
-                        <span>View Flyer</span>
-                      </button>
-                      <a
-                        href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${item.title}" and would like to get more information.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="py-2.5 px-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center justify-center gap-1 shadow-xs hover:shadow-md"
-                        title="Enquire Scheme on WhatsApp"
-                      >
-                        <i data-lucide="message-circle" className="w-3.5 h-3.5"></i>
-                        <span className="hidden sm:inline">WhatsApp</span>
-                      </a>
                     </div>
                   </div>
                 </div>
@@ -2218,15 +2272,15 @@ export default function App() {
                 key={item.id}
                 className="glass-card rounded-3xl p-6 sm:p-7 border border-white/95 shadow-xl hover:shadow-2xl transition-all flex flex-col justify-between group"
               >
-                {/* Photo Image Container */}
+                {/* Photo Image Container - Display full image without cropping */}
                 <div 
                   onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                  className="w-full aspect-[4/3] rounded-2xl overflow-hidden relative bg-slate-900/5 border border-slate-200/90 shadow-md group-hover:border-[#0047AB]/60 transition-colors cursor-pointer"
+                  className="w-full aspect-[4/3] rounded-2xl overflow-hidden relative bg-slate-50 border border-slate-200/90 shadow-md group-hover:border-[#0047AB]/60 transition-colors cursor-pointer flex items-center justify-center p-2"
                 >
                   <img 
                     src={item.src} 
                     alt={item.title} 
-                    className="card-img-fit group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-500"
                   />
                   {/* Floating Metric Badge */}
                   <div className="absolute top-3.5 left-3.5 px-3.5 py-1.5 rounded-full bg-[#000080]/90 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-md border border-white/20">
@@ -2279,7 +2333,7 @@ export default function App() {
                       <span>Enlarge Photo</span>
                     </button>
                     <a
-                      href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, congratulations on "${item.title}". I would like to connect for financial advisory.`)}`}
+                      href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, congratulations on "${item.title}". I would like to connect for financial consultancy.`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
@@ -2467,7 +2521,7 @@ export default function App() {
                         <option value="General Financial Consultation">General Financial Consultation</option>
                         <option value="Life Insurance">1. Life Insurance (Term Plan, Endowment, Pension)</option>
                         <option value="Health Insurance">2. Health Insurance (Family Mediclaim, Critical Illness)</option>
-                        <option value="Mutual Funds & SIP">3. Mutual Funds & SIP (Top-Up SIP, Equity, Wealth)</option>
+                        <option value="Mutual Funds & SIP / SWP">3. Mutual Funds & SIP / SWP (Top-Up SIP, SWP Cashflow, Wealth)</option>
                         <option value="Vehicle / Motor Insurance">4. Vehicle / Motor Insurance (2-Wheeler, Car, Commercial)</option>
                         <option value="Home Loan">5. Home Loan (Purchase, Construction, Balance Transfer)</option>
                         <option value="Business Loans (Secured / Unsecured)">6. Business Loans (Secured / Unsecured Up to ₹5 Cr)</option>
@@ -3067,7 +3121,7 @@ export default function App() {
                   onChange={(e) => setReviewService(e.target.value)}
                   className="w-full glass-input px-4 py-3 rounded-2xl text-sm text-slate-900 outline-none"
                 >
-                  <option value="Mutual Funds & SIP">Mutual Funds & SIP</option>
+                  <option value="Mutual Funds & SIP / SWP">Mutual Funds & SIP / SWP</option>
                   <option value="Health Insurance">Health Insurance</option>
                   <option value="Life Insurance">Life Insurance</option>
                   <option value="Home Loan">Home Loan</option>
