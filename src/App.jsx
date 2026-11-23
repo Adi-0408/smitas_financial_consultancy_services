@@ -563,7 +563,7 @@ export default function App() {
     window.open(whatsappUrl, '_blank');
   };
 
-  // 9 Core Services Data (mapped to new authentic high-res flyers)
+  // 9 Core Services Data (each service uses a matching flyer)
   const services = [
     {
       id: 1,
@@ -648,8 +648,8 @@ export default function App() {
         'End-to-end legal & valuation document assistance',
         'Flexible tenure up to 30 years with easy EMI'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
-      flyerTitle: 'Complete Loan Portfolio Overview Guide'
+      flyer: 'assets/flyer_home_loan.svg',
+      flyerTitle: 'Home Loan Assistance'
     },
     {
       id: 6,
@@ -665,8 +665,8 @@ export default function App() {
         'Authorised channel partner of leading Banks & NBFCs',
         'Minimum documentation & quick disbursement'
       ],
-      flyer: 'assets/flyer_business_loan_hq.png',
-      flyerTitle: 'Business Loan (Up to ₹5 Cr) Saturday Club Global Trust Flyer'
+      flyer: 'assets/flyer_business_loan.svg',
+      flyerTitle: 'Business Loan Assistance for MSMEs and Traders'
     },
     {
       id: 7,
@@ -682,8 +682,8 @@ export default function App() {
         'Special schemes for Doctors, CA, Architects',
         'Hospital / clinic setup financing without friction'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
-      flyerTitle: 'Professional Loan Portfolio Guide'
+      flyer: 'assets/flyer_professional_loan.svg',
+      flyerTitle: 'Professional Loan Assistance'
     },
     {
       id: 8,
@@ -699,8 +699,8 @@ export default function App() {
         'Zero collateral requirement & flexible repayment',
         'Disbursement within 24 to 48 working hours'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
-      flyerTitle: 'Personal Loan for Salaried Individuals Guide'
+      flyer: 'assets/flyer_personal_loan.svg',
+      flyerTitle: 'Personal Loan Assistance for Salaried Individuals'
     },
     {
       id: 9,
@@ -716,8 +716,8 @@ export default function App() {
         'Tie-ups with leading automobile dealerships in Sangli',
         'Quick sanctioning with pre-approved options'
       ],
-      flyer: 'assets/flyer_all_loans_hq.png',
-      flyerTitle: 'Car Loan Financing Guide'
+      flyer: 'assets/flyer_car_loan.svg',
+      flyerTitle: 'New and Used Car Loan Assistance'
     }
   ];
 
@@ -2079,36 +2079,16 @@ export default function App() {
             
             <div className="lg:col-span-5">
               <div className="rounded-3xl overflow-hidden glass-card border border-white/95 shadow-glass p-4 sm:p-5 relative group">
-                <div 
-                  className="rounded-2xl overflow-hidden bg-white shadow-sm border border-slate-200/90 relative cursor-pointer"
-                  onClick={() => setLightboxData({
-                    open: true,
-                    src: 'assets/sfcs_official_logo.jpg',
-                    caption: "Smita's Financial Consultancy Services - Official Brand Identity & Core Pillars"
-                  })}
-                  title="Click to view full brand identity poster"
-                >
-                  <img 
-                    src="assets/sfcs_official_logo.jpg" 
-                    alt="Smita's Financial Consultancy Services Official Brand Identity" 
-                    className="w-full h-auto block rounded-xl object-contain group-hover:scale-[1.02] transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/10 transition-colors flex items-center justify-center">
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-slate-800 text-xs font-bold shadow-md flex items-center gap-1.5">
-                      <i data-lucide="zoom-in" className="w-4 h-4 text-[#0047AB]"></i>
-                      <span>Inspect Official Brand Poster</span>
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-3 py-3 shadow-sm">
+                <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-white via-blue-50/70 to-sky-100/70 px-5 py-8 text-center shadow-sm">
                   <img
                     src="assets/sfcs_logo_emblem.png"
                     alt="Smita's Financial Consultancy Services logo"
-                    className="h-12 w-12 shrink-0 object-contain"
+                    className="mx-auto h-36 w-36 object-contain drop-shadow-sm"
                   />
-                  <div className="min-w-0">
-                    <p className="text-xs font-black tracking-wide text-slate-900">Smita's Financial</p>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Consultancy Services · Sangli</p>
+                  <div className="mt-3">
+                    <p className="text-2xl font-black tracking-tight text-slate-900">Smita's <span className="text-[#0047AB]">Financial</span></p>
+                    <p className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-500">Consultancy Services · Sangli</p>
+                    <p className="mt-3 text-sm font-semibold italic text-[#0047AB]">Your Trust, Our Commitment.</p>
                   </div>
                 </div>
                 <div className="mt-3 grid grid-cols-5 gap-1.5" aria-label="Financial service areas">
@@ -2125,12 +2105,9 @@ export default function App() {
                     </div>
                   ))}
                 </div>
-                <div className="pt-4 text-center space-y-1">
-                  <div className="text-[#0047AB] font-serif-italic text-lg font-bold">
-                    “Your Trust, Our Commitment.”
-                  </div>
+                <div className="pt-3 text-center">
                   <div className="text-xs text-slate-500 font-medium">
-                    Official Corporate Identity • Sangli, Maharashtra
+                    Financial planning, protection, investments &amp; loans
                   </div>
                 </div>
               </div>
