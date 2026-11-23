@@ -563,7 +563,7 @@ export default function App() {
     window.open(whatsappUrl, '_blank');
   };
 
-  // 9 Core Services Data (each service uses a matching flyer)
+  // 9 Core Services Data (mapped to new authentic high-res flyers)
   const services = [
     {
       id: 1,
@@ -579,7 +579,7 @@ export default function App() {
         'Married Women\'s Property Act (MWPA) protection',
         'Immediate claim assistance & policy servicing'
       ],
-      flyer: 'assets/flyer_life_insurance.svg',
+      flyer: 'assets/flyer_kotak_signature_hq.jpg',
       flyerTitle: 'Kotak Signature Term Plan Flyer'
     },
     {
@@ -596,7 +596,7 @@ export default function App() {
         'Tata AIG Medicare Select & Super Top-Up plans',
         'Tax saving benefit under Section 80D'
       ],
-      flyer: 'assets/flyer_health_insurance.svg',
+      flyer: 'assets/flyer_health_insurance_hq.png',
       flyerTitle: 'Family Health Insurance & Mediclaim Scheme Flyer'
     },
     {
@@ -614,7 +614,7 @@ export default function App() {
         'Risk-profile matched equity & hybrid funds',
         'Seamless digital portfolio tracking & rebalancing'
       ],
-      flyer: 'assets/flyer_investments.svg',
+      flyer: 'assets/flyer_sip_topup_hq.png',
       flyerTitle: 'Top-Up SIP ₹11.78 Cr Compounding Guide'
     },
     {
@@ -631,7 +631,7 @@ export default function App() {
         'Best rates for 2-Wheelers, Private Cars & Commercial',
         'Zero-Depreciation & Cashless network garages'
       ],
-      flyer: 'assets/flyer_motor_insurance.svg',
+      flyer: 'assets/flyer_vehicle_insurance_hq.png',
       flyerTitle: 'All Types of Vehicle Online Insurance Flyer'
     },
     {
@@ -648,8 +648,8 @@ export default function App() {
         'End-to-end legal & valuation document assistance',
         'Flexible tenure up to 30 years with easy EMI'
       ],
-      flyer: 'assets/flyer_home_loan.svg',
-      flyerTitle: 'Home Loan Assistance'
+      flyer: 'assets/flyer_all_loans_hq.png',
+      flyerTitle: 'Complete Loan Portfolio Overview Guide'
     },
     {
       id: 6,
@@ -665,8 +665,8 @@ export default function App() {
         'Authorised channel partner of leading Banks & NBFCs',
         'Minimum documentation & quick disbursement'
       ],
-      flyer: 'assets/flyer_business_loan.svg',
-      flyerTitle: 'Business Loan Assistance for MSMEs and Traders'
+      flyer: 'assets/flyer_business_loan_hq.png',
+      flyerTitle: 'Business Loan (Up to ₹5 Cr) Saturday Club Global Trust Flyer'
     },
     {
       id: 7,
@@ -682,8 +682,8 @@ export default function App() {
         'Special schemes for Doctors, CA, Architects',
         'Hospital / clinic setup financing without friction'
       ],
-      flyer: 'assets/flyer_professional_loan.svg',
-      flyerTitle: 'Professional Loan Assistance'
+      flyer: 'assets/flyer_all_loans_hq.png',
+      flyerTitle: 'Professional Loan Portfolio Guide'
     },
     {
       id: 8,
@@ -699,8 +699,8 @@ export default function App() {
         'Zero collateral requirement & flexible repayment',
         'Disbursement within 24 to 48 working hours'
       ],
-      flyer: 'assets/flyer_personal_loan.svg',
-      flyerTitle: 'Personal Loan Assistance for Salaried Individuals'
+      flyer: 'assets/flyer_all_loans_hq.png',
+      flyerTitle: 'Personal Loan for Salaried Individuals Guide'
     },
     {
       id: 9,
@@ -716,8 +716,8 @@ export default function App() {
         'Tie-ups with leading automobile dealerships in Sangli',
         'Quick sanctioning with pre-approved options'
       ],
-      flyer: 'assets/flyer_car_loan.svg',
-      flyerTitle: 'New and Used Car Loan Assistance'
+      flyer: 'assets/flyer_all_loans_hq.png',
+      flyerTitle: 'Car Loan Financing Guide'
     }
   ];
 
