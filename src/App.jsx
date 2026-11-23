@@ -56,7 +56,6 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(false);
-  const activeFlyer = items[activeIndex];
 
   useEffect(() => {
     const panel = panelRef.current;
@@ -75,36 +74,44 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
       if (!document.hidden) setActiveIndex(index => (index + 1) % items.length);
     }, 2000);
     return () => window.clearInterval(timer);
-  }, [visible, paused, items.length]);
+  }, [visible, paused, items.length, activeIndex]);
 
   const move = (direction) => setActiveIndex(index => (index + direction + items.length) % items.length);
 
   return (
     <article
       ref={panelRef}
-      className="glass-card group relative w-[min(82vw,320px)] shrink-0 snap-start overflow-hidden rounded-3xl border border-white/95 p-3.5 shadow-lg transition-shadow duration-300 hover:shadow-2xl lg:w-auto lg:min-w-0 lg:flex-1"
+      className="glass-card group relative overflow-hidden rounded-3xl border border-white/95 p-4 shadow-xl transition-shadow duration-300 hover:shadow-2xl sm:p-6"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
       aria-label={`${category.tag} flyers`}
     >
-      <div className="flex min-h-20 items-start gap-2.5 px-1 pb-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#0047AB]/10 text-[#0047AB]">
-          <i data-lucide={category.icon} className="h-5 w-5" aria-hidden="true"></i>
-        </span>
-        <div className="min-w-0">
-          <h3 className="font-heading text-base font-black text-slate-900">{category.tag}</h3>
-          <p className="mt-0.5 text-[11px] leading-snug text-slate-500">{category.description}</p>
+      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0047AB] to-[#000080] text-white shadow-md">
+            <i data-lucide={category.icon} className="h-6 w-6" aria-hidden="true"></i>
+          </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-heading text-xl font-black text-slate-900">{category.tag}</h3>
+              <span className="rounded-full bg-[#0047AB]/10 px-2 py-0.5 text-[10px] font-extrabold text-[#0047AB]">{items.length} {items.length === 1 ? 'flyer' : 'flyers'}</span>
+            </div>
+            <p className="mt-0.5 text-xs text-slate-500">{category.description}</p>
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-4 sm:justify-end">
+          <span className="text-xs font-bold tabular-nums text-slate-500"><strong className="text-[#0047AB]">{String(activeIndex + 1).padStart(2, '0')}</strong> / {String(items.length).padStart(2, '0')}</span>
+          <div className="flex gap-2">
+            <button type="button" onClick={() => move(-1)} disabled={items.length < 2} className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0047AB] shadow-sm transition-all hover:-translate-x-0.5 hover:border-[#0047AB] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:cursor-not-allowed disabled:opacity-40" aria-label={`Previous ${category.tag} flyer`}><i data-lucide="arrow-left" className="h-4 w-4" aria-hidden="true"></i></button>
+            <button type="button" onClick={() => move(1)} disabled={items.length < 2} className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0047AB] text-white shadow-md transition-all hover:translate-x-0.5 hover:bg-[#000080] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:cursor-not-allowed disabled:opacity-40" aria-label={`Next ${category.tag} flyer`}><i data-lucide="arrow-right" className="h-4 w-4" aria-hidden="true"></i></button>
+          </div>
         </div>
       </div>
 
       <div
-        className="relative flex h-[355px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-2.5"
-        onClick={() => {
-          if (suppressOpen.current) { suppressOpen.current = false; return; }
-          onOpen(activeFlyer);
-        }}
+        className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
         onTouchStart={(event) => { touchStartX.current = event.touches[0].clientX; }}
         onTouchEnd={(event) => {
           if (touchStartX.current === null || items.length < 2) return;
@@ -116,28 +123,37 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
           }
           touchStartX.current = null;
         }}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onOpen(activeFlyer); } }}
-        aria-label={`View ${activeFlyer.title} flyer in full size`}
+        aria-label={`${category.tag} image slider`}
       >
-        <img key={activeFlyer.id} src={activeFlyer.src} alt={activeFlyer.title} className="scheme-flyer-enter h-full w-full rounded-xl object-contain transition-transform duration-500 group-hover:scale-[1.02]" loading="lazy" />
-        <span className="absolute left-3 top-3 max-w-[75%] truncate rounded-full bg-[#000080]/90 px-2.5 py-1 text-[10px] font-extrabold text-white shadow-md">{activeFlyer.badgeMetric || category.tag}</span>
-        {items.length > 1 && (
-          <div className="absolute inset-x-2 bottom-3 flex items-center justify-between" onClick={event => event.stopPropagation()}>
-            <button type="button" onClick={() => move(-1)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#0047AB] shadow-md transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB]" aria-label={`Previous ${category.tag} flyer`}><i data-lucide="chevron-left" className="h-5 w-5" aria-hidden="true"></i></button>
-            <span className="rounded-full bg-slate-900/75 px-2.5 py-1 text-[11px] font-bold text-white">{activeIndex + 1} / {items.length}</span>
-            <button type="button" onClick={() => move(1)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#0047AB] shadow-md transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB]" aria-label={`Next ${category.tag} flyer`}><i data-lucide="chevron-right" className="h-5 w-5" aria-hidden="true"></i></button>
-          </div>
-        )}
+        <div className="scheme-slide-track flex" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+          {items.map((item, index) => (
+            <div key={item.id} className="grid w-full shrink-0 gap-5 bg-gradient-to-br from-slate-50 via-white to-[#82C8E5]/10 p-4 sm:p-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:items-center" aria-hidden={index !== activeIndex}>
+              <button type="button" tabIndex={index === activeIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image relative flex h-[280px] w-full items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-md transition-shadow hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[340px]" aria-label={`View ${item.title} flyer in full size`}>
+                <img src={item.src} alt={item.title} className="h-full w-full object-contain transition-transform duration-500 group-hover/image:scale-[1.04]" loading="lazy" />
+                <span className="absolute bottom-3 right-3 rounded-full bg-[#000080]/90 px-3 py-1.5 text-[10px] font-bold text-white shadow-md">View full flyer ↗</span>
+              </button>
+              <div className="flex flex-col justify-center py-1">
+                <span className="w-fit rounded-full border border-[#82C8E5]/50 bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0047AB]">{item.badgeMetric || category.tag}</span>
+                <h4 className="mt-3 font-heading text-xl font-black leading-tight text-slate-900 sm:text-2xl">{item.title}</h4>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.subtitle}</p>
+                <ul className="mt-4 space-y-2 text-xs text-slate-600">
+                  {item.highlights?.slice(0, 2).map(highlight => <li key={highlight} className="flex items-start gap-2"><i data-lucide="check-circle-2" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" aria-hidden="true"></i><span>{highlight}</span></li>)}
+                </ul>
+                <a href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${item.title}" and would like to get more information.`)}`} target="_blank" rel="noopener noreferrer" tabIndex={index === activeIndex ? 0 : -1} className="mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700"><i data-lucide="message-circle" className="h-4 w-4" aria-hidden="true"></i>Enquire on WhatsApp</a>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="flex min-h-24 flex-col justify-between px-1 pt-3">
-        <div>
-          <h4 className="line-clamp-2 font-heading text-sm font-black leading-snug text-slate-900">{activeFlyer.title}</h4>
-          <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-slate-500">{activeFlyer.subtitle}</p>
+      <div className="mt-4 flex items-center gap-3">
+        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-slate-500">{items.length > 1 ? 'Auto slide · 2 sec' : 'More flyers coming'}</span>
+        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200" aria-hidden="true">
+          {items.length > 1 && <div key={`${activeIndex}-${visible}`} className="scheme-autoplay-progress h-full rounded-full bg-gradient-to-r from-[#0047AB] to-[#82C8E5]" style={{ animationPlayState: paused || !visible ? 'paused' : 'running' }} />}
         </div>
-        <a href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${activeFlyer.title}" and would like to get more information.`)}`} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex w-fit items-center gap-1.5 text-xs font-bold text-emerald-700 transition-colors hover:text-emerald-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700"><i data-lucide="message-circle" className="h-3.5 w-3.5" aria-hidden="true"></i>Enquire on WhatsApp</a>
+        <div className="flex max-w-[40%] gap-1.5 overflow-hidden" aria-label="Choose flyer">
+          {items.map((item, index) => <button key={item.id} type="button" onClick={() => setActiveIndex(index)} className={`h-2 shrink-0 rounded-full transition-all ${index === activeIndex ? 'w-6 bg-[#0047AB]' : 'w-2 bg-slate-300 hover:bg-[#82C8E5]'}`} aria-label={`Show ${item.title}`} aria-current={index === activeIndex ? 'true' : undefined} />)}
+        </div>
       </div>
     </article>
   );
@@ -2423,11 +2439,11 @@ export default function App() {
                 Authentic Scheme Catalogues & Flyers
               </h2>
               <p className="text-slate-600 text-xs sm:text-sm mt-2">
-                Explore four collections. Sets with multiple flyers advance every two seconds; use the arrows or swipe to browse at your own pace.
+                Explore four collections below. Galleries with multiple flyers slide every two seconds; use the arrows, dots or a swipe to browse.
               </p>
             </div>
 
-            <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-5 lg:overflow-visible" aria-label="Scheme flyer collections">
+            <div className="space-y-8" aria-label="Scheme flyer collections">
               {SCHEME_CATEGORIES.map(category => (
                 <SchemeFlyerCarousel
                   key={category.tag}

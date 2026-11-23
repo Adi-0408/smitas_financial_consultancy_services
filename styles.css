@@ -481,13 +481,18 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   animation: tabContentFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes schemeFlyerEnter {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.scheme-slide-track {
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.scheme-flyer-enter {
-  animation: schemeFlyerEnter 0.45s ease-out both;
+@keyframes schemeAutoplayProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.scheme-autoplay-progress {
+  transform-origin: left center;
+  animation: schemeAutoplayProgress 2s linear both;
 }
 
 /* Pulse animation for WhatsApp */
