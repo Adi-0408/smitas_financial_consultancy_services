@@ -152,7 +152,7 @@ export default function App() {
       }
     };
     const handleResize = () => {
-      if (window.innerWidth >= 1024 && mobileMenuOpen) {
+      if (window.innerWidth >= 1280 && mobileMenuOpen) {
         setMobileMenuOpen(false);
       }
     };
@@ -966,7 +966,7 @@ export default function App() {
           </a>
 
           {/* Desktop Nav Links - Single Line, Clean Spacing, Never Wraps */}
-          <nav className="hidden lg:flex items-center gap-3.5 xl:gap-6 text-xs xl:text-[13px] font-bold text-slate-700 tracking-wide">
+          <nav className="hidden xl:flex items-center gap-3.5 xl:gap-6 text-xs xl:text-[13px] font-bold text-slate-700 tracking-wide">
             <a href="#hero" className="nav-link-interactive hover:text-[#0047AB] whitespace-nowrap">Home</a>
             <a href="#services" className="nav-link-interactive hover:text-[#0047AB] whitespace-nowrap">Services</a>
             <a href="#calculators" className="nav-link-interactive hover:text-[#0047AB] whitespace-nowrap">Calculators</a>
@@ -978,7 +978,7 @@ export default function App() {
           </nav>
 
           {/* Desktop Action Group - Strictly visible only on desktop (lg:) alongside full navigation */}
-          <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
+          <div className="hidden xl:flex items-center gap-2 xl:gap-3 shrink-0">
             <div className="hidden xl:flex items-center gap-2 border-r border-slate-200 pr-3">
               <button 
                 onClick={shareProfile} 
@@ -1008,7 +1008,7 @@ export default function App() {
           </div>
 
           {/* Mobile Hamburger Toggle & QR Code Button */}
-          <div className="flex items-center gap-2 lg:hidden shrink-0">
+          <div className="flex items-center gap-2 xl:hidden shrink-0">
             <button 
               onClick={() => setQrModalOpen(true)} 
               className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-[#0047AB] flex items-center justify-center shadow-xs active:scale-95 transition-all focus:outline-none" 
@@ -1034,14 +1034,14 @@ export default function App() {
             {/* Click-outside backdrop below header */}
             <div 
               onClick={() => setMobileMenuOpen(false)} 
-              className="lg:hidden fixed inset-0 top-20 bg-slate-900/40 backdrop-blur-xs z-10 animate-drawer-backdrop cursor-pointer"
+              className="xl:hidden fixed inset-0 top-20 bg-slate-900/40 backdrop-blur-xs z-10 animate-drawer-backdrop cursor-pointer"
               aria-label="Close mobile navigation menu"
             />
 
             {/* Smooth Slide-down Drawer Container */}
             <div 
               onClick={(e) => e.stopPropagation()}
-              className="lg:hidden relative z-20 border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-2xl animate-drawer max-h-[calc(100vh-5.5rem)] overflow-y-auto overscroll-contain"
+              className="xl:hidden relative z-20 border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-2xl animate-drawer max-h-[calc(100vh-5.5rem)] overflow-y-auto overscroll-contain"
             >
               <nav className="flex flex-col space-y-1.5 text-sm font-semibold text-slate-700">
                 <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
