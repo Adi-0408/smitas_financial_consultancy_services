@@ -848,7 +848,7 @@ export default function App() {
     return schemeFlyers.filter(item => item.tag.toLowerCase() === activeSchemeTab.toLowerCase());
   }, [activeSchemeTab, schemeFlyers]);
 
-  // Photo Gallery Data (Awards, Stage Felicitations & Official Certificates)
+  // Photo Gallery Data (Awards, Certificates & Visiting Cards)
   const photoGalleryItems = [
     {
       id: 'gallery-1',
@@ -924,6 +924,37 @@ export default function App() {
         'Active member of Saturday Club Global Trust - Yellow City Sangli Chapter (Regn E-26480)',
         'Membership valid upto 24th June 2027 fostering trusted enterprise financial consultancy'
       ]
+    },
+    {
+      id: 'gallery-visiting-card-financial',
+      title: "Smita's Financial Consultancy Services Visiting Card",
+      category: 'visiting-cards',
+      tag: 'Financial Consultancy',
+      badgeMetric: 'Sangli Contact',
+      subtitle: 'Financial planning, insurance, investments, SIP and business services',
+      src: 'assets/visiting_card_smita_financial.jpg',
+      caption: "Smita Rahul Desai's visiting card for Smita's Financial Consultancy Services in Sangli",
+      highlights: [
+        'Main line for calls and WhatsApp: +91 70571 32237',
+        'Alternate number for calls only: +91 77769 77171',
+        'Email: smitadesai1821@gmail.com'
+      ]
+    },
+    {
+      id: 'gallery-visiting-card-starpowerz',
+      title: 'StarPowerz Loan Services Visiting Card',
+      category: 'visiting-cards',
+      tag: 'Loan Assistance',
+      badgeMetric: 'StarPowerz',
+      subtitle: 'Loan services from StarPowerz Digital Technologies Pvt. Ltd.',
+      src: 'assets/visiting_card_starpowerz_loans.jpg',
+      caption: "Smita Rahul Desai's StarPowerz visiting card for loan enquiry services",
+      highlights: [
+        'Land, business, home, mortgage, personal and vehicle loan enquiries',
+        'Main line for calls and WhatsApp: +91 70571 32237',
+        'Alternate number for calls only: +91 77769 77171',
+        'Website: starpowerz.com'
+      ]
     }
   ];
 
@@ -958,7 +989,7 @@ export default function App() {
             <div className="w-12 h-12 rounded-2xl bg-white p-1 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform border border-slate-200/90 relative overflow-hidden shrink-0">
               <img 
                 src="assets/sfcs_logo_emblem.png" 
-                alt="Smita's Financial Consultancy Official Logo" 
+                alt="Smita's Financial Consultancy logo" 
                 className="w-full h-full object-contain"
               />
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-0.5 -right-0.5 animate-pulse"></span>
@@ -1076,7 +1107,7 @@ export default function App() {
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
                 <a href="#gallery" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
-                  <span>Awards & Photo Gallery</span>
+                  <span>Awards, Gallery & Visiting Cards</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
                 <a href="#payment" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
@@ -1244,7 +1275,7 @@ export default function App() {
                         <div className="w-12 h-12 rounded-2xl bg-white p-1 border border-slate-200/90 shadow-xs shrink-0 flex items-center justify-center">
                           <img 
                             src="assets/sfcs_logo_emblem.png" 
-                            alt="SFCS 3D Ribbon Logo" 
+                            alt="Smita's Financial Consultancy logo" 
                             className="w-full h-full object-contain" 
                           />
                         </div>
@@ -2283,21 +2314,22 @@ export default function App() {
           <div className="text-center max-w-2xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0047AB]/10 border border-[#0047AB]/25 text-[#0047AB] text-xs font-bold uppercase tracking-wider mb-3">
               <i data-lucide="award" className="w-3.5 h-3.5 text-[#0047AB]"></i>
-              <span>Honors, Milestones & Accreditations</span>
+              <span>Honors, Credentials & Visiting Cards</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-heading">
-              Moments of Excellence & Photo Gallery
+              Professional Highlights & Visiting Cards
             </h2>
             <p className="text-slate-600 text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
-              Stage felicitations, excellence awards from industry leaders, and official partner accreditations reflecting our continuous commitment to client success.
+              Explore industry awards, official partner accreditations, and the visiting cards for our consultancy and loan services.
             </p>
 
             {/* Gallery Category Filter Tabs */}
             <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
               {[
-                { id: 'all', label: 'All Moments' },
+                { id: 'all', label: 'All Highlights' },
                 { id: 'awards', label: 'Awards & Honors (3)' },
-                { id: 'certifications', label: 'Certifications (2)' }
+                { id: 'certifications', label: 'Certifications (2)' },
+                { id: 'visiting-cards', label: 'Visiting Cards (2)' }
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -2322,7 +2354,7 @@ export default function App() {
                 {/* Photo Image Container - Display full image without cropping */}
                 <div 
                   onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                  className="w-full aspect-[4/3] rounded-2xl overflow-hidden relative bg-slate-50 border border-slate-200/90 shadow-md group-hover:border-[#0047AB]/60 transition-colors cursor-pointer flex items-center justify-center p-2"
+                  className={`w-full ${item.category === 'visiting-cards' ? 'aspect-[16/9]' : 'aspect-[4/3]'} rounded-2xl overflow-hidden relative bg-slate-50 border border-slate-200/90 shadow-md group-hover:border-[#0047AB]/60 transition-colors cursor-pointer flex items-center justify-center p-2`}
                 >
                   <img 
                     src={item.src} 
@@ -2639,9 +2671,11 @@ export default function App() {
                   
                   <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-white p-2 flex items-center justify-center">
                     <img 
-                      src="assets/upi_qr_clean.png" 
-                      alt="Google Pay Punjab National Bank UPI QR" 
-                      className="w-full max-h-72 object-contain rounded-xl"
+                      src="assets/upi_payment_qr.jpg" 
+                      alt="Smitaa Desai UPI payment QR for smitadesai1821-3@okicici"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-auto max-h-[32rem] object-contain rounded-xl"
                     />
                   </div>
 
@@ -2955,7 +2989,7 @@ export default function App() {
               <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center shadow-md overflow-hidden shrink-0">
                 <img 
                   src="assets/sfcs_logo_emblem.png" 
-                  alt="SFCS Official 3D Ribbon Logo" 
+                  alt="Smita's Financial Consultancy logo" 
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -2979,7 +3013,7 @@ export default function App() {
               <li><a href="#services" className="hover:text-[#82C8E5]">9 Core Services</a></li>
               <li><a href="#about" className="hover:text-[#82C8E5]">About & Vision</a></li>
               <li><a href="#schemes" className="hover:text-[#82C8E5]">Official Scheme Flyers</a></li>
-              <li><a href="#gallery" className="hover:text-[#82C8E5]">Awards & Photo Gallery</a></li>
+              <li><a href="#gallery" className="hover:text-[#82C8E5]">Awards, Gallery & Visiting Cards</a></li>
               <li><a href="#calculators" className="hover:text-[#82C8E5]">SIP & Loan EMI Calculators</a></li>
               <li><a href="#payment" className="hover:text-[#82C8E5]">UPI Payment & Bank Details</a></li>
             </ul>
@@ -3045,7 +3079,7 @@ export default function App() {
               <div className="w-14 h-14 rounded-2xl bg-white p-1.5 shadow-md mx-auto border border-slate-200/90 overflow-hidden flex items-center justify-center">
                 <img 
                   src="assets/sfcs_logo_emblem.png" 
-                  alt="SFCS Official Logo" 
+                  alt="Smita's Financial Consultancy logo" 
                   className="w-full h-full object-contain"
                 />
               </div>
