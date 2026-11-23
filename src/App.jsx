@@ -662,7 +662,7 @@ export default function App() {
       oneLiner: 'Flexible capital to scale your business operations.',
       description: 'Fuel your commercial growth with collateral-free unsecured business loans or large-ticket secured credit lines, cash credit (C.C.), and overdraft (O.D.).',
       bullets: [
-        'Loan limits up to ₹5 Crore for MSMEs & traders',
+        'Unsecured loan limits up to ₹5 Crore for MSMEs & traders',
         'Authorised channel partner of leading Banks & NBFCs',
         'Minimum documentation & quick disbursement'
       ],
