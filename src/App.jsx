@@ -271,7 +271,7 @@ export default function App() {
       'TEL;TYPE=WORK,VOICE;VALUE=uri:tel:+917776977171',
       'EMAIL;TYPE=INTERNET,WORK:smitadesai1821@gmail.com',
       'ADR;TYPE=WORK:;;Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road;Sangli;Maharashtra;416416;India',
-      'NOTE:7+ Years Financial Excellence. Life & Health Insurance, Mutual Funds SIP, Home & Business Loans. Certified NJ Wealth Partner (Code: 28795). "Your Trust, Our Commitment."',
+      'NOTE:Alternate phone +91 77769 77171 is for calls only and is not available on WhatsApp. WhatsApp: +91 70571 32237. 7+ Years Financial Excellence. Life & Health Insurance, Mutual Funds SIP, Home & Business Loans. Certified NJ Wealth Partner (Code: 28795). "Your Trust, Our Commitment."',
       'URL:https://smitasfinancialconsultancyservices.vercel.app/',
       'END:VCARD'
     ].join('\r\n');
@@ -390,20 +390,25 @@ export default function App() {
     triggerToast('Your review has been successfully removed from the website.', 'info');
   };
 
-  // SIP Math Calculation (Monthly compounding, Annuity Due - standard for mutual fund SIPs)
+  // SIP future value using the financial-calculator END mode (ordinary annuity).
   const sipResult = useMemo(() => {
     const P = parseFloat(sipAmount);
     const rAnnual = parseFloat(sipRate);
     const years = parseFloat(sipYears);
 
-    if (isNaN(P) || P <= 0 || isNaN(years) || years <= 0) {
+    if (!Number.isFinite(P) || P <= 0 || !Number.isFinite(years) || years <= 0) {
       return { totalInvested: 0, maturityValue: 0, wealthGained: 0, investedPercent: 0, gainPercent: 0 };
     }
 
     const n = Math.round(years * 12);
     const totalInvested = Math.round(P * n);
 
-    if (isNaN(rAnnual) || rAnnual <= 0) {
+    if (!Number.isFinite(rAnnual) || rAnnual < 0) {
+      return { totalInvested, maturityValue: 0, wealthGained: 0, investedPercent: 0, gainPercent: 0 };
+    }
+
+    const i = rAnnual / 100 / 12;
+    if (i === 0) {
       return {
         totalInvested,
         maturityValue: totalInvested,
@@ -413,11 +418,15 @@ export default function App() {
       };
     }
 
-    const i = rAnnual / 100 / 12;
-    // Standard AMFI / Groww / Zerodha annuity due formula: M = P * [ ((1 + i)^n - 1) / i ] * (1 + i)
-    const maturity = P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+    // Ordinary-annuity FV: deposits are made at the end of each month.
+    // expm1/log1p keep the annuity factor accurate for small monthly rates.
+    const annuityFactor = Math.expm1(n * Math.log1p(i)) / i;
+    const maturity = P * annuityFactor;
+    if (!Number.isFinite(maturity)) {
+      return { totalInvested, maturityValue: 0, wealthGained: 0, investedPercent: 0, gainPercent: 0 };
+    }
     const maturityValue = Math.round(maturity);
-    const wealthGained = Math.max(0, maturityValue - totalInvested);
+    const wealthGained = maturityValue - totalInvested;
 
     const investedPercent = maturityValue > 0 ? Math.min(100, Math.max(0, Math.round((totalInvested / maturityValue) * 100))) : 50;
     const gainPercent = 100 - investedPercent;
@@ -811,7 +820,7 @@ export default function App() {
       badgeMetric: '100% Creditor-Proof',
       subtitle: 'Senior Agency Associate Smita Desai • Protect Wife & Children',
       src: 'assets/flyer_kotak_mwpa_hq.jpg',
-      caption: 'Kotak Life MWPA Wife & Children Protection Flyer - Associate Smita Desai (7776977171)',
+      caption: 'Kotak Life MWPA Wife & Children Protection Flyer - Associate Smita Desai (Call only: +91 77769 77171; no WhatsApp)',
       highlights: [
         'Married Women’s Property Act (MWPA 1874) legal ring-fencing protection',
         'Policy proceeds strictly reserved for wife & children, free from business debts',
@@ -999,11 +1008,13 @@ export default function App() {
             </div>
 
             <a 
-              href="tel:+917057132237" 
+              href="tel:+917776977171"
+              aria-label="Call only number +91 77769 77171. WhatsApp is available on +91 70571 32237."
+              title="Call-only number"
               className="btn-pill btn-pill-cobalt px-3.5 xl:px-5 py-2 xl:py-2.5 text-xs font-bold tracking-wider uppercase shadow-md flex items-center gap-1.5 xl:gap-2 whitespace-nowrap"
             >
               <i data-lucide="phone-call" className="w-3.5 h-3.5"></i>
-              <span>+91 70571 32237</span>
+              <span>Call: +91 77769 77171</span>
             </a>
           </div>
 
@@ -1083,7 +1094,7 @@ export default function App() {
               </nav>
 
               <div className="pt-3 border-t border-slate-200 flex items-center justify-between gap-3">
-                <a href="tel:+917057132237" className="flex-1 py-2.5 px-3 rounded-full btn-pill-cobalt text-xs font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform">
+                <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" className="flex-1 py-2.5 px-3 rounded-full btn-pill-cobalt text-xs font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform">
                   <i data-lucide="phone-call" className="w-4 h-4"></i> Call Now
                 </a>
                 <button onClick={shareProfile} className="flex-1 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-2 border border-slate-200 active:scale-95 transition-all">
@@ -1096,7 +1107,7 @@ export default function App() {
       </header>
 
       {/* MAIN CONTENT */}
-      <main className="flex-grow">
+      <main className="flex-grow pb-20 md:pb-0">
 
         {/* 1. HERO SECTION WITH ORGANIC LAYERED FLUID WAVE FRAME (User Reference Design Aesthetic) */}
         <section id="hero" className="organic-wave-outer pt-28 pb-16 lg:pt-32 lg:pb-24 px-3 sm:px-6 lg:px-8">
@@ -1146,7 +1157,7 @@ export default function App() {
 
                 {/* Pill Action Triggers (Matching the Reference UI's rounded-full pill button style) */}
                 <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3">
-                  <a href="tel:+917057132237" className="btn-pill btn-pill-cobalt px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm shadow-md touch-target justify-center whitespace-nowrap">
+                  <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" title="Call-only alternate number" className="btn-pill btn-pill-cobalt px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm shadow-md touch-target justify-center whitespace-nowrap">
                     <i data-lucide="phone" className="w-4 h-4"></i>
                     <span>Call Now</span>
                   </a>
@@ -1271,11 +1282,29 @@ export default function App() {
                           <i data-lucide="phone" className="w-4 h-4"></i>
                         </div>
                         <div className="text-left">
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Direct Phone & WhatsApp</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Main line · Calls & WhatsApp</span>
                           <span className="text-sm font-bold text-slate-900">+91 70571 32237</span>
                         </div>
                       </div>
                       <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] transition-transform group-hover:translate-x-1"></i>
+                    </a>
+
+                    <a
+                      href="tel:+917776977171"
+                      aria-label="Call alternate number +91 77769 77171. Calls only, no WhatsApp."
+                      className="flex items-center justify-between p-3 rounded-2xl bg-amber-50/70 hover:bg-amber-50 border border-amber-200/80 text-slate-800 transition-colors group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                          <i data-lucide="phone-call" className="w-4 h-4"></i>
+                        </div>
+                        <div className="text-left">
+                          <span className="text-[10px] uppercase font-bold text-amber-800 block tracking-wider">Alternate · Calls only</span>
+                          <span className="text-sm font-bold text-slate-900">+91 77769 77171</span>
+                          <span className="block text-[10px] font-semibold text-amber-800">Not available on WhatsApp</span>
+                        </div>
+                      </div>
+                      <i data-lucide="chevron-right" className="w-4 h-4 text-amber-700 transition-transform group-hover:translate-x-1"></i>
                     </a>
 
                     <a 
@@ -1298,11 +1327,12 @@ export default function App() {
                   {/* Card Action Dual Buttons */}
                   <div className="grid grid-cols-2 gap-3 pt-2">
                     <a 
-                      href="tel:+917057132237"
+                      href="tel:+917776977171"
+                      aria-label="Call only number +91 77769 77171"
                       className="btn-pill btn-pill-cobalt py-3 text-xs tracking-wider uppercase shadow-xs touch-target"
                     >
                       <i data-lucide="phone-call" className="w-4 h-4"></i>
-                      <span>Call Consultant</span>
+                      <span>Call · 77769 77171</span>
                     </a>
                     <a 
                       href="https://wa.me/917057132237?text=Hello%20Smita%20Desai,%20I%20am%20connecting%20from%20your%20website."
@@ -1533,7 +1563,7 @@ export default function App() {
                         Quick Investment Presets
                       </span>
                       <div className="flex flex-wrap gap-2">
-                        {[2500, 5000, 10000, 25000, 50000].map((amt) => (
+                        {[2500, 5000, 10000, 25000, 50000, 100000].map((amt) => (
                           <button
                             key={amt}
                             type="button"
@@ -1564,7 +1594,7 @@ export default function App() {
                             max="500000"
                             step="500"
                             value={sipAmount || ''}
-                            onChange={(e) => setSipAmount(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            onChange={(e) => setSipAmount(e.target.value === '' ? 0 : Math.min(500000, Math.max(0, Number(e.target.value))))}
                             className="w-24 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
                             aria-label="Monthly investment amount in Rupees"
                           />
@@ -1573,7 +1603,7 @@ export default function App() {
                       <input 
                         type="range" 
                         min="500" 
-                        max="100000" 
+                        max="500000" 
                         step="500" 
                         value={sipAmount} 
                         onChange={(e) => setSipAmount(Number(e.target.value))}
@@ -1582,8 +1612,8 @@ export default function App() {
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
                         <span>₹500 (Min)</span>
-                        <span>₹50,000</span>
-                        <span>₹1,00,000 (Max)</span>
+                        <span>₹2,50,000</span>
+                        <span>₹5,00,000 (Max)</span>
                       </div>
                     </div>
 
@@ -1591,16 +1621,16 @@ export default function App() {
                     <div>
                       <div className="flex justify-between items-center mb-2">
                         <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                          Expected Annual Return (% CAGR)
+                          Expected Annual Return (p.a., compounded monthly)
                         </label>
                         <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-50 border border-slate-300 focus-within:border-[#0047AB] focus-within:ring-2 focus-within:ring-[#0047AB]/20 transition-all shadow-2xs">
                           <input 
                             type="number"
-                            min="1"
+                            min="0"
                             max="30"
                             step="0.1"
                             value={sipRate || ''}
-                            onChange={(e) => setSipRate(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            onChange={(e) => setSipRate(e.target.value === '' ? 0 : Math.min(30, Math.max(0, Number(e.target.value))))}
                             className="w-14 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
                             aria-label="Expected annual return percentage"
                           />
@@ -1609,18 +1639,18 @@ export default function App() {
                       </div>
                       <input 
                         type="range" 
-                        min="6" 
-                        max="20" 
-                        step="0.5" 
+                        min="0" 
+                        max="30" 
+                        step="0.1" 
                         value={sipRate} 
                         onChange={(e) => setSipRate(Number(e.target.value))}
                         className="w-full cursor-pointer"
                         aria-label="Expected return rate slider"
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
-                        <span>6% (Conservative)</span>
-                        <span>13% (Avg Equity CAGR)</span>
-                        <span>20% (Aggressive)</span>
+                        <span>0%</span>
+                        <span>15%</span>
+                        <span>30%</span>
                       </div>
                     </div>
 
@@ -1637,7 +1667,7 @@ export default function App() {
                             max="40"
                             step="1"
                             value={sipYears || ''}
-                            onChange={(e) => setSipYears(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                            onChange={(e) => setSipYears(e.target.value === '' ? 0 : Math.min(40, Math.max(0, Number(e.target.value))))}
                             className="w-12 font-bold text-slate-900 text-sm bg-transparent outline-none text-right"
                             aria-label="Investment tenure in years"
                           />
@@ -1647,7 +1677,7 @@ export default function App() {
                       <input 
                         type="range" 
                         min="1" 
-                        max="30" 
+                        max="40" 
                         step="1" 
                         value={sipYears} 
                         onChange={(e) => setSipYears(Number(e.target.value))}
@@ -1656,14 +1686,14 @@ export default function App() {
                       />
                       <div className="flex justify-between text-[11px] text-slate-400 mt-1 font-semibold">
                         <span>1 Year</span>
-                        <span>15 Years</span>
-                        <span>30 Years</span>
+                        <span>20 Years</span>
+                        <span>40 Years</span>
                       </div>
 
                       {/* Quick Tenure Presets */}
                       <div className="flex flex-wrap items-center gap-1.5 mt-3">
                         <span className="text-[10px] text-slate-400 font-bold uppercase mr-1">Tenure:</span>
-                        {[5, 10, 15, 20, 25].map((yr) => (
+                        {[5, 10, 15, 20, 25, 30, 35, 40].map((yr) => (
                           <button
                             key={yr}
                             type="button"
@@ -1740,7 +1770,7 @@ export default function App() {
                     </button>
 
                     <p className="text-[10px] text-slate-400 italic text-center pt-1 leading-tight">
-                      *Compounded monthly at expected CAGR using standard AMFI annuity-due formula. Mutual funds are subject to market risks.
+                      *Financial-calculator END mode: monthly rate = annual rate ÷ 12, with each SIP added at month-end. Returns are estimates, not guaranteed; mutual funds are subject to market risks.
                     </p>
                   </div>
 
@@ -2864,10 +2894,14 @@ export default function App() {
                       <i data-lucide="building" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></i>
                       <span><strong>Address:</strong> Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road, Sangli - 416416, Maharashtra</span>
                     </div>
-                    <div className="flex items-center gap-2.5">
+                    <a href="tel:+917057132237" className="flex items-center gap-2.5 text-slate-700 hover:text-[#0047AB] transition-colors">
                       <i data-lucide="phone" className="w-4 h-4 text-[#0047AB] shrink-0"></i>
-                      <span><strong>Office Contact:</strong> +91 70571 32237 / +91 77769 77171</span>
-                    </div>
+                      <span><strong>Main line · Calls & WhatsApp:</strong> +91 70571 32237</span>
+                    </a>
+                    <a href="tel:+917776977171" aria-label="Call alternate number +91 77769 77171. Calls only, no WhatsApp." className="flex items-start gap-2.5 text-slate-700 hover:text-[#0047AB] transition-colors">
+                      <i data-lucide="phone-call" className="w-4 h-4 text-amber-700 shrink-0 mt-0.5"></i>
+                      <span><strong>Alternate · Calls only:</strong> +91 77769 77171 <span className="block pl-0.5 text-[11px] text-slate-500">Not available on WhatsApp</span></span>
+                    </a>
                     <div className="flex items-center gap-2.5">
                       <i data-lucide="mail" className="w-4 h-4 text-[#0047AB] shrink-0"></i>
                       <span><strong>Email:</strong> smitadesai1821@gmail.com</span>
@@ -2875,7 +2909,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 flex flex-col gap-3">
+                <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                   <a
                     href="https://www.google.com/maps/search/?api=1&query=Sujata+Apartment,+In+front+of+Mathubai+Garware+College,+Star+Bhel+road,+Behind+Divekar+Hospital,+Risala+Road,+Sangli+416416+Maharashtra"
                     target="_blank"
@@ -2887,11 +2921,21 @@ export default function App() {
                   </a>
 
                   <a
-                    href="tel:+917057132237"
+                    href="tel:+917776977171"
+                    aria-label="Call only number +91 77769 77171"
                     className="btn-pill btn-pill-cobalt py-3.5 text-xs font-bold uppercase tracking-wider shadow-sm touch-target"
                   >
                     <i data-lucide="phone-call" className="w-4 h-4"></i>
-                    <span>Call Directly: +91 70571 32237</span>
+                    <span>Call only: +91 77769 77171</span>
+                  </a>
+                  <a
+                    href="https://wa.me/917057132237?text=Hello%20Smita%20Desai,%20I%20would%20like%20to%20connect%20on%20WhatsApp."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-pill py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm touch-target"
+                  >
+                    <i data-lucide="message-circle" className="w-4 h-4"></i>
+                    <span>WhatsApp: +91 70571 32237</span>
                   </a>
                 </div>
 
@@ -2944,8 +2988,9 @@ export default function App() {
           <div className="space-y-3">
             <h4 className="text-white font-bold uppercase tracking-wider text-xs">Contact Consultant</h4>
             <p className="text-slate-300 font-bold">Smita Rahul Desai</p>
-            <p>Phone: +91 70571 32237</p>
-            <p>Office: +91 77769 77171</p>
+            <p><a href="tel:+917057132237" className="hover:text-white">Main line · Calls & WhatsApp: +91 70571 32237</a></p>
+            <p><a href="tel:+917776977171" aria-label="Call alternate number +91 77769 77171. Calls only, no WhatsApp." className="hover:text-white">Alternate · Calls only: +91 77769 77171</a></p>
+            <p className="text-[11px] text-slate-500">The alternate number is not available on WhatsApp.</p>
             <p>Email: smitadesai1821@gmail.com</p>
             <p className="leading-relaxed">Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road, Sangli - 416416, Maharashtra</p>
           </div>
@@ -2965,7 +3010,7 @@ export default function App() {
       {/* MOBILE STICKY BOTTOM DOCK (md:hidden) */}
       <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-dock-light px-3 py-2">
         <div className="grid grid-cols-4 gap-1 items-center max-w-md mx-auto">
-          <a href="tel:+917057132237" className="touch-target flex flex-col items-center justify-center p-1.5 rounded-xl text-slate-600 hover:text-[#0047AB]">
+          <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" title="Call only: +91 77769 77171" className="touch-target flex flex-col items-center justify-center p-1.5 rounded-xl text-slate-600 hover:text-[#0047AB]">
             <i data-lucide="phone" className="w-5 h-5 text-[#0047AB]"></i>
             <span className="text-[10px] font-bold mt-1">Call</span>
           </a>
@@ -3259,7 +3304,7 @@ export default function App() {
       )}
 
       {/* FLOATING WHATSAPP BUTTON (BOTTOM-RIGHT WITH PRETEXT) */}
-      <aside aria-label="WhatsApp quick chat" className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-40">
+      <aside aria-label="WhatsApp quick chat" className="hidden md:block fixed bottom-20 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-40">
         <a
           href="https://wa.me/917057132237?text=Hello%20Smita%20Desai%2C%20I%20visited%20your%20website%20and%20would%20like%20to%20get%20a%20personalized%20consultation%20regarding%20your%20financial%20services."
           target="_blank"
