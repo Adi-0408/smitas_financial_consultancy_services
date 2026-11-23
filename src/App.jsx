@@ -2178,20 +2178,20 @@ export default function App() {
               </div>
             </div>
 
-            {/* Scheme Cards Grid */}
-            <div key={activeSchemeTab} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-start animate-tab-content">
+            {/* Scheme Cards Grid - Perfectly aligned uniform heights & frames */}
+            <div key={activeSchemeTab} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch animate-tab-content">
               {filteredSchemeFlyers.map((item) => (
                 <div 
                   key={item.id}
                   onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                  className="glass-card rounded-3xl p-3 sm:p-4 border border-white/95 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col"
+                  className="glass-card rounded-3xl p-4 sm:p-5 border border-white/95 shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group cursor-pointer flex flex-col justify-between h-full"
                 >
-                  {/* Full Flyer Image Container */}
-                  <div className="w-full relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/90 shadow-sm group-hover:border-[#0047AB]/60 transition-colors">
+                  {/* Uniform Aligned Flyer Image Container */}
+                  <div className="w-full h-[460px] sm:h-[500px] lg:h-[520px] relative rounded-2xl overflow-hidden bg-slate-50/90 border border-slate-200/90 shadow-sm group-hover:border-[#0047AB]/60 transition-colors flex items-center justify-center p-2.5">
                     <img 
                       src={item.src} 
                       alt={item.title} 
-                      className="w-full h-auto block rounded-2xl object-contain group-hover:scale-[1.02] transition-transform duration-500"
+                      className="w-full h-full object-contain rounded-xl group-hover:scale-[1.02] transition-transform duration-500"
                       loading="lazy"
                     />
 
@@ -2223,6 +2223,22 @@ export default function App() {
                         <span>Inspect Full Flyer</span>
                       </span>
                     </div>
+                  </div>
+
+                  {/* Aligned Scheme Info Header below Flyer */}
+                  <div className="pt-3.5 px-1 flex items-center justify-between gap-3 border-t border-slate-100/90 mt-2">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-black text-slate-900 truncate font-heading group-hover:text-[#0047AB] transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 font-semibold truncate mt-0.5">
+                        {item.badgeMetric} • {item.tag}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-xs font-bold text-[#0047AB] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span>Enlarge</span>
+                      <i data-lucide="arrow-right" className="w-3.5 h-3.5"></i>
+                    </span>
                   </div>
                 </div>
               ))}
