@@ -2100,6 +2100,31 @@ export default function App() {
                     </span>
                   </div>
                 </div>
+                <div className="mt-4 flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-3 py-3 shadow-sm">
+                  <img
+                    src="assets/sfcs_logo_emblem.png"
+                    alt="Smita's Financial Consultancy Services logo"
+                    className="h-12 w-12 shrink-0 object-contain"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-xs font-black tracking-wide text-slate-900">Smita's Financial</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Consultancy Services · Sangli</p>
+                  </div>
+                </div>
+                <div className="mt-3 grid grid-cols-5 gap-1.5" aria-label="Financial service areas">
+                  {[
+                    { icon: 'users', label: 'Wealth', tone: 'text-blue-700 bg-blue-50' },
+                    { icon: 'trending-up', label: 'Invest', tone: 'text-sky-700 bg-sky-50' },
+                    { icon: 'shield', label: 'Insurance', tone: 'text-emerald-700 bg-emerald-50' },
+                    { icon: 'briefcase', label: 'Loans', tone: 'text-indigo-700 bg-indigo-50' },
+                    { icon: 'sprout', label: 'Growth', tone: 'text-teal-700 bg-teal-50' },
+                  ].map((item) => (
+                    <div key={item.label} className={`flex min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 ${item.tone}`}>
+                      <i data-lucide={item.icon} className="h-4 w-4" aria-hidden="true"></i>
+                      <span className="text-[9px] font-extrabold uppercase tracking-wide">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
                 <div className="pt-4 text-center space-y-1">
                   <div className="text-[#0047AB] font-serif-italic text-lg font-bold">
                     “Your Trust, Our Commitment.”
