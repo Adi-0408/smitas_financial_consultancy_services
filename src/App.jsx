@@ -596,7 +596,7 @@ export default function App() {
         'Tata AIG Medicare Select & Super Top-Up plans',
         'Tax saving benefit under Section 80D'
       ],
-      flyer: 'assets/flyer_health_insurance_hq.jpg',
+      flyer: 'assets/flyer_health_insurance_hq.png',
       flyerTitle: 'Family Health Insurance & Mediclaim Scheme Flyer'
     },
     {
@@ -614,7 +614,7 @@ export default function App() {
         'Risk-profile matched equity & hybrid funds',
         'Seamless digital portfolio tracking & rebalancing'
       ],
-      flyer: 'assets/flyer_sip_topup_hq.jpg',
+      flyer: 'assets/flyer_sip_topup_hq.png',
       flyerTitle: 'Top-Up SIP ₹11.78 Cr Compounding Guide'
     },
     {
@@ -631,7 +631,7 @@ export default function App() {
         'Best rates for 2-Wheelers, Private Cars & Commercial',
         'Zero-Depreciation & Cashless network garages'
       ],
-      flyer: 'assets/flyer_vehicle_insurance_hq.jpg',
+      flyer: 'assets/flyer_vehicle_insurance_hq.png',
       flyerTitle: 'All Types of Vehicle Online Insurance Flyer'
     },
     {
@@ -648,7 +648,7 @@ export default function App() {
         'End-to-end legal & valuation document assistance',
         'Flexible tenure up to 30 years with easy EMI'
       ],
-      flyer: 'assets/flyer_all_loans_hq.jpg',
+      flyer: 'assets/flyer_all_loans_hq.png',
       flyerTitle: 'Complete Loan Portfolio Overview Guide'
     },
     {
@@ -665,7 +665,7 @@ export default function App() {
         'Authorised channel partner of leading Banks & NBFCs',
         'Minimum documentation & quick disbursement'
       ],
-      flyer: 'assets/flyer_business_loan_hq.jpg',
+      flyer: 'assets/flyer_business_loan_hq.png',
       flyerTitle: 'Business Loan (Up to ₹5 Cr) Saturday Club Global Trust Flyer'
     },
     {
@@ -682,7 +682,7 @@ export default function App() {
         'Special schemes for Doctors, CA, Architects',
         'Hospital / clinic setup financing without friction'
       ],
-      flyer: 'assets/flyer_all_loans_hq.jpg',
+      flyer: 'assets/flyer_all_loans_hq.png',
       flyerTitle: 'Professional Loan Portfolio Guide'
     },
     {
@@ -699,7 +699,7 @@ export default function App() {
         'Zero collateral requirement & flexible repayment',
         'Disbursement within 24 to 48 working hours'
       ],
-      flyer: 'assets/flyer_all_loans_hq.jpg',
+      flyer: 'assets/flyer_all_loans_hq.png',
       flyerTitle: 'Personal Loan for Salaried Individuals Guide'
     },
     {
@@ -716,7 +716,7 @@ export default function App() {
         'Tie-ups with leading automobile dealerships in Sangli',
         'Quick sanctioning with pre-approved options'
       ],
-      flyer: 'assets/flyer_all_loans_hq.jpg',
+      flyer: 'assets/flyer_all_loans_hq.png',
       flyerTitle: 'Car Loan Financing Guide'
     }
   ];
@@ -735,7 +735,7 @@ export default function App() {
       tag: 'Loans',
       badgeMetric: 'Up to ₹5 Cr Limit',
       subtitle: 'Saturday Club Global Trust Member verified flyer • Unsecured & Secured',
-      src: 'assets/flyer_business_loan_hq.jpg',
+      src: 'assets/flyer_business_loan_hq.png',
       caption: 'Business Loan (Up to ₹5 Cr) Scheme Flyer - Saturday Club Global Trust Regn E-26480, Sangli Office',
       highlights: [
         'Unsecured MSME loans up to ₹50 Lakh & Secured credit lines up to ₹5 Cr',
@@ -749,7 +749,7 @@ export default function App() {
       tag: 'Loans',
       badgeMetric: 'Multi-Bank Tie-ups',
       subtitle: 'Home, Business, Professional, Personal & Car Loans • Smitaa R Desai',
-      src: 'assets/flyer_all_loans_hq.jpg',
+      src: 'assets/flyer_all_loans_hq.png',
       caption: 'Complete Loan Portfolio Overview Flyer - Smitaa R Desai (+91 70571 32237)',
       highlights: [
         'Comparative ROI check across all major Indian banks for lowest interest rates',
@@ -763,7 +763,7 @@ export default function App() {
       tag: 'Investments',
       badgeMetric: '₹11.78 Cr Target',
       subtitle: '₹11.78 Crore Wealth Creation Case Study • Smita Desai Financial Consultancy',
-      src: 'assets/flyer_sip_topup_hq.jpg',
+      src: 'assets/flyer_sip_topup_hq.png',
       caption: 'Top-Up SIP ₹11.78 Cr Compounding Guide - Smita Desai (+91 70571 32237)',
       highlights: [
         'Disciplined 10% - 15% annual step-up compounding strategy model',
@@ -777,7 +777,7 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: '10,000+ Hospitals',
       subtitle: 'Comprehensive Hospitalization & Cashless Network Protection',
-      src: 'assets/flyer_health_insurance_hq.jpg',
+      src: 'assets/flyer_health_insurance_hq.png',
       caption: 'Family Health Insurance Scheme Flyer - Smita Desai (+91 70571 32237)',
       highlights: [
         'Cashless admission & claims settlement across 10,000+ top Indian hospitals',
@@ -791,7 +791,7 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: '₹5L to ₹3 Cr Cover',
       subtitle: 'Cashless Hospitalization • ₹5 Lakh to ₹3 Crore Coverage on EMI',
-      src: 'assets/flyer_tata_aig_medicare_hq.jpg',
+      src: 'assets/flyer_tata_aig_medicare_hq.png',
       caption: 'Tata AIG Medicare Select Policy Flyer - Official Partner Network',
       highlights: [
         'Zero room rent capping with automatic restoration benefit for unrelated illnesses',
@@ -805,7 +805,7 @@ export default function App() {
       tag: 'Insurance',
       badgeMetric: 'Instant WhatsApp Quote',
       subtitle: 'Instant Online Policy for Bikes, Cars, Commercial Vehicles & Buses',
-      src: 'assets/flyer_vehicle_insurance_hq.jpg',
+      src: 'assets/flyer_vehicle_insurance_hq.png',
       caption: 'Vehicle Online Insurance Flyer - Fast Paperless Process & Best Rates',
       highlights: [
         'Instant quotes generated directly by sharing RC Book photo on WhatsApp',
