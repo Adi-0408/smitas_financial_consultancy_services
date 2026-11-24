@@ -288,6 +288,17 @@ export default function App() {
 
   const historyPushedRef = useRef(false);
   const isProgrammaticBackRef = useRef(false);
+  const mobileNavNavigationRef = useRef(false);
+
+  const navigateFromMobileMenu = (event, targetId) => {
+    event.preventDefault();
+    mobileNavNavigationRef.current = true;
+    setMobileMenuOpen(false);
+    window.history.replaceState(window.history.state, '', `#${targetId}`);
+    requestAnimationFrame(() => {
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  };
 
   // Close the highest priority open overlay
   const closeTopOverlay = () => {
@@ -329,6 +340,10 @@ export default function App() {
     } else {
       if (historyPushedRef.current) {
         historyPushedRef.current = false;
+        if (mobileNavNavigationRef.current) {
+          mobileNavNavigationRef.current = false;
+          return;
+        }
         isProgrammaticBackRef.current = true;
         try {
           window.history.back();
@@ -1259,39 +1274,39 @@ export default function App() {
               className="xl:hidden relative z-20 border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-2xl animate-drawer max-h-[calc(100vh-5.5rem)] overflow-y-auto overscroll-contain"
             >
               <nav className="flex flex-col space-y-1.5 text-sm font-semibold text-slate-700">
-                <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#hero" onClick={event => navigateFromMobileMenu(event, 'hero')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Home</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#services" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#services" onClick={event => navigateFromMobileMenu(event, 'services')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>9 Core Services</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#calculators" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#calculators" onClick={event => navigateFromMobileMenu(event, 'calculators')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>SIP & Loan Calculators</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#about" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#about" onClick={event => navigateFromMobileMenu(event, 'about')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>About Smita Desai</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#schemes" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#schemes" onClick={event => navigateFromMobileMenu(event, 'schemes')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Official Scheme Flyers</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#gallery" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#gallery" onClick={event => navigateFromMobileMenu(event, 'gallery')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Awards, Gallery & Visiting Cards</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#payment" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#payment" onClick={event => navigateFromMobileMenu(event, 'payment')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>UPI Payment & Bank Details</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#reviews" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
+                <a href="#reviews" onClick={event => navigateFromMobileMenu(event, 'reviews')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Client Reviews</span>
                   <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
-                <a href="#enquiry-section" onClick={() => setMobileMenuOpen(false)} className="px-3.5 py-2.5 rounded-xl bg-[#82C8E5]/20 text-[#000080] font-bold border border-[#82C8E5]/50 flex items-center justify-between hover:bg-[#82C8E5]/30 active:scale-[0.99] transition-all shadow-xs group">
+                <a href="#enquiry-section" onClick={event => navigateFromMobileMenu(event, 'enquiry-section')} className="px-3.5 py-2.5 rounded-xl bg-[#82C8E5]/20 text-[#000080] font-bold border border-[#82C8E5]/50 flex items-center justify-between hover:bg-[#82C8E5]/30 active:scale-[0.99] transition-all shadow-xs group">
                   <span>Fast WhatsApp Enquiry</span>
                   <i data-lucide="message-circle" className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform"></i>
                 </a>
