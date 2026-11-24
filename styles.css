@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Executive Palette:
    Cobalt Blue: #0047AB
    Deep Navy:   #000080
@@ -484,16 +488,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .scheme-slide-track {
   transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
-}
-
-@keyframes schemeAutoplayProgress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-.scheme-autoplay-progress {
-  transform-origin: left center;
-  animation: schemeAutoplayProgress 2s linear both;
 }
 
 /* Pulse animation for WhatsApp */

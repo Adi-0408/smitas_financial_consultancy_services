@@ -1,3 +1,4 @@
+import Icon from './Icon.jsx';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 const STORAGE_KEY_REVIEWS = 'sfcs_client_reviews_v1';
@@ -49,7 +50,6 @@ const INITIAL_REVIEWS = [
 ];
 
 function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIndex, slideCount }) {
-  const panelRef = useRef(null);
   const touchStartX = useRef(null);
   const suppressOpen = useRef(false);
   const currentIndex = items.length ? activeIndex % items.length : 0;
@@ -57,31 +57,9 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
 
   return (
     <article
-      ref={panelRef}
       className="group relative border-b border-slate-200 py-5 last:border-b-0"
       aria-label={`${category.tag} flyers`}
     >
-      <div className="hidden">
-        <div className="flex items-center gap-3">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0047AB] to-[#000080] text-white shadow-md">
-            <i data-lucide={category.icon} className="h-6 w-6" aria-hidden="true"></i>
-          </span>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-heading text-xl font-black text-slate-900">{category.tag}</h3>
-              <span className="rounded-full bg-[#0047AB]/10 px-2 py-0.5 text-[10px] font-extrabold text-[#0047AB]">{items.length} {items.length === 1 ? 'flyer' : 'flyers'}</span>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center justify-between gap-4 sm:justify-end">
-          <span className="text-xs font-bold tabular-nums text-slate-500"><strong className="text-[#0047AB]">{String(currentIndex + 1).padStart(2, '0')}</strong> / {String(items.length).padStart(2, '0')}</span>
-          <div className="flex gap-2">
-            <button type="button" onClick={() => move(-1)} disabled={items.length < 2} className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0047AB] shadow-sm transition-all hover:-translate-x-0.5 hover:border-[#0047AB] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:cursor-not-allowed disabled:opacity-40" aria-label={`Previous ${category.tag} flyer`}><i data-lucide="arrow-left" className="h-4 w-4" aria-hidden="true"></i></button>
-            <button type="button" onClick={() => move(1)} disabled={items.length < 2} className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0047AB] text-white shadow-md transition-all hover:translate-x-0.5 hover:bg-[#000080] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:cursor-not-allowed disabled:opacity-40" aria-label={`Next ${category.tag} flyer`}><i data-lucide="arrow-right" className="h-4 w-4" aria-hidden="true"></i></button>
-          </div>
-        </div>
-      </div>
-
       <div
         className="relative overflow-hidden"
         onTouchStart={(event) => { touchStartX.current = event.touches[0].clientX; }}
@@ -103,15 +81,6 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
               <button type="button" tabIndex={index === currentIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image flex h-[360px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[500px] lg:h-[560px]" aria-label={`View ${item.title} flyer in full size`}>
                 <img src={item.src} alt={item.title} className="h-full w-full object-contain transition-transform duration-500 group-hover/image:scale-[1.02]" loading="lazy" />
               </button>
-              <div className="hidden">
-                <span className="w-fit rounded-full border border-[#82C8E5]/50 bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0047AB]">{item.badgeMetric || category.tag}</span>
-                <h4 className="mt-3 font-heading text-xl font-black leading-tight text-slate-900 sm:text-2xl">{item.title}</h4>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.subtitle}</p>
-                <ul className="mt-4 space-y-2 text-xs text-slate-600">
-                  {item.highlights?.slice(0, 2).map(highlight => <li key={highlight} className="flex items-start gap-2"><i data-lucide="check-circle-2" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" aria-hidden="true"></i><span>{highlight}</span></li>)}
-                </ul>
-                <a href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${item.title}" and would like to get more information.`)}`} target="_blank" rel="noopener noreferrer" tabIndex={index === currentIndex ? 0 : -1} className="mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700"><i data-lucide="message-circle" className="h-4 w-4" aria-hidden="true"></i>Enquire on WhatsApp</a>
-              </div>
             </div>
           ))}
         </div>
@@ -122,7 +91,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
           className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/90 text-[#0047AB] shadow-md backdrop-blur-sm transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:opacity-40 sm:left-3 sm:h-10 sm:w-10"
           aria-label={`Previous ${category.tag} flyer`}
         >
-          <i data-lucide="chevron-left" className="h-4 w-4" aria-hidden="true"></i>
+          <Icon name="chevron-left" className="h-4 w-4" aria-hidden="true"></Icon>
         </button>
         <button
           type="button"
@@ -131,7 +100,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
           className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/90 text-[#0047AB] shadow-md backdrop-blur-sm transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:opacity-40 sm:right-3 sm:h-10 sm:w-10"
           aria-label={`Next ${category.tag} flyer`}
         >
-          <i data-lucide="chevron-right" className="h-4 w-4" aria-hidden="true"></i>
+          <Icon name="chevron-right" className="h-4 w-4" aria-hidden="true"></Icon>
         </button>
       </div>
 
@@ -231,20 +200,6 @@ export default function App() {
   const [serviceRequired, setServiceRequired] = useState('General Financial Consultation');
   const [requirementDetails, setRequirementDetails] = useState('');
   const [formHighlighted, setFormHighlighted] = useState(false);
-
-  // Initialize Lucide icons on render/update
-  useEffect(() => {
-    if (window.lucide) {
-      window.lucide.createIcons();
-    }
-  });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (window.lucide) window.lucide.createIcons();
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [mobileMenuOpen, activeCategory, activeGalleryTab, calcTab, activeAboutTab, reviewModalOpen, qrModalOpen, lightboxData, deleteConfirmModal, myReviewIds, reviews]);
 
   // Close mobile drawer on Escape key or on window resize to desktop
   useEffect(() => {
@@ -446,7 +401,7 @@ export default function App() {
     // Read from state or fallback directly to DOM elements
     const authorVal = reviewAuthor.trim() || document.querySelector('input[placeholder*="Ramesh"]')?.value.trim() || '';
     const roleVal = reviewRole.trim() || document.querySelector('input[placeholder*="Business Owner"]')?.value.trim() || 'Client, Sangli';
-    const textVal = reviewText.trim() || document.querySelector('textarea')?.value.trim() || '';
+    const textVal = reviewText.trim();
 
     if (!authorVal) {
       triggerToast('Please enter your full name.', 'error');
@@ -483,7 +438,7 @@ export default function App() {
     setReviewRole('');
     setReviewText('');
     setReviewRating(5);
-    triggerToast('Thank you! Your review has been published directly on the website.', 'success');
+    triggerToast('Thank you! Your review has been saved in this browser.', 'success');
 
     // Smooth scroll to reviews section
     setTimeout(() => {
@@ -641,7 +596,7 @@ export default function App() {
     ].join('\n');
 
     const whatsappUrl = `https://wa.me/917057132237?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     triggerToast('Redirecting your enquiry to WhatsApp...');
   };
 
@@ -1164,7 +1119,7 @@ export default function App() {
               ? 'bg-rose-50 text-rose-800 border-rose-200'
               : 'bg-emerald-50 text-emerald-800 border-emerald-200'
           }`}>
-            <i data-lucide={toast.type === 'error' ? 'alert-circle' : 'check-circle-2'} className="w-4 h-4"></i>
+            <Icon name={toast.type === 'error' ? 'alert-circle' : 'check-circle-2'} className="w-4 h-4"></Icon>
             <span>{toast.message}</span>
           </div>
         </div>
@@ -1216,7 +1171,7 @@ export default function App() {
                 title="Share Digital vCard"
                 aria-label="Share Website"
               >
-                <i data-lucide="share-2" className="w-4 h-4"></i>
+                <Icon name="share-2" className="w-4 h-4"></Icon>
               </button>
               <button 
                 onClick={() => setQrModalOpen(true)} 
@@ -1224,7 +1179,7 @@ export default function App() {
                 title="Show QR Code"
                 aria-label="Show Website QR Code"
               >
-                <i data-lucide="qr-code" className="w-4 h-4 text-[#0047AB]"></i>
+                <Icon name="qr-code" className="w-4 h-4 text-[#0047AB]"></Icon>
               </button>
             </div>
 
@@ -1234,7 +1189,7 @@ export default function App() {
               title="Call-only number"
               className="btn-pill btn-pill-cobalt px-3.5 xl:px-5 py-2 xl:py-2.5 text-xs font-bold tracking-wider uppercase shadow-md flex items-center gap-1.5 xl:gap-2 whitespace-nowrap"
             >
-              <i data-lucide="phone-call" className="w-3.5 h-3.5"></i>
+              <Icon name="phone-call" className="w-3.5 h-3.5"></Icon>
               <span>Call: +91 77769 77171</span>
             </a>
           </div>
@@ -1247,14 +1202,14 @@ export default function App() {
               title="Show QR Code"
               aria-label="Show QR Code"
             >
-              <i data-lucide="qr-code" className="w-5 h-5 text-[#0047AB]"></i>
+              <Icon name="qr-code" className="w-5 h-5 text-[#0047AB]"></Icon>
             </button>
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
               className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 flex items-center justify-center shadow-xs focus:outline-none active:scale-95 transition-all"
               aria-label="Toggle navigation menu"
             >
-              <i data-lucide={mobileMenuOpen ? "x" : "menu"} className={`w-5 h-5 transition-transform duration-300 ${mobileMenuOpen ? 'rotate-90 text-[#0047AB]' : 'rotate-0'}`}></i>
+              <Icon name={mobileMenuOpen ? "x" : "menu"} className={`w-5 h-5 transition-transform duration-300 ${mobileMenuOpen ? 'rotate-90 text-[#0047AB]' : 'rotate-0'}`}></Icon>
             </button>
           </div>
 
@@ -1278,48 +1233,48 @@ export default function App() {
               <nav className="flex flex-col space-y-1.5 text-sm font-semibold text-slate-700">
                 <a href="#hero" onClick={event => navigateFromMobileMenu(event, 'hero')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Home</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#services" onClick={event => navigateFromMobileMenu(event, 'services')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>9 Core Services</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#calculators" onClick={event => navigateFromMobileMenu(event, 'calculators')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>SIP & Loan Calculators</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#about" onClick={event => navigateFromMobileMenu(event, 'about')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>About Smita Desai</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#schemes" onClick={event => navigateFromMobileMenu(event, 'schemes')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Official Scheme Flyers</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#gallery" onClick={event => navigateFromMobileMenu(event, 'gallery')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Awards, Gallery & Visiting Cards</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#payment" onClick={event => navigateFromMobileMenu(event, 'payment')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>UPI Payment & Bank Details</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#reviews" onClick={event => navigateFromMobileMenu(event, 'reviews')} className="px-3.5 py-2.5 rounded-xl hover:bg-[#82C8E5]/15 hover:text-[#0047AB] active:scale-[0.99] transition-all flex items-center justify-between group">
                   <span>Client Reviews</span>
-                  <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></i>
+                  <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] group-hover:translate-x-0.5 transition-transform"></Icon>
                 </a>
                 <a href="#enquiry-section" onClick={event => navigateFromMobileMenu(event, 'enquiry-section')} className="px-3.5 py-2.5 rounded-xl bg-[#82C8E5]/20 text-[#000080] font-bold border border-[#82C8E5]/50 flex items-center justify-between hover:bg-[#82C8E5]/30 active:scale-[0.99] transition-all shadow-xs group">
                   <span>Fast WhatsApp Enquiry</span>
-                  <i data-lucide="message-circle" className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform"></i>
+                  <Icon name="message-circle" className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform"></Icon>
                 </a>
               </nav>
 
               <div className="pt-3 border-t border-slate-200 flex items-center justify-between gap-3">
                 <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" className="flex-1 py-2.5 px-3 rounded-full btn-pill-cobalt text-xs font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform">
-                  <i data-lucide="phone-call" className="w-4 h-4"></i> Call Now
+                  <Icon name="phone-call" className="w-4 h-4"></Icon> Call Now
                 </a>
                 <button onClick={shareProfile} className="flex-1 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-2 border border-slate-200 active:scale-95 transition-all">
-                  <i data-lucide="share-2" className="w-4 h-4"></i> Share
+                  <Icon name="share-2" className="w-4 h-4"></Icon> Share
                 </button>
               </div>
             </div>
@@ -1379,7 +1334,7 @@ export default function App() {
                 {/* Pill Action Triggers (Matching the Reference UI's rounded-full pill button style) */}
                 <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3">
                   <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" title="Call-only alternate number" className="btn-pill btn-pill-cobalt px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm shadow-md touch-target justify-center whitespace-nowrap">
-                    <i data-lucide="phone" className="w-4 h-4"></i>
+                    <Icon name="phone" className="w-4 h-4"></Icon>
                     <span>Call Now</span>
                   </a>
 
@@ -1389,7 +1344,7 @@ export default function App() {
                     rel="noopener noreferrer"
                     className="btn-pill px-4 sm:px-5 py-3 sm:py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-emerald-600 text-xs sm:text-sm shadow-md pulse-whatsapp-light touch-target justify-center whitespace-nowrap"
                   >
-                    <i data-lucide="message-circle" className="w-4 h-4"></i>
+                    <Icon name="message-circle" className="w-4 h-4"></Icon>
                     <span>WhatsApp Direct</span>
                   </a>
 
@@ -1398,7 +1353,7 @@ export default function App() {
                     className="btn-pill btn-pill-outline px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm shadow-xs touch-target justify-center whitespace-nowrap"
                     title="Share Profile"
                   >
-                    <i data-lucide="share-2" className="w-4 h-4"></i>
+                    <Icon name="share-2" className="w-4 h-4"></Icon>
                     <span>Share</span>
                   </button>
 
@@ -1407,7 +1362,7 @@ export default function App() {
                     className="btn-pill btn-pill-outline px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm shadow-xs touch-target justify-center whitespace-nowrap"
                     title="Show Scannable QR"
                   >
-                    <i data-lucide="qr-code" className="w-4 h-4 text-[#0047AB]"></i>
+                    <Icon name="qr-code" className="w-4 h-4 text-[#0047AB]"></Icon>
                     <span>QR Code</span>
                   </button>
                 </div>
@@ -1450,7 +1405,7 @@ export default function App() {
                   {/* Clean Accreditation Bar (Outside the image) */}
                   <div className="flex flex-wrap items-center justify-between gap-2 px-1">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-xs">
-                      <i data-lucide="badge-check" className="w-4 h-4 text-emerald-600"></i>
+                      <Icon name="badge-check" className="w-4 h-4 text-emerald-600"></Icon>
                       <span>Verified Financial Consultant</span>
                     </span>
                     <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
@@ -1479,11 +1434,11 @@ export default function App() {
                         </div>
                       </div>
                       <div className="flex shrink-0 flex-nowrap items-center justify-center sm:justify-end gap-1 whitespace-nowrap text-yellow-400">
-                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
-                        <i data-lucide="star" className="w-4 h-4 shrink-0 fill-yellow-400"></i>
+                        <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
+                        <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
+                        <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
+                        <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
+                        <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
                         <span className="shrink-0 text-xs font-bold text-slate-700 ml-1">5.0</span>
                       </div>
                     </div>
@@ -1500,14 +1455,14 @@ export default function App() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-[#82C8E5]/25 text-[#0047AB] flex items-center justify-center">
-                          <i data-lucide="phone" className="w-4 h-4"></i>
+                          <Icon name="phone" className="w-4 h-4"></Icon>
                         </div>
                         <div className="text-left">
                           <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Main line · Calls & WhatsApp</span>
                           <span className="text-sm font-bold text-slate-900">+91 70571 32237</span>
                         </div>
                       </div>
-                      <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] transition-transform group-hover:translate-x-1"></i>
+                      <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-[#0047AB] transition-transform group-hover:translate-x-1"></Icon>
                     </a>
 
                     <a
@@ -1517,7 +1472,7 @@ export default function App() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
-                          <i data-lucide="phone-call" className="w-4 h-4"></i>
+                          <Icon name="phone-call" className="w-4 h-4"></Icon>
                         </div>
                         <div className="text-left">
                           <span className="text-[10px] uppercase font-bold text-amber-800 block tracking-wider">Alternate · Calls only</span>
@@ -1525,7 +1480,7 @@ export default function App() {
                           <span className="block text-[10px] font-semibold text-amber-800">Not available on WhatsApp</span>
                         </div>
                       </div>
-                      <i data-lucide="chevron-right" className="w-4 h-4 text-amber-700 transition-transform group-hover:translate-x-1"></i>
+                      <Icon name="chevron-right" className="w-4 h-4 text-amber-700 transition-transform group-hover:translate-x-1"></Icon>
                     </a>
 
                     <a 
@@ -1534,14 +1489,14 @@ export default function App() {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
-                          <i data-lucide="mail" className="w-4 h-4"></i>
+                          <Icon name="mail" className="w-4 h-4"></Icon>
                         </div>
                         <div className="text-left">
                           <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Official Email</span>
                           <span className="text-sm font-bold text-slate-900 break-all">smitadesai1821@gmail.com</span>
                         </div>
                       </div>
-                      <i data-lucide="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-amber-600 transition-transform group-hover:translate-x-1"></i>
+                      <Icon name="chevron-right" className="w-4 h-4 text-slate-400 group-hover:text-amber-600 transition-transform group-hover:translate-x-1"></Icon>
                     </a>
                   </div>
 
@@ -1552,7 +1507,7 @@ export default function App() {
                       aria-label="Call only number +91 77769 77171"
                       className="btn-pill btn-pill-cobalt py-3 text-xs tracking-wider uppercase shadow-xs touch-target"
                     >
-                      <i data-lucide="phone-call" className="w-4 h-4"></i>
+                      <Icon name="phone-call" className="w-4 h-4"></Icon>
                       <span>Call · 77769 77171</span>
                     </a>
                     <a 
@@ -1561,7 +1516,7 @@ export default function App() {
                       rel="noopener noreferrer"
                       className="btn-pill py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs tracking-wider uppercase font-bold shadow-xs touch-target"
                     >
-                      <i data-lucide="message-circle" className="w-4 h-4"></i>
+                      <Icon name="message-circle" className="w-4 h-4"></Icon>
                       <span>WhatsApp</span>
                     </a>
                   </div>
@@ -1576,9 +1531,9 @@ export default function App() {
           {/* Bottom Organic Wave Transition */}
           <div className="w-full max-w-7xl mx-auto mt-8 flex justify-center">
             <div className="inline-flex items-center gap-6 text-slate-300 text-xs font-semibold">
-              <span className="flex items-center gap-1.5"><i data-lucide="check" className="w-4 h-4 text-[#82C8E5]"></i> Authorized NJ Wealth Network</span>
-              <span className="hidden sm:flex items-center gap-1.5"><i data-lucide="check" className="w-4 h-4 text-[#82C8E5]"></i> Saturday Club Global Trust Member</span>
-              <span className="flex items-center gap-1.5"><i data-lucide="check" className="w-4 h-4 text-[#82C8E5]"></i> Leading Banks & NBFC Partner</span>
+              <span className="flex items-center gap-1.5"><Icon name="check" className="w-4 h-4 text-[#82C8E5]"></Icon> Authorized NJ Wealth Network</span>
+              <span className="hidden sm:flex items-center gap-1.5"><Icon name="check" className="w-4 h-4 text-[#82C8E5]"></Icon> Saturday Club Global Trust Member</span>
+              <span className="flex items-center gap-1.5"><Icon name="check" className="w-4 h-4 text-[#82C8E5]"></Icon> Leading Banks & NBFC Partner</span>
             </div>
           </div>
 
@@ -1665,7 +1620,7 @@ export default function App() {
                       />
                       <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-[1px] opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="btn-pill px-3.5 py-1.5 bg-white text-[#000080] font-black text-xs shadow-lg flex items-center gap-1.5 transform group-hover/img:scale-105 transition-transform">
-                          <i data-lucide="zoom-in" className="w-3.5 h-3.5 text-[#0047AB]"></i>
+                          <Icon name="zoom-in" className="w-3.5 h-3.5 text-[#0047AB]"></Icon>
                           <span>Inspect Flyer</span>
                         </span>
                       </div>
@@ -1677,7 +1632,7 @@ export default function App() {
 
                   <div className="flex items-center justify-between mb-4">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${service.iconBg} service-icon-box shadow-xs`}>
-                      <i data-lucide={service.icon} className="w-6 h-6"></i>
+                      <Icon name={service.icon} className="w-6 h-6"></Icon>
                     </div>
                     <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs">
                       {service.badge}
@@ -1699,7 +1654,7 @@ export default function App() {
                   <ul className="space-y-2 mb-6">
                     {service.bullets.map((bullet, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-xs text-slate-600">
-                        <i data-lucide="check-circle-2" className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5"></i>
+                        <Icon name="check-circle-2" className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5"></Icon>
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -1715,7 +1670,7 @@ export default function App() {
                     >
                       <span className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#82C8E5]/25 blur-2xl transition-transform duration-500 group-hover/sip:scale-150" aria-hidden="true" />
                       <span className="relative inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#0047AB] shadow-xs">
-                        <i data-lucide="badge-check" className="h-3.5 w-3.5" aria-hidden="true"></i>
+                        <Icon name="badge-check" className="h-3.5 w-3.5" aria-hidden="true"></Icon>
                         NJ Wealth Partner #28795
                       </span>
                       <span className="relative mt-3 block text-base font-bold text-slate-900 font-heading">Create your SIP account</span>
@@ -1724,7 +1679,7 @@ export default function App() {
                       </span>
                       <span className="relative mt-3 inline-flex items-center gap-1.5 text-xs font-extrabold text-[#0047AB]">
                         Open account page
-                        <i data-lucide="arrow-up-right" className="h-4 w-4 transition-transform duration-300 group-hover/sip:-translate-y-0.5 group-hover/sip:translate-x-0.5" aria-hidden="true"></i>
+                        <Icon name="arrow-up-right" className="h-4 w-4 transition-transform duration-300 group-hover/sip:-translate-y-0.5 group-hover/sip:translate-x-0.5" aria-hidden="true"></Icon>
                       </span>
                     </a>
                   )}
@@ -1736,7 +1691,7 @@ export default function App() {
                     className="flex-1 py-2.5 px-4 rounded-full bg-slate-100 hover:bg-[#0047AB] hover:text-white text-slate-800 text-xs font-bold flex items-center justify-center gap-1.5 transition-all group-hover:border-[#82C8E5] shadow-xs hover:shadow-md"
                   >
                     <span>QUICK ENQUIRE</span>
-                    <i data-lucide="arrow-right" className="w-3.5 h-3.5"></i>
+                    <Icon name="arrow-right" className="w-3.5 h-3.5"></Icon>
                   </button>
 
                   {service.flyer && (
@@ -1745,7 +1700,7 @@ export default function App() {
                       className="p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors shadow-xs"
                       title="View Official Scheme Flyer"
                     >
-                      <i data-lucide="image" className="w-4 h-4"></i>
+                      <Icon name="image" className="w-4 h-4"></Icon>
                     </button>
                   )}
                 </div>
@@ -1762,7 +1717,7 @@ export default function App() {
             
             <div className="text-center max-w-2xl mx-auto mb-10">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
-                <i data-lucide="calculator" className="w-3.5 h-3.5"></i>
+                <Icon name="calculator" className="w-3.5 h-3.5"></Icon>
                 <span>Smart Financial Planner</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-heading">
@@ -1780,7 +1735,7 @@ export default function App() {
                     calcTab === 'sip' ? 'btn-pill-cobalt shadow-md' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <i data-lucide="trending-up" className="w-3.5 h-3.5"></i>
+                  <Icon name="trending-up" className="w-3.5 h-3.5"></Icon>
                   <span>SIP Wealth Calculator</span>
                 </button>
                 <button
@@ -1789,7 +1744,7 @@ export default function App() {
                     calcTab === 'emi' ? 'btn-pill-cobalt shadow-md' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <i data-lucide="home" className="w-3.5 h-3.5"></i>
+                  <Icon name="home" className="w-3.5 h-3.5"></Icon>
                   <span>Loan EMI Calculator</span>
                 </button>
               </div>
@@ -2010,7 +1965,7 @@ export default function App() {
                       onClick={() => handleInquirePlan('sip')}
                       className="w-full btn-pill py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-md touch-target flex items-center justify-center gap-2"
                     >
-                      <i data-lucide="message-circle" className="w-4 h-4"></i>
+                      <Icon name="message-circle" className="w-4 h-4"></Icon>
                       <span>Enquire This Plan on WhatsApp</span>
                     </button>
 
@@ -2021,9 +1976,9 @@ export default function App() {
                       className="group/sip flex w-full items-center justify-center gap-2 rounded-full border border-[#0047AB]/25 bg-white px-4 py-3 text-center text-xs font-bold text-[#0047AB] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0047AB] hover:bg-sky-50 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0047AB]"
                       aria-label="Create an NJ Wealth SIP account with Smita Desai's partner reference 28795 (opens in a new tab)"
                     >
-                      <i data-lucide="user-round-plus" className="h-4 w-4" aria-hidden="true"></i>
+                      <Icon name="user-round-plus" className="h-4 w-4" aria-hidden="true"></Icon>
                       <span>Create SIP Account · Partner #28795</span>
-                      <i data-lucide="arrow-up-right" className="h-3.5 w-3.5 transition-transform duration-300 group-hover/sip:-translate-y-0.5 group-hover/sip:translate-x-0.5" aria-hidden="true"></i>
+                      <Icon name="arrow-up-right" className="h-3.5 w-3.5 transition-transform duration-300 group-hover/sip:-translate-y-0.5 group-hover/sip:translate-x-0.5" aria-hidden="true"></Icon>
                     </a>
 
                     <p className="text-[10px] text-slate-400 italic text-center pt-1 leading-tight">
@@ -2283,7 +2238,7 @@ export default function App() {
                       onClick={() => handleInquirePlan('emi')}
                       className="w-full btn-pill py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider shadow-md touch-target flex items-center justify-center gap-2"
                     >
-                      <i data-lucide="message-circle" className="w-4 h-4"></i>
+                      <Icon name="message-circle" className="w-4 h-4"></Icon>
                       <span>Check Loan Eligibility on WhatsApp</span>
                     </button>
 
@@ -2326,7 +2281,7 @@ export default function App() {
                     { icon: 'sprout', label: 'Growth', tone: 'text-teal-700 bg-teal-50' },
                   ].map((item) => (
                     <div key={item.label} className={`flex min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 ${item.tone}`}>
-                      <i data-lucide={item.icon} className="h-4 w-4" aria-hidden="true"></i>
+                      <Icon name={item.icon} className="h-4 w-4" aria-hidden="true"></Icon>
                       <span className="text-[9px] font-extrabold uppercase tracking-wide">{item.label}</span>
                     </div>
                   ))}
@@ -2382,7 +2337,7 @@ export default function App() {
                 {activeAboutTab === 'about' && (
                   <div className="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
                     <div className="flex items-center gap-2 text-[#0047AB] font-bold text-sm">
-                      <i data-lucide="building-2" className="w-4 h-4"></i>
+                      <Icon name="building-2" className="w-4 h-4"></Icon>
                       <span>About Smita's Financial Consultancy Services</span>
                     </div>
                     <p>
@@ -2400,7 +2355,7 @@ export default function App() {
                 {activeAboutTab === 'vision' && (
                   <div className="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
                     <div className="flex items-center gap-2 text-[#0047AB] font-bold text-sm">
-                      <i data-lucide="compass" className="w-4 h-4"></i>
+                      <Icon name="compass" className="w-4 h-4"></Icon>
                       <span>Our Strategic Vision</span>
                     </div>
                     <p>
@@ -2418,7 +2373,7 @@ export default function App() {
                 {activeAboutTab === 'mission' && (
                   <div className="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
                     <div className="flex items-center gap-2 text-[#0047AB] font-bold text-sm">
-                      <i data-lucide="target" className="w-4 h-4"></i>
+                      <Icon name="target" className="w-4 h-4"></Icon>
                       <span>Our Operational Mission</span>
                     </div>
                     <p>
@@ -2441,7 +2396,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-10">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#82C8E5]/20 border border-[#82C8E5]/60 text-[#000080] text-xs font-bold uppercase tracking-wider mb-3">
-                <i data-lucide="file-text" className="w-3.5 h-3.5 text-[#0047AB]"></i>
+                <Icon name="file-text" className="w-3.5 h-3.5 text-[#0047AB]"></Icon>
                 <span>Official Scheme Catalogues & Verified Flyers</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-heading">
@@ -2472,7 +2427,7 @@ export default function App() {
         <section id="gallery" className="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0047AB]/10 border border-[#0047AB]/25 text-[#0047AB] text-xs font-bold uppercase tracking-wider mb-3">
-              <i data-lucide="award" className="w-3.5 h-3.5 text-[#0047AB]"></i>
+              <Icon name="award" className="w-3.5 h-3.5 text-[#0047AB]"></Icon>
               <span>Honors, Credentials & Visiting Cards</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 font-heading">
@@ -2531,7 +2486,7 @@ export default function App() {
                   {/* Smooth Zoom Hover Overlay */}
                   <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="btn-pill px-5 py-2.5 bg-white text-[#000080] font-black text-xs shadow-xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
-                      <i data-lucide="zoom-in" className="w-4 h-4 text-[#0047AB]"></i>
+                      <Icon name="zoom-in" className="w-4 h-4 text-[#0047AB]"></Icon>
                       <span>Inspect Photo</span>
                     </span>
                   </div>
@@ -2550,7 +2505,7 @@ export default function App() {
                       <div className="mt-4 pt-4 border-t border-slate-100 space-y-2.5">
                         {item.highlights.map((bullet, idx) => (
                           <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-600">
-                            <i data-lucide="check-circle-2" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></i>
+                            <Icon name="check-circle-2" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></Icon>
                             <span className="leading-relaxed">{bullet}</span>
                           </div>
                         ))}
@@ -2567,7 +2522,7 @@ export default function App() {
                       }}
                       className="flex-1 py-3 px-4 rounded-full bg-slate-100 hover:bg-[#0047AB] hover:text-white text-slate-800 text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-xs hover:shadow-md"
                     >
-                      <i data-lucide="zoom-in" className="w-4 h-4"></i>
+                      <Icon name="zoom-in" className="w-4 h-4"></Icon>
                       <span>Enlarge Photo</span>
                     </button>
                     <a
@@ -2578,7 +2533,7 @@ export default function App() {
                       className="py-3 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs hover:shadow-md"
                       title="Connect on WhatsApp"
                     >
-                      <i data-lucide="message-circle" className="w-4 h-4"></i>
+                      <Icon name="message-circle" className="w-4 h-4"></Icon>
                       <span>WhatsApp</span>
                     </a>
                   </div>
@@ -2610,7 +2565,7 @@ export default function App() {
               <div className="space-y-4 pt-1">
                 <div className="flex items-start gap-3.5">
                   <div className="w-8 h-8 rounded-xl bg-[#82C8E5]/25 text-[#0047AB] flex items-center justify-center shrink-0 mt-0.5">
-                    <i data-lucide="check" className="w-4 h-4"></i>
+                    <Icon name="check" className="w-4 h-4"></Icon>
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-slate-900">Objective & Transparent Advice</h4>
@@ -2620,7 +2575,7 @@ export default function App() {
 
                 <div className="flex items-start gap-3.5">
                   <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-                    <i data-lucide="zap" className="w-4 h-4"></i>
+                    <Icon name="zap" className="w-4 h-4"></Icon>
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-slate-900">Instant WhatsApp Response</h4>
@@ -2630,7 +2585,7 @@ export default function App() {
 
                 <div className="flex items-start gap-3.5">
                   <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
-                    <i data-lucide="file-check" className="w-4 h-4"></i>
+                    <Icon name="file-check" className="w-4 h-4"></Icon>
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-slate-900">Complete Paperwork Assistance</h4>
@@ -2643,7 +2598,7 @@ export default function App() {
               <div className="rounded-2xl bg-slate-900 text-white p-5 shadow-lg border border-slate-800">
                 <div className="flex items-center justify-between mb-3 text-xs">
                   <span className="font-bold text-slate-300 flex items-center gap-1.5">
-                    <i data-lucide="message-square" className="w-3.5 h-3.5 text-emerald-400"></i>
+                    <Icon name="message-square" className="w-3.5 h-3.5 text-emerald-400"></Icon>
                     Live WhatsApp Message Preview:
                   </span>
                   <span className="text-[10px] text-slate-500">Auto-generated</span>
@@ -2673,7 +2628,7 @@ export default function App() {
                     <p className="text-xs text-slate-500 mt-0.5">Routes directly to Smita Desai: +91 70571 32237</p>
                   </div>
                   <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200">
-                    <i data-lucide="message-circle" className="w-5 h-5"></i>
+                    <Icon name="message-circle" className="w-5 h-5"></Icon>
                   </div>
                 </div>
 
@@ -2685,7 +2640,7 @@ export default function App() {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <i data-lucide="user" className="w-4 h-4"></i>
+                        <Icon name="user" className="w-4 h-4"></Icon>
                       </div>
                       <input 
                         type="text" 
@@ -2704,7 +2659,7 @@ export default function App() {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <i data-lucide="phone" className="w-4 h-4"></i>
+                        <Icon name="phone" className="w-4 h-4"></Icon>
                       </div>
                       <div className="absolute inset-y-0 left-10 flex items-center pointer-events-none text-slate-500 text-sm font-bold">
                         +91
@@ -2787,7 +2742,7 @@ export default function App() {
                     type="submit"
                     className="w-full btn-pill py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold uppercase tracking-wider shadow-lg hover:shadow-xl transition-all touch-target"
                   >
-                    <i data-lucide="send" className="w-4 h-4"></i>
+                    <Icon name="send" className="w-4 h-4"></Icon>
                     <span>Submit & Open WhatsApp Enquiry</span>
                   </button>
 
@@ -2847,7 +2802,7 @@ export default function App() {
                     onClick={copyUpiId}
                     className="w-full btn-pill py-2.5 px-3 bg-slate-100 hover:bg-[#82C8E5]/20 text-slate-800 text-xs font-bold transition-all border border-slate-200 hover:text-[#0047AB] flex items-center justify-center gap-2"
                   >
-                    <i data-lucide="copy" className="w-3.5 h-3.5"></i>
+                    <Icon name="copy" className="w-3.5 h-3.5"></Icon>
                     <span>Copy UPI: smitadesai1821-3@okicici</span>
                   </button>
                 </div>
@@ -2857,7 +2812,7 @@ export default function App() {
               <div className="md:col-span-7">
                 <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/95 shadow-glass space-y-5">
                   <div className="flex items-center gap-2 text-[#0047AB] font-bold text-sm">
-                    <i data-lucide="landmark" className="w-5 h-5"></i>
+                    <Icon name="landmark" className="w-5 h-5"></Icon>
                     <span>Banking Credentials</span>
                   </div>
 
@@ -2891,7 +2846,7 @@ export default function App() {
                       rel="noopener noreferrer"
                       className="w-full btn-pill py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-300 shadow-xs touch-target"
                     >
-                      <i data-lucide="receipt" className="w-4 h-4 text-emerald-600"></i>
+                      <Icon name="receipt" className="w-4 h-4 text-emerald-600"></Icon>
                       <span>Share Payment Screenshot on WhatsApp</span>
                     </a>
                   </div>
@@ -2922,11 +2877,11 @@ export default function App() {
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl glass-card border border-white/90 shadow-glass">
                 <div className="flex text-yellow-400">
-                  <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                  <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                  <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                  <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
-                  <i data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
+                  <Icon name="star" className="w-4 h-4 fill-yellow-400"></Icon>
+                  <Icon name="star" className="w-4 h-4 fill-yellow-400"></Icon>
+                  <Icon name="star" className="w-4 h-4 fill-yellow-400"></Icon>
+                  <Icon name="star" className="w-4 h-4 fill-yellow-400"></Icon>
+                  <Icon name="star" className="w-4 h-4 fill-yellow-400"></Icon>
                 </div>
                 <span className="text-xs font-bold text-slate-800">
                   5.0 ★ ({reviews.length} Verified Reviews)
@@ -2937,7 +2892,7 @@ export default function App() {
                 onClick={() => setReviewModalOpen(true)}
                 className="btn-pill btn-pill-cobalt px-5 py-2.5 text-xs font-bold uppercase tracking-wider shadow-md flex items-center gap-2 hover:scale-105 transition-transform"
               >
-                <i data-lucide="message-square-plus" className="w-4 h-4"></i>
+                <Icon name="message-square-plus" className="w-4 h-4"></Icon>
                 <span>+ Write a Review</span>
               </button>
             </div>
@@ -2961,7 +2916,7 @@ export default function App() {
                   <div className="absolute -top-3 right-5 flex items-center gap-1.5 z-10">
                     {isMyReview && (
                       <span className="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1 border border-amber-300">
-                        <i data-lucide="user-check" className="w-3 h-3 text-slate-950"></i>
+                        <Icon name="user-check" className="w-3 h-3 text-slate-950"></Icon>
                         <span>Your Review</span>
                       </span>
                     )}
@@ -2976,7 +2931,7 @@ export default function App() {
                     <div className="flex items-center justify-between">
                       <div className="flex text-[#82C8E5]">
                         {[...Array(rev.rating || 5)].map((_, i) => (
-                          <i key={i} data-lucide="star" className="w-4 h-4 fill-yellow-400"></i>
+                          <Icon key={i} name="star" className="w-4 h-4 fill-yellow-400"></Icon>
                         ))}
                       </div>
                       <div className="flex items-center gap-2">
@@ -2989,7 +2944,7 @@ export default function App() {
                             title="Remove your review from the website"
                             aria-label="Remove your review"
                           >
-                            <i data-lucide="trash-2" className="w-3.5 h-3.5"></i>
+                            <Icon name="trash-2" className="w-3.5 h-3.5"></Icon>
                             <span>Remove</span>
                           </button>
                         )}
@@ -3035,7 +2990,7 @@ export default function App() {
                         title="Remove your review"
                         aria-label="Remove your review"
                       >
-                        <i data-lucide="trash-2" className="w-4 h-4"></i>
+                        <Icon name="trash-2" className="w-4 h-4"></Icon>
                       </button>
                     )}
                   </div>
@@ -3054,7 +3009,7 @@ export default function App() {
                 className="group inline-flex items-center gap-2 rounded-full border border-[#0047AB]/20 bg-white px-6 py-3 text-sm font-bold text-[#0047AB] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[#0047AB]/50 hover:bg-[#0047AB] hover:text-white hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#82C8E5]/50"
               >
                 <span>{showAllReviews ? 'Show fewer reviews' : `Show all ${reviews.length} reviews`}</span>
-                <i data-lucide="chevron-down" className={`h-4 w-4 transition-transform duration-300 ${showAllReviews ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}></i>
+                <Icon name="chevron-down" className={`h-4 w-4 transition-transform duration-300 ${showAllReviews ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}></Icon>
               </button>
               <span className="text-xs text-slate-500" aria-live="polite">
                 {showAllReviews ? `Showing all ${reviews.length} client reviews` : `Showing 4 of ${reviews.length} client reviews`}
@@ -3072,7 +3027,7 @@ export default function App() {
                 
                 <div className="lg:col-span-7 space-y-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#82C8E5]/20 text-[#000080] text-xs font-bold border border-[#82C8E5]/50">
-                    <i data-lucide="map-pin" className="w-3.5 h-3.5 text-[#0047AB]"></i>
+                    <Icon name="map-pin" className="w-3.5 h-3.5 text-[#0047AB]"></Icon>
                     <span>Consultancy Headquarters</span>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-black text-slate-900 font-heading">
@@ -3084,19 +3039,19 @@ export default function App() {
 
                   <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-slate-700">
                     <div className="flex items-start gap-2.5">
-                      <i data-lucide="building" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></i>
+                      <Icon name="building" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></Icon>
                       <span><strong>Address:</strong> Sujata Apartment, in front of Mathubai Garware College, Star Bhel Road, behind Divekar Hospital, Risala Road, Sangli - 416416, Maharashtra</span>
                     </div>
                     <a href="tel:+917057132237" className="flex items-center gap-2.5 text-slate-700 hover:text-[#0047AB] transition-colors">
-                      <i data-lucide="phone" className="w-4 h-4 text-[#0047AB] shrink-0"></i>
+                      <Icon name="phone" className="w-4 h-4 text-[#0047AB] shrink-0"></Icon>
                       <span><strong>Main line · Calls & WhatsApp:</strong> +91 70571 32237</span>
                     </a>
                     <a href="tel:+917776977171" aria-label="Call alternate number +91 77769 77171. Calls only, no WhatsApp." className="flex items-start gap-2.5 text-slate-700 hover:text-[#0047AB] transition-colors">
-                      <i data-lucide="phone-call" className="w-4 h-4 text-amber-700 shrink-0 mt-0.5"></i>
+                      <Icon name="phone-call" className="w-4 h-4 text-amber-700 shrink-0 mt-0.5"></Icon>
                       <span><strong>Alternate · Calls only:</strong> +91 77769 77171 <span className="block pl-0.5 text-[11px] text-slate-500">Not available on WhatsApp</span></span>
                     </a>
                     <div className="flex items-center gap-2.5">
-                      <i data-lucide="mail" className="w-4 h-4 text-[#0047AB] shrink-0"></i>
+                      <Icon name="mail" className="w-4 h-4 text-[#0047AB] shrink-0"></Icon>
                       <span><strong>Email:</strong> smitadesai1821@gmail.com</span>
                     </div>
                   </div>
@@ -3109,7 +3064,7 @@ export default function App() {
                     rel="noopener noreferrer"
                     className="btn-pill py-3.5 bg-[#000080] hover:bg-[#00144d] text-white text-xs font-bold border border-[#000080] shadow-md touch-target"
                   >
-                    <i data-lucide="map" className="w-4 h-4 text-[#82C8E5]"></i>
+                    <Icon name="map" className="w-4 h-4 text-[#82C8E5]"></Icon>
                     <span>Open Location in Google Maps</span>
                   </a>
 
@@ -3118,7 +3073,7 @@ export default function App() {
                     aria-label="Call only number +91 77769 77171"
                     className="btn-pill btn-pill-cobalt py-3.5 text-xs font-bold uppercase tracking-wider shadow-sm touch-target"
                   >
-                    <i data-lucide="phone-call" className="w-4 h-4"></i>
+                    <Icon name="phone-call" className="w-4 h-4"></Icon>
                     <span>Call only: +91 77769 77171</span>
                   </a>
                   <a
@@ -3127,7 +3082,7 @@ export default function App() {
                     rel="noopener noreferrer"
                     className="btn-pill py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm touch-target"
                   >
-                    <i data-lucide="message-circle" className="w-4 h-4"></i>
+                    <Icon name="message-circle" className="w-4 h-4"></Icon>
                     <span>WhatsApp: +91 70571 32237</span>
                   </a>
                 </div>
@@ -3204,15 +3159,15 @@ export default function App() {
       <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-dock-light px-3 py-2">
         <div className="grid grid-cols-4 gap-1 items-center max-w-md mx-auto">
           <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" title="Call only: +91 77769 77171" className="touch-target flex flex-col items-center justify-center p-1.5 rounded-xl text-slate-600 hover:text-[#0047AB]">
-            <i data-lucide="phone" className="w-5 h-5 text-[#0047AB]"></i>
+            <Icon name="phone" className="w-5 h-5 text-[#0047AB]"></Icon>
             <span className="text-[10px] font-bold mt-1">Call</span>
           </a>
           <a href="#services" className="touch-target flex flex-col items-center justify-center p-1.5 rounded-xl text-slate-600 hover:text-[#0047AB]">
-            <i data-lucide="grid" className="w-5 h-5 text-blue-600"></i>
+            <Icon name="grid" className="w-5 h-5 text-blue-600"></Icon>
             <span className="text-[10px] font-bold mt-1">Services</span>
           </a>
           <a href="#enquiry-section" className="touch-target flex flex-col items-center justify-center p-1.5 rounded-xl bg-emerald-600 text-white font-bold shadow-md active:scale-95 transition-transform">
-            <i data-lucide="message-circle" className="w-5 h-5"></i>
+            <Icon name="message-circle" className="w-5 h-5"></Icon>
             <span className="text-[10px] font-bold mt-1">Enquire</span>
           </a>
           <a 
@@ -3221,7 +3176,7 @@ export default function App() {
             rel="noopener noreferrer"
             className="touch-target flex flex-col items-center justify-center p-1.5 rounded-xl text-emerald-600 hover:text-emerald-700"
           >
-            <i data-lucide="message-square" className="w-5 h-5 text-emerald-600"></i>
+            <Icon name="message-square" className="w-5 h-5 text-emerald-600"></Icon>
             <span className="text-[10px] font-bold mt-1">WhatsApp</span>
           </a>
         </div>
@@ -3232,7 +3187,7 @@ export default function App() {
         <div className="fixed inset-0 z-[100] modal-backdrop-light animate-modal-backdrop flex items-center justify-center p-4">
           <div className="glass-panel border border-white/95 rounded-3xl p-6 sm:p-8 max-w-sm w-full relative shadow-2xl space-y-5 text-center animate-modal-content">
             <button onClick={() => setQrModalOpen(false)} className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 text-slate-500 hover:text-slate-900" aria-label="Close">
-              <i data-lucide="x" className="w-5 h-5"></i>
+              <Icon name="x" className="w-5 h-5"></Icon>
             </button>
             <div className="space-y-2">
               <div className="w-14 h-14 rounded-2xl bg-white p-1.5 shadow-md mx-auto border border-slate-200/90 overflow-hidden flex items-center justify-center">
@@ -3267,7 +3222,7 @@ export default function App() {
                 rel="noopener noreferrer"
                 className="flex-1 btn-pill btn-pill-cobalt py-2.5 text-xs flex items-center justify-center gap-1.5"
               >
-                <i data-lucide="message-circle" className="w-4 h-4"></i> WhatsApp
+                <Icon name="message-circle" className="w-4 h-4"></Icon> WhatsApp
               </a>
               <button onClick={() => setQrModalOpen(false)} className="btn-pill btn-pill-outline py-2.5 px-4 text-xs">
                 Close
@@ -3282,7 +3237,7 @@ export default function App() {
         <div className="fixed inset-0 z-[100] modal-backdrop-light flex items-center justify-center p-4">
           <div className="max-w-3xl w-full bg-white/95 backdrop-blur-xl border border-white/90 rounded-3xl p-5 relative shadow-2xl flex flex-col items-center max-h-[92vh] animate-modal-content">
             <button onClick={() => setLightboxData({ open: false, src: '', caption: '' })} className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 text-slate-600 hover:text-slate-900 z-10" aria-label="Close">
-              <i data-lucide="x" className="w-5 h-5"></i>
+              <Icon name="x" className="w-5 h-5"></Icon>
             </button>
             <div className="w-full flex-1 overflow-auto rounded-2xl bg-slate-50/80 p-3 flex items-center justify-center min-h-[300px]">
               <img src={lightboxData.src} alt={lightboxData.caption || 'Scheme flyer'} className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-xs" />
@@ -3295,7 +3250,7 @@ export default function App() {
                 rel="noopener noreferrer" 
                 className="btn-pill px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold shrink-0 shadow-xs"
               >
-                <i data-lucide="message-circle" className="w-3.5 h-3.5"></i>
+                <Icon name="message-circle" className="w-3.5 h-3.5"></Icon>
                 <span>Enquire on WhatsApp</span>
               </a>
             </div>}
@@ -3314,19 +3269,19 @@ export default function App() {
               className="absolute top-5 right-5 p-2 rounded-full bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors"
               aria-label="Close modal"
             >
-              <i data-lucide="x" className="w-5 h-5"></i>
+              <Icon name="x" className="w-5 h-5"></Icon>
             </button>
 
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#82C8E5]/20 text-[#000080] text-xs font-bold border border-[#82C8E5]/50 mb-2">
-                <i data-lucide="star" className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400"></i>
+                <Icon name="star" className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400"></Icon>
                 <span>Direct Client Review</span>
               </div>
               <h3 className="text-2xl font-black text-slate-900 font-heading">
                 Share Your Experience
               </h3>
               <p className="text-xs text-slate-500 mt-1">
-                Your feedback will be published directly on the website to guide other families and businesses in Sangli.
+                Your feedback will be saved in this browser to guide other families and businesses in Sangli.
               </p>
             </div>
 
@@ -3344,10 +3299,10 @@ export default function App() {
                       onClick={() => setReviewRating(star)}
                       className="p-1 text-yellow-400 hover:scale-125 transition-transform focus:outline-none"
                     >
-                      <i 
-                        data-lucide="star" 
+                      <Icon 
+                        name="star" 
                         className={`w-7 h-7 ${star <= reviewRating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'}`}
-                      ></i>
+                      ></Icon>
                     </button>
                   ))}
                   <span className="text-xs font-bold text-[#000080] ml-2 bg-[#82C8E5]/20 px-2.5 py-1 rounded-lg border border-[#82C8E5]/50">
@@ -3430,7 +3385,7 @@ export default function App() {
                   onClick={handleReviewSubmit}
                   className="w-full sm:flex-1 btn-pill btn-pill-cobalt py-3.5 text-xs font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform"
                 >
-                  <i data-lucide="check-circle-2" className="w-4 h-4"></i>
+                  <Icon name="check-circle-2" className="w-4 h-4"></Icon>
                   <span>Publish Review Directly</span>
                 </button>
                 <button
@@ -3458,11 +3413,11 @@ export default function App() {
               className="absolute top-4 right-4 p-2 rounded-full bg-slate-100/80 hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors"
               aria-label="Close"
             >
-              <i data-lucide="x" className="w-4 h-4"></i>
+              <Icon name="x" className="w-4 h-4"></Icon>
             </button>
 
             <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto shadow-xs">
-              <i data-lucide="trash-2" className="w-6 h-6"></i>
+              <Icon name="trash-2" className="w-6 h-6"></Icon>
             </div>
 
             <div className="text-center space-y-1.5">
@@ -3480,7 +3435,7 @@ export default function App() {
                 onClick={() => handleDeleteReview(deleteConfirmModal.reviewId)}
                 className="w-full sm:flex-1 py-3 px-4 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold uppercase tracking-wider shadow-md flex items-center justify-center gap-2 transition-transform active:scale-95"
               >
-                <i data-lucide="trash-2" className="w-4 h-4"></i>
+                <Icon name="trash-2" className="w-4 h-4"></Icon>
                 <span>Yes, Remove Review</span>
               </button>
               <button
