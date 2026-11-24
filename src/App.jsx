@@ -1009,7 +1009,9 @@ export default function App() {
     }
   ];
 
-  const schemeSlideCount = Math.ceil(schemeFlyers.length / FLYER_SECTIONS.length);
+  const coreServiceFlyerIds = new Set([1, 3, 4, 6, 8]);
+  const galleryFlyers = schemeFlyers.filter(item => !coreServiceFlyerIds.has(item.id));
+  const schemeSlideCount = Math.ceil(galleryFlyers.length / FLYER_SECTIONS.length);
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || schemeSlideCount < 2) return;
     const timer = window.setInterval(() => {
@@ -2434,7 +2436,7 @@ export default function App() {
 
             <div className="space-y-0" aria-label="Scheme flyer collections">
               {FLYER_SECTIONS.map((category, sectionIndex) => {
-                const categoryItems = schemeFlyers.filter((item, flyerIndex) => flyerIndex % FLYER_SECTIONS.length === sectionIndex);
+                const categoryItems = galleryFlyers.filter((item, flyerIndex) => flyerIndex % FLYER_SECTIONS.length === sectionIndex);
                 const categoryLength = categoryItems.length;
                 const categoryOffset = schemeSlideOffsets[category.tag] || 0;
                 const activeIndex = categoryLength
