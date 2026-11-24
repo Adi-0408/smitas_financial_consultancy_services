@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 const STORAGE_KEY_REVIEWS = 'sfcs_client_reviews_v1';
 const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
 const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
+const SITE_SHARE_URL = 'https://smitasfinancialconsultancyservices.vercel.app/?share=profile';
 const FLYER_SECTIONS = [
   { tag: 'Flyer collection 1' },
   { tag: 'Flyer collection 2' },
@@ -400,7 +401,7 @@ export default function App() {
     const shareData = {
       title: "Smita's Financial Consultancy Services",
       text: "“Your Trust, Our Commitment.” Personalized financial planning, Insurance, SIP & Loans from 8+ yrs experienced financial consultant Smita Desai in Sangli.",
-      url: window.location.href
+      url: SITE_SHARE_URL
     };
 
     if (navigator.share) {
@@ -415,10 +416,10 @@ export default function App() {
   };
 
   const copyLinkFallback = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
+    navigator.clipboard.writeText(SITE_SHARE_URL).then(() => {
       triggerToast('Direct link copied to clipboard!');
     }).catch(() => {
-      triggerToast('Share URL: ' + window.location.href);
+      triggerToast('Share URL: ' + SITE_SHARE_URL);
     });
   };
 
