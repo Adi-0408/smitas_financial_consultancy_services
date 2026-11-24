@@ -2503,11 +2503,11 @@ export default function App() {
                     className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-500"
                   />
                   {/* Floating Metric Badge */}
-                  <div className="absolute top-3.5 left-3.5 px-3.5 py-1.5 rounded-full bg-[#000080]/90 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-md border border-white/20">
+                  <div className="absolute top-3.5 left-3.5 hidden px-3.5 py-1.5 rounded-full bg-[#000080]/90 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-md border border-white/20 sm:block">
                     {item.badgeMetric}
                   </div>
                   {/* Floating Tag */}
-                  <div className="absolute top-3.5 right-3.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#000080] text-[11px] font-black uppercase tracking-wider shadow-xs border border-white/70">
+                  <div className="absolute top-3.5 right-3.5 hidden px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#000080] text-[11px] font-black uppercase tracking-wider shadow-xs border border-white/70 sm:block">
                     {item.tag}
                   </div>
                   {/* Smooth Zoom Hover Overlay */}
