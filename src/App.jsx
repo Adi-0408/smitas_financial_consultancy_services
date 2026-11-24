@@ -396,9 +396,21 @@ export default function App() {
     triggerToast('Contact card (vCard) downloaded successfully!');
   };
 
-  // Open WhatsApp with the website URL as the only message so it can render the link preview.
+  // Let the recipient app build its preview from the single website link.
   const shareProfile = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(SITE_SHARE_URL)}`, '_blank', 'noopener,noreferrer');
+    if (navigator.share) {
+      navigator.share({ text: SITE_SHARE_URL }).catch(error => {
+        if (error.name !== 'AbortError') copyLinkFallback();
+      });
+    } else {
+      copyLinkFallback();
+    }
+  };
+
+  const copyLinkFallback = () => {
+    navigator.clipboard.writeText(SITE_SHARE_URL)
+      .then(() => triggerToast('Website link copied to clipboard!'))
+      .catch(() => triggerToast('Share URL: ' + SITE_SHARE_URL));
   };
 
   const copyUpiId = () => {
@@ -1181,8 +1193,8 @@ export default function App() {
               <button 
                 onClick={shareProfile} 
                 className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 transition-all shadow-xs flex items-center justify-center active:scale-95" 
-                title="Share Website on WhatsApp"
-                aria-label="Share Website on WhatsApp"
+                title="Share Website"
+                aria-label="Share Website"
               >
                 <Icon name="share-2" className="w-4 h-4"></Icon>
               </button>
@@ -1286,7 +1298,7 @@ export default function App() {
                 <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" className="flex-1 py-2.5 px-3 rounded-full btn-pill-cobalt text-xs font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform">
                   <Icon name="phone-call" className="w-4 h-4"></Icon> Call Now
                 </a>
-                <button onClick={shareProfile} aria-label="Share Website on WhatsApp" className="flex-1 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-2 border border-slate-200 active:scale-95 transition-all">
+                <button onClick={shareProfile} aria-label="Share Website" className="flex-1 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-2 border border-slate-200 active:scale-95 transition-all">
                   <Icon name="share-2" className="w-4 h-4"></Icon> Share
                 </button>
               </div>
@@ -1364,7 +1376,7 @@ export default function App() {
                   <button 
                     onClick={shareProfile}
                     className="btn-pill btn-pill-outline px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm shadow-xs touch-target justify-center whitespace-nowrap"
-                    title="Share Website on WhatsApp"
+                    title="Share Website"
                   >
                     <Icon name="share-2" className="w-4 h-4"></Icon>
                     <span>Share</span>
