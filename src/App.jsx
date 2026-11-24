@@ -53,7 +53,25 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualInd
   const touchStartX = useRef(null);
   const suppressOpen = useRef(false);
   const currentIndex = items.length ? activeIndex % items.length : 0;
+  const previousIndex = useRef(currentIndex);
+  const [displayIndex, setDisplayIndex] = useState(currentIndex);
+  const [skipTransition, setSkipTransition] = useState(false);
   const move = (direction) => onManualIndexChange((currentIndex + direction + items.length) % items.length);
+
+  useEffect(() => {
+    if (currentIndex === previousIndex.current) return;
+    setSkipTransition(false);
+    setDisplayIndex(previousIndex.current === items.length - 1 && currentIndex === 0
+      ? items.length
+      : currentIndex);
+    previousIndex.current = currentIndex;
+  }, [currentIndex, items.length]);
+
+  useEffect(() => {
+    if (!skipTransition) return;
+    const frame = requestAnimationFrame(() => setSkipTransition(false));
+    return () => cancelAnimationFrame(frame);
+  }, [skipTransition]);
 
   return (
     <article
@@ -75,7 +93,15 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualInd
         }}
         aria-label={`${category.tag} image slider`}
       >
-        <div className="scheme-slide-track flex" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+        <div
+          className="scheme-slide-track flex"
+          style={{ transform: `translateX(-${displayIndex * 100}%)`, transition: skipTransition ? 'none' : undefined }}
+          onTransitionEnd={event => {
+            if (event.target !== event.currentTarget || displayIndex !== items.length) return;
+            setSkipTransition(true);
+            setDisplayIndex(0);
+          }}
+        >
           {items.map((item, index) => (
             <div key={item.id} className="w-full shrink-0" aria-hidden={index !== currentIndex}>
               <button type="button" tabIndex={index === currentIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image flex h-[360px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[500px] lg:h-[560px]" aria-label={`View ${item.title} flyer in full size`}>
@@ -83,6 +109,13 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualInd
               </button>
             </div>
           ))}
+          {items.length > 1 && (
+            <div className="w-full shrink-0" aria-hidden="true">
+              <div className="flex h-[360px] w-full items-center justify-center sm:h-[500px] lg:h-[560px]">
+                <img src={items[0].src} alt="" className="h-full w-full object-contain" loading="lazy" />
+              </div>
+            </div>
+          )}
         </div>
         <button
           type="button"
