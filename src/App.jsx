@@ -4,11 +4,11 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 const STORAGE_KEY_REVIEWS = 'sfcs_client_reviews_v1';
 const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
 const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
-const SCHEME_CATEGORIES = [
-  { tag: 'Loans', icon: 'landmark', description: 'Funding for homes, businesses and personal goals' },
-  { tag: 'Insurance', icon: 'shield-check', description: 'Health, life, motor and retirement protection' },
-  { tag: 'Investments', icon: 'trending-up', description: 'SIP ideas and long-term wealth planning' },
-  { tag: 'Careers', icon: 'briefcase-business', description: 'Opportunities in financial services' }
+const FLYER_SECTIONS = [
+  { tag: 'Flyer collection 1' },
+  { tag: 'Flyer collection 2' },
+  { tag: 'Flyer collection 3' },
+  { tag: 'Flyer collection 4' }
 ];
 const INITIAL_REVIEWS = [
   {
@@ -985,11 +985,11 @@ export default function App() {
     }
   ];
 
-  const schemeSlideCount = Math.max(...SCHEME_CATEGORIES.map(category => schemeFlyers.filter(item => item.tag === category.tag).length));
+  const schemeSlideCount = Math.ceil(schemeFlyers.length / FLYER_SECTIONS.length);
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || schemeSlideCount < 2) return;
     const timer = window.setInterval(() => {
-      if (!document.hidden) setSchemeSlideIndex(index => (index + 1) % schemeSlideCount);
+      if (!document.hidden) setSchemeSlideIndex(index => index + 1);
     }, 4000);
     return () => window.clearInterval(timer);
   }, [schemeSlideCount]);
@@ -2404,13 +2404,13 @@ export default function App() {
                 Authentic Scheme Catalogues & Flyers
               </h2>
               <p className="text-slate-600 text-xs sm:text-sm mt-2">
-                Explore loan, insurance, investment and career flyers, grouped by service.
+                Explore our loan, insurance, investment and career flyers across four collections.
               </p>
             </div>
 
             <div className="space-y-0" aria-label="Scheme flyer collections">
-              {SCHEME_CATEGORIES.map(category => {
-                const categoryItems = schemeFlyers.filter(item => item.tag === category.tag);
+              {FLYER_SECTIONS.map((category, sectionIndex) => {
+                const categoryItems = schemeFlyers.filter((item, flyerIndex) => flyerIndex % FLYER_SECTIONS.length === sectionIndex);
                 const categoryLength = categoryItems.length;
                 const categoryOffset = schemeSlideOffsets[category.tag] || 0;
                 const activeIndex = categoryLength
