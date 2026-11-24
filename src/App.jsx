@@ -48,43 +48,17 @@ const INITIAL_REVIEWS = [
   }
 ];
 
-function SchemeFlyerCarousel({ category, items, onOpen }) {
+function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIndex, slideCount }) {
   const panelRef = useRef(null);
   const touchStartX = useRef(null);
   const suppressOpen = useRef(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel || !window.IntersectionObserver) {
-      setVisible(true);
-      return;
-    }
-    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.25 });
-    observer.observe(panel);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!visible || paused || items.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const timer = window.setInterval(() => {
-      if (!document.hidden) setActiveIndex(index => (index + 1) % items.length);
-    }, 2000);
-    return () => window.clearInterval(timer);
-  }, [visible, paused, items.length, activeIndex]);
-
-  const move = (direction) => setActiveIndex(index => (index + direction + items.length) % items.length);
+  const currentIndex = items.length ? activeIndex % items.length : 0;
+  const move = (direction) => setActiveIndex(index => (index + direction + slideCount) % slideCount);
 
   return (
     <article
       ref={panelRef}
-      className="group relative py-3"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false); }}
+      className="group relative border-b border-slate-200 py-5 last:border-b-0"
       aria-label={`${category.tag} flyers`}
     >
       <div className="hidden">
@@ -100,7 +74,7 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
           </div>
         </div>
         <div className="flex items-center justify-between gap-4 sm:justify-end">
-          <span className="text-xs font-bold tabular-nums text-slate-500"><strong className="text-[#0047AB]">{String(activeIndex + 1).padStart(2, '0')}</strong> / {String(items.length).padStart(2, '0')}</span>
+          <span className="text-xs font-bold tabular-nums text-slate-500"><strong className="text-[#0047AB]">{String(currentIndex + 1).padStart(2, '0')}</strong> / {String(items.length).padStart(2, '0')}</span>
           <div className="flex gap-2">
             <button type="button" onClick={() => move(-1)} disabled={items.length < 2} className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-[#0047AB] shadow-sm transition-all hover:-translate-x-0.5 hover:border-[#0047AB] hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:cursor-not-allowed disabled:opacity-40" aria-label={`Previous ${category.tag} flyer`}><i data-lucide="arrow-left" className="h-4 w-4" aria-hidden="true"></i></button>
             <button type="button" onClick={() => move(1)} disabled={items.length < 2} className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0047AB] text-white shadow-md transition-all hover:translate-x-0.5 hover:bg-[#000080] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:cursor-not-allowed disabled:opacity-40" aria-label={`Next ${category.tag} flyer`}><i data-lucide="arrow-right" className="h-4 w-4" aria-hidden="true"></i></button>
@@ -123,10 +97,10 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
         }}
         aria-label={`${category.tag} image slider`}
       >
-        <div className="scheme-slide-track flex" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+        <div className="scheme-slide-track flex" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {items.map((item, index) => (
-            <div key={item.id} className="w-full shrink-0" aria-hidden={index !== activeIndex}>
-              <button type="button" tabIndex={index === activeIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image flex h-[360px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[500px] lg:h-[560px]" aria-label={`View ${item.title} flyer in full size`}>
+            <div key={item.id} className="w-full shrink-0" aria-hidden={index !== currentIndex}>
+              <button type="button" tabIndex={index === currentIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image flex h-[360px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[500px] lg:h-[560px]" aria-label={`View ${item.title} flyer in full size`}>
                 <img src={item.src} alt={item.title} className="h-full w-full object-contain transition-transform duration-500 group-hover/image:scale-[1.02]" loading="lazy" />
               </button>
               <div className="hidden">
@@ -136,7 +110,7 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
                 <ul className="mt-4 space-y-2 text-xs text-slate-600">
                   {item.highlights?.slice(0, 2).map(highlight => <li key={highlight} className="flex items-start gap-2"><i data-lucide="check-circle-2" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" aria-hidden="true"></i><span>{highlight}</span></li>)}
                 </ul>
-                <a href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${item.title}" and would like to get more information.`)}`} target="_blank" rel="noopener noreferrer" tabIndex={index === activeIndex ? 0 : -1} className="mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700"><i data-lucide="message-circle" className="h-4 w-4" aria-hidden="true"></i>Enquire on WhatsApp</a>
+                <a href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, I saw the flyer for "${item.title}" and would like to get more information.`)}`} target="_blank" rel="noopener noreferrer" tabIndex={index === currentIndex ? 0 : -1} className="mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700"><i data-lucide="message-circle" className="h-4 w-4" aria-hidden="true"></i>Enquire on WhatsApp</a>
               </div>
             </div>
           ))}
@@ -145,7 +119,7 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
 
       <div className="mt-3 flex justify-center">
         <div className="flex max-w-full gap-1.5 overflow-x-auto px-2 py-1" aria-label="Choose flyer">
-          {items.map((item, index) => <button key={item.id} type="button" onClick={() => setActiveIndex(index)} className={`h-2 shrink-0 rounded-full transition-all ${index === activeIndex ? 'w-6 bg-[#0047AB]' : 'w-2 bg-slate-300 hover:bg-[#82C8E5]'}`} aria-label={`Show ${item.title}`} aria-current={index === activeIndex ? 'true' : undefined} />)}
+          {items.map((item, index) => <button key={item.id} type="button" onClick={() => setActiveIndex(index)} className={`h-2 shrink-0 rounded-full transition-all ${index === currentIndex ? 'w-6 bg-[#0047AB]' : 'w-2 bg-slate-300 hover:bg-[#82C8E5]'}`} aria-label={`Show ${item.title}`} aria-current={index === currentIndex ? 'true' : undefined} />)}
         </div>
       </div>
     </article>
@@ -154,6 +128,7 @@ function SchemeFlyerCarousel({ category, items, onOpen }) {
 
 export default function App() {
   // Navigation & UI States
+  const [schemeSlideIndex, setSchemeSlideIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeGalleryTab, setActiveGalleryTab] = useState('all');
@@ -1035,6 +1010,15 @@ export default function App() {
       highlights: ['Life cover options as described in the flyer', 'Review plan options and rider details', 'Read the insurer brochure for terms and exclusions']
     }
   ];
+
+  const schemeSlideCount = Math.max(...SCHEME_CATEGORIES.map(category => schemeFlyers.filter(item => item.tag === category.tag).length));
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || schemeSlideCount < 2) return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden) setSchemeSlideIndex(index => (index + 1) % schemeSlideCount);
+    }, 2000);
+    return () => window.clearInterval(timer);
+  }, [schemeSlideCount]);
 
   // Photo Gallery Data (Awards, Certificates & Visiting Cards)
   const photoGalleryItems = [
@@ -2450,12 +2434,15 @@ export default function App() {
               </p>
             </div>
 
-            <div className="space-y-8" aria-label="Scheme flyer collections">
+            <div className="space-y-0" aria-label="Scheme flyer collections">
               {SCHEME_CATEGORIES.map(category => (
                 <SchemeFlyerCarousel
                   key={category.tag}
                   category={category}
                   items={schemeFlyers.filter(item => item.tag === category.tag)}
+                  activeIndex={schemeSlideIndex}
+                  setActiveIndex={setSchemeSlideIndex}
+                  slideCount={schemeSlideCount}
                   onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
                 />
               ))}
