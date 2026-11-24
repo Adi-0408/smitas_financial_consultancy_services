@@ -2373,10 +2373,6 @@ export default function App() {
                   >
                     <img src={item.src} alt={item.title} className="h-full w-full object-contain" loading="lazy" />
                   </button>
-                  <GalleryItemDetails
-                    item={item}
-                    onOpen={card => setLightboxData({ open: true, src: card.src, caption: card.caption })}
-                  />
                 </article>
               ))}
             </div>
