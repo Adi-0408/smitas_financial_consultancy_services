@@ -83,7 +83,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
       </div>
 
       <div
-        className="overflow-hidden"
+        className="relative overflow-hidden"
         onTouchStart={(event) => { touchStartX.current = event.touches[0].clientX; }}
         onTouchEnd={(event) => {
           if (touchStartX.current === null || items.length < 2) return;
@@ -115,6 +115,24 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
             </div>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={() => move(-1)}
+          disabled={items.length < 2}
+          className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/90 text-[#0047AB] shadow-md backdrop-blur-sm transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:opacity-40 sm:left-3 sm:h-10 sm:w-10"
+          aria-label={`Previous ${category.tag} flyer`}
+        >
+          <i data-lucide="chevron-left" className="h-4 w-4" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          onClick={() => move(1)}
+          disabled={items.length < 2}
+          className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/90 text-[#0047AB] shadow-md backdrop-blur-sm transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:opacity-40 sm:right-3 sm:h-10 sm:w-10"
+          aria-label={`Next ${category.tag} flyer`}
+        >
+          <i data-lucide="chevron-right" className="h-4 w-4" aria-hidden="true"></i>
+        </button>
       </div>
 
       <div className="mt-3 flex justify-center">
