@@ -398,11 +398,7 @@ export default function App() {
 
   // Native Web Share with Clipboard Fallback
   const shareProfile = () => {
-    const shareData = {
-      title: "Smita's Financial Consultancy Services",
-      text: "“Your Trust, Our Commitment.” Personalized financial planning, Insurance, SIP & Loans from 8+ yrs experienced financial consultant Smita Desai in Sangli.",
-      url: SITE_SHARE_URL
-    };
+    const shareData = { url: SITE_SHARE_URL };
 
     if (navigator.share) {
       navigator.share(shareData)
