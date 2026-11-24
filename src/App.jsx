@@ -728,7 +728,7 @@ export default function App() {
         'Best rates for 2-Wheelers, Private Cars & Commercial',
         'Zero-Depreciation & Cashless network garages'
       ],
-      flyer: 'assets/flyer_vehicle_insurance_supplied.png',
+      flyer: 'assets/flyer_vehicle_insurance_updated.webp',
       flyerTitle: 'All Types of Vehicle Online Insurance Flyer'
     },
     {
