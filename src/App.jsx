@@ -993,6 +993,13 @@ export default function App() {
 
   const highlightItems = photoGalleryItems.filter(item => item.category !== 'visiting-cards');
   const visitingCards = photoGalleryItems.filter(item => item.category === 'visiting-cards');
+  useEffect(() => {
+    if (lightboxData.open || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden) setHighlightIndex(index => (index + 1) % highlightItems.length);
+    }, 8000);
+    return () => window.clearInterval(timer);
+  }, [highlightIndex, highlightItems.length, lightboxData.open]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-sky-200 selection:text-navy-900 pb-16 md:pb-0">
@@ -2338,7 +2345,7 @@ export default function App() {
 
           </div>
 
-          <div aria-label="Awards and certificates">
+          <div aria-label="Awards and certificates" className="mx-auto max-w-6xl rounded-3xl border border-slate-200 bg-white px-4 pb-4 shadow-xl sm:px-6 sm:pb-6 lg:px-8">
             <SchemeFlyerCarousel
               category={{ tag: 'Professional highlights' }}
               itemType="image"
@@ -2357,7 +2364,7 @@ export default function App() {
             <h3 className="font-heading text-2xl font-extrabold text-slate-900">Visiting Cards</h3>
             <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
               {visitingCards.map(item => (
-                <article key={item.id}>
+                <article key={item.id} className="rounded-3xl border border-slate-200 bg-white p-4 shadow-lg sm:p-6">
                   <button
                     type="button"
                     onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
