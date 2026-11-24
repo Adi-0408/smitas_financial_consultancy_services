@@ -369,7 +369,7 @@ export default function App() {
       'TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+917057132237',
       'TEL;TYPE=WORK,VOICE;VALUE=uri:tel:+917776977171',
       'EMAIL;TYPE=INTERNET,WORK:smitadesai1821@gmail.com',
-      'ADR;TYPE=WORK:;;Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road;Sangli;Maharashtra;416416;India',
+      'ADR;TYPE=WORK:;;;;Sangli;Maharashtra;;India',
       'NOTE:Alternate phone +91 77769 77171 is for calls only and is not available on WhatsApp. WhatsApp: +91 70571 32237. 8+ Years Financial Excellence. Life & Health Insurance, Mutual Funds SIP, Home & Business Loans. Certified NJ Wealth Partner (Code: 28795). "Your Trust, Our Commitment."',
       'URL:https://smitasfinancialconsultancyservices.vercel.app/',
       'END:VCARD'
@@ -3067,7 +3067,7 @@ export default function App() {
                   <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-slate-700">
                     <div className="flex items-start gap-2.5">
                       <i data-lucide="building" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></i>
-                      <span><strong>Address:</strong> Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road, Sangli - 416416, Maharashtra</span>
+                      <span><strong>Location:</strong> Sangli, Maharashtra</span>
                     </div>
                     <a href="tel:+917057132237" className="flex items-center gap-2.5 text-slate-700 hover:text-[#0047AB] transition-colors">
                       <i data-lucide="phone" className="w-4 h-4 text-[#0047AB] shrink-0"></i>
@@ -3086,7 +3086,7 @@ export default function App() {
 
                 <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                   <a
-                    href="https://www.google.com/maps/search/?api=1&query=Sujata+Apartment,+In+front+of+Mathubai+Garware+College,+Star+Bhel+road,+Behind+Divekar+Hospital,+Risala+Road,+Sangli+416416+Maharashtra"
+                    href="https://maps.app.goo.gl/g3sJiweKafxiKUjK6"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-pill py-3.5 bg-[#000080] hover:bg-[#00144d] text-white text-xs font-bold border border-[#000080] shadow-md touch-target"
@@ -3167,7 +3167,7 @@ export default function App() {
             <p><a href="tel:+917776977171" aria-label="Call alternate number +91 77769 77171. Calls only, no WhatsApp." className="hover:text-white">Alternate · Calls only: +91 77769 77171</a></p>
             <p className="text-[11px] text-slate-500">The alternate number is not available on WhatsApp.</p>
             <p>Email: smitadesai1821@gmail.com</p>
-            <p className="leading-relaxed">Sujata Apartment, In front of Mathubai Garware College, Star Bhel road, Behind Divekar Hospital, Risala Road, Sangli - 416416, Maharashtra</p>
+            <p className="leading-relaxed">Location: Sangli, Maharashtra</p>
           </div>
 
         </div>
