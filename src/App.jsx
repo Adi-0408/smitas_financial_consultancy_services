@@ -834,7 +834,9 @@ export default function App() {
     { id: 7, title: 'SIP Discipline and Wealth', src: 'assets/gallery_sip_resilience.png', caption: 'SIP Discipline and Wealth' },
     { id: 8, title: 'Kotak Term Insurance Plans', src: 'assets/gallery_kotak_term_plan.png', caption: 'Kotak Term Insurance Plans' },
     { id: 9, title: 'SIP for Long-Term Growth', src: 'assets/gallery_sip_billboard.png', caption: 'SIP for Long-Term Growth' },
-    { id: 10, title: 'Long-Term Savings Illustration', src: 'assets/gallery_savings_illustration.png', caption: 'Long-Term Savings Illustration' }
+    { id: 10, title: 'Long-Term Savings Illustration', src: 'assets/gallery_savings_illustration.png', caption: 'Long-Term Savings Illustration' },
+    { id: 11, title: 'SIP for Education, Wedding and Retirement', src: 'assets/gallery_sip_life_goals.webp', caption: 'SIP for Education, Wedding and Retirement' },
+    { id: 12, title: 'Top-Up SIP for Retirement', src: 'assets/gallery_top_up_sip_new.webp', caption: 'Top-Up SIP for Retirement' }
   ];
   const schemeSlideCount = Math.ceil(galleryFlyers.length / FLYER_SECTIONS.length);
   useEffect(() => {
