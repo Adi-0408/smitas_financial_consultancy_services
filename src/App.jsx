@@ -152,26 +152,11 @@ export default function App() {
   const [schemeSlideIndex, setSchemeSlideIndex] = useState(0);
   const [schemeSlideOffsets, setSchemeSlideOffsets] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const shareImageRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeGalleryTab, setActiveGalleryTab] = useState('all');
   const [activeAboutTab, setActiveAboutTab] = useState('about');
   const [calcTab, setCalcTab] = useState('sip');
   const [showAllReviews, setShowAllReviews] = useState(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch('/assets/smita_profile.jpg', { signal: controller.signal })
-      .then(response => {
-        if (!response.ok) throw new Error('Owner photo unavailable');
-        return response.blob();
-      })
-      .then(blob => {
-        shareImageRef.current = new File([blob], 'smita-desai.jpg', { type: 'image/jpeg' });
-      })
-      .catch(() => {});
-    return () => controller.abort();
-  }, []);
 
   // Reviews State (with LocalStorage persistence for user-submitted reviews)
   const [reviews, setReviews] = useState(() => {
@@ -411,30 +396,9 @@ export default function App() {
     triggerToast('Contact card (vCard) downloaded successfully!');
   };
 
-  // Native Web Share with Clipboard Fallback
+  // Open WhatsApp with the website URL as the only message so it can render the link preview.
   const shareProfile = () => {
-    const image = shareImageRef.current;
-    const shareData = image && navigator.canShare?.({ files: [image] })
-      ? { files: [image], text: SITE_SHARE_URL, title: "Smita's Financial Consultancy Services" }
-      : { url: SITE_SHARE_URL };
-
-    if (navigator.share) {
-      navigator.share(shareData)
-        .then(() => triggerToast('Profile shared successfully!'))
-        .catch((err) => {
-          if (err.name !== 'AbortError') copyLinkFallback();
-        });
-    } else {
-      copyLinkFallback();
-    }
-  };
-
-  const copyLinkFallback = () => {
-    navigator.clipboard.writeText(SITE_SHARE_URL).then(() => {
-      triggerToast('Direct link copied to clipboard!');
-    }).catch(() => {
-      triggerToast('Share URL: ' + SITE_SHARE_URL);
-    });
+    window.open(`https://wa.me/?text=${encodeURIComponent(SITE_SHARE_URL)}`, '_blank', 'noopener,noreferrer');
   };
 
   const copyUpiId = () => {
@@ -1217,8 +1181,8 @@ export default function App() {
               <button 
                 onClick={shareProfile} 
                 className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-900 transition-all shadow-xs flex items-center justify-center active:scale-95" 
-                title="Share Digital vCard"
-                aria-label="Share Website"
+                title="Share Website on WhatsApp"
+                aria-label="Share Website on WhatsApp"
               >
                 <Icon name="share-2" className="w-4 h-4"></Icon>
               </button>
@@ -1322,7 +1286,7 @@ export default function App() {
                 <a href="tel:+917776977171" aria-label="Call only number +91 77769 77171" className="flex-1 py-2.5 px-3 rounded-full btn-pill-cobalt text-xs font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 transition-transform">
                   <Icon name="phone-call" className="w-4 h-4"></Icon> Call Now
                 </a>
-                <button onClick={shareProfile} className="flex-1 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-2 border border-slate-200 active:scale-95 transition-all">
+                <button onClick={shareProfile} aria-label="Share Website on WhatsApp" className="flex-1 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-2 border border-slate-200 active:scale-95 transition-all">
                   <Icon name="share-2" className="w-4 h-4"></Icon> Share
                 </button>
               </div>
@@ -1400,7 +1364,7 @@ export default function App() {
                   <button 
                     onClick={shareProfile}
                     className="btn-pill btn-pill-outline px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-sm shadow-xs touch-target justify-center whitespace-nowrap"
-                    title="Share Profile"
+                    title="Share Website on WhatsApp"
                   >
                     <Icon name="share-2" className="w-4 h-4"></Icon>
                     <span>Share</span>
