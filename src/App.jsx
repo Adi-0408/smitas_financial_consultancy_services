@@ -50,7 +50,7 @@ const INITIAL_REVIEWS = [
   }
 ];
 
-function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualIndexChange }) {
+function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualIndexChange, itemType = 'flyer' }) {
   const touchStartX = useRef(null);
   const suppressOpen = useRef(false);
   const currentIndex = items.length ? activeIndex % items.length : 0;
@@ -77,7 +77,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualInd
   return (
     <article
       className="group relative border-b border-slate-200 py-5 last:border-b-0"
-      aria-label={`${category.tag} flyers`}
+      aria-label={`${category.tag} ${itemType}s`}
     >
       <div
         className="relative overflow-hidden"
@@ -105,7 +105,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualInd
         >
           {items.map((item, index) => (
             <div key={item.id} className="w-full shrink-0" aria-hidden={index !== currentIndex}>
-              <button type="button" tabIndex={index === currentIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image flex h-[360px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[500px] lg:h-[560px]" aria-label={`View ${item.title} flyer in full size`}>
+              <button type="button" tabIndex={index === currentIndex ? 0 : -1} onClick={() => { if (suppressOpen.current) { suppressOpen.current = false; return; } onOpen(item); }} className="group/image flex h-[360px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[500px] lg:h-[560px]" aria-label={`View ${item.title} ${itemType} in full size`}>
                 <img src={item.src} alt={item.title} className="h-full w-full object-contain transition-transform duration-500 group-hover/image:scale-[1.02]" loading="lazy" />
               </button>
             </div>
@@ -123,7 +123,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualInd
           onClick={() => move(-1)}
           disabled={items.length < 2}
           className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/90 text-[#0047AB] shadow-md backdrop-blur-sm transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:opacity-40 sm:left-3 sm:h-10 sm:w-10"
-          aria-label={`Previous ${category.tag} flyer`}
+          aria-label={`Previous ${category.tag} ${itemType}`}
         >
           <Icon name="chevron-left" className="h-4 w-4" aria-hidden="true"></Icon>
         </button>
@@ -132,18 +132,52 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualInd
           onClick={() => move(1)}
           disabled={items.length < 2}
           className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/80 bg-white/90 text-[#0047AB] shadow-md backdrop-blur-sm transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] disabled:opacity-40 sm:right-3 sm:h-10 sm:w-10"
-          aria-label={`Next ${category.tag} flyer`}
+          aria-label={`Next ${category.tag} ${itemType}`}
         >
           <Icon name="chevron-right" className="h-4 w-4" aria-hidden="true"></Icon>
         </button>
       </div>
 
       <div className="mt-3 flex justify-center">
-        <div className="flex max-w-full gap-1.5 overflow-x-auto px-2 py-1" aria-label="Choose flyer">
+        <div className="flex max-w-full gap-1.5 overflow-x-auto px-2 py-1" aria-label={`Choose ${itemType}`}>
           {items.map((item, index) => <button key={item.id} type="button" onClick={() => onManualIndexChange(index)} className={`h-2 shrink-0 rounded-full transition-all ${index === currentIndex ? 'w-6 bg-[#0047AB]' : 'w-2 bg-slate-300 hover:bg-[#82C8E5]'}`} aria-label={`Show ${item.title}`} aria-current={index === currentIndex ? 'true' : undefined} />)}
         </div>
       </div>
     </article>
+  );
+}
+
+function GalleryItemDetails({ item, onOpen }) {
+  return (
+    <div className="mx-auto w-full max-w-3xl py-5">
+      <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#0047AB]">
+        <span>{item.badgeMetric}</span>
+        <span aria-hidden="true">•</span>
+        <span>{item.tag}</span>
+      </div>
+      <h3 className="mt-2 font-heading text-xl font-extrabold leading-tight text-slate-900 sm:text-2xl">{item.title}</h3>
+      <p className="mt-1.5 text-sm text-slate-600">{item.subtitle}</p>
+      {item.highlights?.length > 0 && (
+        <ul className="mt-4 space-y-2.5">
+          {item.highlights.map((bullet, index) => (
+            <li key={index} className="flex items-start gap-2.5 text-sm text-slate-600">
+              <Icon name="check-circle-2" className="mt-0.5 h-4 w-4 shrink-0 text-[#0047AB]"></Icon>
+              <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-5 flex flex-wrap gap-3">
+        <button type="button" onClick={() => onOpen(item)} className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-5 py-3 text-xs font-bold text-slate-800 transition-colors hover:bg-[#0047AB] hover:text-white">
+          <Icon name="zoom-in" className="h-4 w-4"></Icon>
+          Enlarge Photo
+        </button>
+        <a href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, congratulations on "${item.title}". I would like to connect for financial consultancy.`)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-xs font-bold text-white transition-colors hover:bg-emerald-700" title="Connect on WhatsApp">
+          <Icon name="message-circle" className="h-4 w-4"></Icon>
+          WhatsApp
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -153,7 +187,7 @@ export default function App() {
   const [schemeSlideOffsets, setSchemeSlideOffsets] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
-  const [activeGalleryTab, setActiveGalleryTab] = useState('all');
+  const [highlightIndex, setHighlightIndex] = useState(0);
   const [activeAboutTab, setActiveAboutTab] = useState('about');
   const [calcTab, setCalcTab] = useState('sip');
   const [showAllReviews, setShowAllReviews] = useState(false);
@@ -957,10 +991,8 @@ export default function App() {
     }
   ];
 
-  const filteredPhotoGallery = useMemo(() => {
-    if (activeGalleryTab === 'all') return photoGalleryItems;
-    return photoGalleryItems.filter(item => item.category.toLowerCase() === activeGalleryTab.toLowerCase());
-  }, [activeGalleryTab, photoGalleryItems]);
+  const highlightItems = photoGalleryItems.filter(item => item.category !== 'visiting-cards');
+  const visitingCards = photoGalleryItems.filter(item => item.category === 'visiting-cards');
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-sky-200 selection:text-navy-900 pb-16 md:pb-0">
@@ -2304,109 +2336,43 @@ export default function App() {
               Explore industry awards, official partner accreditations, and the visiting cards for our consultancy and loan services.
             </p>
 
-            {/* Gallery Category Filter Tabs */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-              {[
-                { id: 'all', label: 'All Highlights' },
-                { id: 'awards', label: 'Awards & Honors (3)' },
-                { id: 'certifications', label: 'Certifications (2)' },
-                { id: 'visiting-cards', label: 'Visiting Cards (2)' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveGalleryTab(tab.id)}
-                  className={`btn-pill px-5 py-2 text-xs font-bold transition-all ${
-                    activeGalleryTab === tab.id ? 'btn-pill-cobalt shadow-sm' : 'btn-pill-outline text-slate-600'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
           </div>
 
-          {/* Photo Gallery Grid - 2 columns for maximum clarity & impact */}
-          <div key={activeGalleryTab} className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 animate-tab-content">
-            {filteredPhotoGallery.map((item) => (
-              <div 
-                key={item.id}
-                className="glass-card rounded-3xl p-6 sm:p-7 border border-white/95 shadow-xl hover:shadow-2xl transition-all flex flex-col justify-between group"
-              >
-                {/* Photo Image Container - Display full image without cropping */}
-                <div 
-                  onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                  className={`w-full ${item.category === 'visiting-cards' ? 'aspect-[16/9]' : 'aspect-[4/3]'} rounded-2xl overflow-hidden relative bg-slate-50 border border-slate-200/90 shadow-md group-hover:border-[#0047AB]/60 transition-colors cursor-pointer flex items-center justify-center p-2`}
-                >
-                  <img 
-                    src={item.src} 
-                    alt={item.title} 
-                    className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-500"
+          <div aria-label="Awards and certificates">
+            <SchemeFlyerCarousel
+              category={{ tag: 'Professional highlights' }}
+              itemType="image"
+              items={highlightItems}
+              activeIndex={highlightIndex}
+              onManualIndexChange={setHighlightIndex}
+              onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
+            />
+            <GalleryItemDetails
+              item={highlightItems[highlightIndex]}
+              onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
+            />
+          </div>
+
+          <div className="mt-12 border-t border-slate-200 pt-10">
+            <h3 className="font-heading text-2xl font-extrabold text-slate-900">Visiting Cards</h3>
+            <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {visitingCards.map(item => (
+                <article key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => setLightboxData({ open: true, src: item.src, caption: item.caption })}
+                    className="flex h-[260px] w-full items-center justify-center bg-transparent focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0047AB] sm:h-[360px]"
+                    aria-label={`View ${item.title} in full size`}
+                  >
+                    <img src={item.src} alt={item.title} className="h-full w-full object-contain" loading="lazy" />
+                  </button>
+                  <GalleryItemDetails
+                    item={item}
+                    onOpen={card => setLightboxData({ open: true, src: card.src, caption: card.caption })}
                   />
-                  {/* Floating Metric Badge */}
-                  <div className="absolute top-3.5 left-3.5 hidden px-3.5 py-1.5 rounded-full bg-[#000080]/90 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-md border border-white/20 sm:block">
-                    {item.badgeMetric}
-                  </div>
-                  {/* Floating Tag */}
-                  <div className="absolute top-3.5 right-3.5 hidden px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#000080] text-[11px] font-black uppercase tracking-wider shadow-xs border border-white/70 sm:block">
-                    {item.tag}
-                  </div>
-                  {/* Smooth Zoom Hover Overlay */}
-                  <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="btn-pill px-5 py-2.5 bg-white text-[#000080] font-black text-xs shadow-xl flex items-center gap-2 transform group-hover:scale-105 transition-transform">
-                      <Icon name="zoom-in" className="w-4 h-4 text-[#0047AB]"></Icon>
-                      <span>Inspect Photo</span>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Details & Highlights */}
-                <div className="pt-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-extrabold text-slate-900 text-lg group-hover:text-[#0047AB] transition-colors font-heading leading-tight">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-1.5 font-medium">{item.subtitle}</p>
-
-                    {/* Bullet Highlights */}
-                    {item.highlights && item.highlights.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-slate-100 space-y-2.5">
-                        {item.highlights.map((bullet, idx) => (
-                          <div key={idx} className="flex items-start gap-2.5 text-xs text-slate-600">
-                            <Icon name="check-circle-2" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></Icon>
-                            <span className="leading-relaxed">{bullet}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Dual Action Buttons */}
-                  <div className="pt-5 mt-5 border-t border-slate-100 flex items-center gap-3">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setLightboxData({ open: true, src: item.src, caption: item.caption });
-                      }}
-                      className="flex-1 py-3 px-4 rounded-full bg-slate-100 hover:bg-[#0047AB] hover:text-white text-slate-800 text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-xs hover:shadow-md"
-                    >
-                      <Icon name="zoom-in" className="w-4 h-4"></Icon>
-                      <span>Enlarge Photo</span>
-                    </button>
-                    <a
-                      href={`https://wa.me/917057132237?text=${encodeURIComponent(`Hello Smita Desai, congratulations on "${item.title}". I would like to connect for financial consultancy.`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="py-3 px-4 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-xs hover:shadow-md"
-                      title="Connect on WhatsApp"
-                    >
-                      <Icon name="message-circle" className="w-4 h-4"></Icon>
-                      <span>WhatsApp</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
 
         </section>
