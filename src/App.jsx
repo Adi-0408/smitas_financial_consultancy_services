@@ -1034,7 +1034,7 @@ export default function App() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || schemeSlideCount < 2) return;
     const timer = window.setInterval(() => {
       if (!document.hidden) setSchemeSlideIndex(index => (index + 1) % schemeSlideCount);
-    }, 2000);
+    }, 4000);
     return () => window.clearInterval(timer);
   }, [schemeSlideCount]);
 
