@@ -369,7 +369,7 @@ export default function App() {
       'TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+917057132237',
       'TEL;TYPE=WORK,VOICE;VALUE=uri:tel:+917776977171',
       'EMAIL;TYPE=INTERNET,WORK:smitadesai1821@gmail.com',
-      'ADR;TYPE=WORK:;;;;Sangli;Maharashtra;;India',
+      'ADR;TYPE=WORK:;;Sujata Apartment, in front of Mathubai Garware College, Star Bhel Road, behind Divekar Hospital, Risala Road;Sangli;Maharashtra;416416;India',
       'NOTE:Alternate phone +91 77769 77171 is for calls only and is not available on WhatsApp. WhatsApp: +91 70571 32237. 8+ Years Financial Excellence. Life & Health Insurance, Mutual Funds SIP, Home & Business Loans. Certified NJ Wealth Partner (Code: 28795). "Your Trust, Our Commitment."',
       'URL:https://smitasfinancialconsultancyservices.vercel.app/',
       'END:VCARD'
@@ -3061,13 +3061,13 @@ export default function App() {
                     Visit Our Office in Sangli
                   </h3>
                   <p className="text-slate-600 text-sm leading-relaxed">
-                    Conveniently located in the heart of Sangli. Schedule an in-person financial review or drop by during working hours (Monday to Saturday, 10:00 AM – 7:00 PM).
+                    Our office is at Sujata Apartment, in front of Mathubai Garware College, on Star Bhel Road, behind Divekar Hospital, Risala Road, Sangli. Please schedule an in-person financial review before visiting (Monday to Saturday, 10:00 AM – 7:00 PM).
                   </p>
 
                   <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-slate-700">
                     <div className="flex items-start gap-2.5">
                       <i data-lucide="building" className="w-4 h-4 text-[#0047AB] shrink-0 mt-0.5"></i>
-                      <span><strong>Location:</strong> Sangli, Maharashtra</span>
+                      <span><strong>Address:</strong> Sujata Apartment, in front of Mathubai Garware College, Star Bhel Road, behind Divekar Hospital, Risala Road, Sangli - 416416, Maharashtra</span>
                     </div>
                     <a href="tel:+917057132237" className="flex items-center gap-2.5 text-slate-700 hover:text-[#0047AB] transition-colors">
                       <i data-lucide="phone" className="w-4 h-4 text-[#0047AB] shrink-0"></i>
@@ -3167,7 +3167,7 @@ export default function App() {
             <p><a href="tel:+917776977171" aria-label="Call alternate number +91 77769 77171. Calls only, no WhatsApp." className="hover:text-white">Alternate · Calls only: +91 77769 77171</a></p>
             <p className="text-[11px] text-slate-500">The alternate number is not available on WhatsApp.</p>
             <p>Email: smitadesai1821@gmail.com</p>
-            <p className="leading-relaxed">Location: Sangli, Maharashtra</p>
+            <p className="leading-relaxed">Sujata Apartment, in front of Mathubai Garware College, Star Bhel Road, behind Divekar Hospital, Risala Road, Sangli - 416416, Maharashtra</p>
           </div>
 
         </div>
