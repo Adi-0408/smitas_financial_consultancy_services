@@ -1653,13 +1653,13 @@ export default function App() {
                   {service.flyer && (
                     <div 
                       onClick={() => setLightboxData({ open: true, src: service.flyer, caption: service.flyerTitle })}
-                      className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden relative mb-5 bg-slate-50/90 border border-slate-200/90 shadow-sm cursor-pointer group/img flex items-center justify-center p-2"
+                      className="w-full h-auto sm:h-72 rounded-2xl overflow-hidden relative mb-5 bg-slate-50/90 border border-slate-200/90 shadow-sm cursor-pointer group/img flex items-center justify-center p-0 sm:p-2"
                       title="Click to inspect official scheme flyer"
                     >
                       <img 
                         src={service.flyer} 
                         alt={service.title} 
-                        className="w-full h-full object-contain rounded-xl group-hover/img:scale-[1.02] transition-transform duration-500"
+                        className="w-full h-auto sm:h-full object-contain rounded-xl group-hover/img:scale-[1.02] transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-[1px] opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="btn-pill px-3.5 py-1.5 bg-white text-[#000080] font-black text-xs shadow-lg flex items-center gap-1.5 transform group-hover/img:scale-105 transition-transform">
