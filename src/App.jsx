@@ -49,11 +49,11 @@ const INITIAL_REVIEWS = [
   }
 ];
 
-function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIndex, slideCount }) {
+function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, onManualIndexChange }) {
   const touchStartX = useRef(null);
   const suppressOpen = useRef(false);
   const currentIndex = items.length ? activeIndex % items.length : 0;
-  const move = (direction) => setActiveIndex(index => (index + direction + slideCount) % slideCount);
+  const move = (direction) => onManualIndexChange((currentIndex + direction + items.length) % items.length);
 
   return (
     <article
@@ -106,7 +106,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
 
       <div className="mt-3 flex justify-center">
         <div className="flex max-w-full gap-1.5 overflow-x-auto px-2 py-1" aria-label="Choose flyer">
-          {items.map((item, index) => <button key={item.id} type="button" onClick={() => setActiveIndex(index)} className={`h-2 shrink-0 rounded-full transition-all ${index === currentIndex ? 'w-6 bg-[#0047AB]' : 'w-2 bg-slate-300 hover:bg-[#82C8E5]'}`} aria-label={`Show ${item.title}`} aria-current={index === currentIndex ? 'true' : undefined} />)}
+          {items.map((item, index) => <button key={item.id} type="button" onClick={() => onManualIndexChange(index)} className={`h-2 shrink-0 rounded-full transition-all ${index === currentIndex ? 'w-6 bg-[#0047AB]' : 'w-2 bg-slate-300 hover:bg-[#82C8E5]'}`} aria-label={`Show ${item.title}`} aria-current={index === currentIndex ? 'true' : undefined} />)}
         </div>
       </div>
     </article>
@@ -116,6 +116,7 @@ function SchemeFlyerCarousel({ category, items, onOpen, activeIndex, setActiveIn
 export default function App() {
   // Navigation & UI States
   const [schemeSlideIndex, setSchemeSlideIndex] = useState(0);
+  const [schemeSlideOffsets, setSchemeSlideOffsets] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeGalleryTab, setActiveGalleryTab] = useState('all');
@@ -2408,17 +2409,30 @@ export default function App() {
             </div>
 
             <div className="space-y-0" aria-label="Scheme flyer collections">
-              {SCHEME_CATEGORIES.map(category => (
-                <SchemeFlyerCarousel
-                  key={category.tag}
-                  category={category}
-                  items={schemeFlyers.filter(item => item.tag === category.tag)}
-                  activeIndex={schemeSlideIndex}
-                  setActiveIndex={setSchemeSlideIndex}
-                  slideCount={schemeSlideCount}
-                  onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                />
-              ))}
+              {SCHEME_CATEGORIES.map(category => {
+                const categoryItems = schemeFlyers.filter(item => item.tag === category.tag);
+                const categoryLength = categoryItems.length;
+                const categoryOffset = schemeSlideOffsets[category.tag] || 0;
+                const activeIndex = categoryLength
+                  ? (schemeSlideIndex + categoryOffset) % categoryLength
+                  : 0;
+
+                return (
+                  <SchemeFlyerCarousel
+                    key={category.tag}
+                    category={category}
+                    items={categoryItems}
+                    activeIndex={activeIndex}
+                    onManualIndexChange={index => setSchemeSlideOffsets(offsets => ({
+                      ...offsets,
+                      [category.tag]: categoryLength
+                        ? (index - (schemeSlideIndex % categoryLength) + categoryLength) % categoryLength
+                        : 0
+                    }))}
+                    onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
+                  />
+                );
+              })}
             </div>
           </div>
         </section>
