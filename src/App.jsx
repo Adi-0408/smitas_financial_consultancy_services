@@ -728,7 +728,7 @@ export default function App() {
         'Best rates for 2-Wheelers, Private Cars & Commercial',
         'Zero-Depreciation & Cashless network garages'
       ],
-      flyer: 'assets/flyer_motor_insurance_service.png',
+      flyer: 'assets/flyer_vehicle_insurance_supplied.png',
       flyerTitle: 'All Types of Vehicle Online Insurance Flyer'
     },
     {
@@ -812,7 +812,7 @@ export default function App() {
         'Lowest processing fees & customized EMI schedules',
         'Quick sanctioning with pre-approved options'
       ],
-      flyer: 'assets/flyer_car_loan_hq.png',
+      flyer: 'assets/flyer_car_loan_supplied.png',
       flyerTitle: 'New and Used Car Loan Financing Guide'
     }
   ];
