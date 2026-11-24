@@ -152,11 +152,26 @@ export default function App() {
   const [schemeSlideIndex, setSchemeSlideIndex] = useState(0);
   const [schemeSlideOffsets, setSchemeSlideOffsets] = useState({});
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const shareImageRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeGalleryTab, setActiveGalleryTab] = useState('all');
   const [activeAboutTab, setActiveAboutTab] = useState('about');
   const [calcTab, setCalcTab] = useState('sip');
   const [showAllReviews, setShowAllReviews] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch('/assets/smita_profile.jpg', { signal: controller.signal })
+      .then(response => {
+        if (!response.ok) throw new Error('Owner photo unavailable');
+        return response.blob();
+      })
+      .then(blob => {
+        shareImageRef.current = new File([blob], 'smita-desai.jpg', { type: 'image/jpeg' });
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
 
   // Reviews State (with LocalStorage persistence for user-submitted reviews)
   const [reviews, setReviews] = useState(() => {
@@ -398,7 +413,10 @@ export default function App() {
 
   // Native Web Share with Clipboard Fallback
   const shareProfile = () => {
-    const shareData = { url: SITE_SHARE_URL };
+    const image = shareImageRef.current;
+    const shareData = image && navigator.canShare?.({ files: [image] })
+      ? { files: [image], text: SITE_SHARE_URL, title: "Smita's Financial Consultancy Services" }
+      : { url: SITE_SHARE_URL };
 
     if (navigator.share) {
       navigator.share(shareData)
