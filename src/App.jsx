@@ -6,8 +6,8 @@ const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
 const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
 const SITE_SHARE_URL = 'https://smitasfinancialconsultancyservices.vercel.app/?share=profile';
 const FLYER_SECTIONS = [
-  { tag: 'Mutual Funds & SIP', flyerIds: [1, 3, 5, 6, 7, 9, 10, 11, 12] },
-  { tag: 'Kotak Life Insurance', flyerIds: [2, 4, 8] },
+  { tag: 'Mutual Funds & SIP', flyerIds: [1, 3, 5, 6, 7, 9, 11, 12] },
+  { tag: 'Kotak Life Insurance', flyerIds: [2, 4, 8, 10] },
   { tag: 'Tata AIG Health Insurance', flyerIds: [13, 14, 15, 16, 17] }
 ];
 const INITIAL_REVIEWS = [
