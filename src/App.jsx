@@ -1282,16 +1282,16 @@ export default function App() {
 
               </div>
 
-              {/* Right Column: BIGGER SHOWCASE CARD FOR SMITA DESAI (Using pure high-res full image) */}
+              {/* Right Column: Company profile and contact card */}
               <div className="lg:col-span-6 flex justify-center">
                 <div className="w-full max-w-lg hero-photo-card rounded-3xl p-5 sm:p-7 space-y-6">
                   
-                  {/* Clean Portrait Image Container - Display full image without cropping */}
-                  <div className="rounded-2xl overflow-hidden bg-white/70 backdrop-blur-md border border-slate-200/90 shadow-md group p-1.5 flex items-center justify-center">
+                  {/* Company logo in the main profile image position */}
+                  <div className="aspect-[5/6] rounded-2xl overflow-hidden bg-white border border-slate-200/90 shadow-md flex items-center justify-center p-4 sm:p-6">
                     <img 
-                      src="assets/smita_profile.jpg" 
-                      alt="Smita Rahul Desai - Principal Financial Consultant" 
-                      className="w-full h-auto block rounded-xl object-contain group-hover:scale-[1.01] transition-transform duration-500"
+                      src="assets/sfcs_logo_emblem.png"
+                      alt="Smita's Financial Consultancy Services logo"
+                      className="w-full h-full block object-contain"
                     />
                   </div>
 
@@ -1308,25 +1308,16 @@ export default function App() {
 
                   {/* Identity & Name Block */}
                   <div className="space-y-2 text-center sm:text-left">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div className="flex items-center gap-3 justify-center sm:justify-start">
-                        <div className="w-12 h-12 rounded-2xl bg-white p-1 border border-slate-200/90 shadow-xs shrink-0 flex items-center justify-center">
-                          <img 
-                            src="assets/sfcs_logo_emblem.png" 
-                            alt="Smita's Financial Consultancy logo" 
-                            className="w-full h-full object-contain" 
-                          />
-                        </div>
-                        <div>
-                          <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-heading">
-                            Smita Rahul Desai
-                          </h2>
-                          <p className="text-[#0047AB] font-bold text-xs sm:text-sm">
-                            Founder & Principal Financial Consultant
-                          </p>
-                        </div>
+                    <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                      <div className="min-w-0">
+                        <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-heading">
+                          Smita Rahul Desai
+                        </h2>
+                        <p className="text-[#0047AB] font-bold text-xs sm:text-sm">
+                          Founder & Principal Financial Consultant
+                        </p>
                       </div>
-                      <div className="flex shrink-0 flex-nowrap items-center justify-center sm:justify-end gap-1 whitespace-nowrap text-yellow-400">
+                      <div className="flex shrink-0 flex-nowrap items-center justify-center sm:justify-end gap-1 whitespace-nowrap text-yellow-400 sm:pt-1">
                         <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
                         <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
                         <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
