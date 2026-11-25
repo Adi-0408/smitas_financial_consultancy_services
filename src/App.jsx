@@ -859,17 +859,17 @@ export default function App() {
 
   // Client-provided flyers for the scheme gallery.
   const galleryFlyers = [
-    { id: 1, title: "SIP for a Daughter's Wedding", src: 'assets/gallery_sip_wedding.png', caption: "SIP for a Daughter's Wedding" },
+    { id: 1, title: "SIP for a Daughter's Wedding", src: 'assets/gallery_original_sip_wedding.jpg', caption: "SIP for a Daughter's Wedding" },
     { id: 2, title: 'Kotak Life Family Cover', src: 'assets/gallery_kotak_family_cover.png', caption: 'Kotak Life Family Cover' },
-    { id: 3, title: 'Continue Your SIP with Discipline', src: 'assets/gallery_sip_discipline.png', caption: 'Continue Your SIP with Discipline' },
+    { id: 3, title: 'Continue Your SIP with Discipline', src: 'assets/gallery_original_sip_discipline.jpg', caption: 'Continue Your SIP with Discipline' },
     { id: 4, title: 'Married Women Property Act Protection', src: 'assets/gallery_kotak_mwpa.png', caption: 'Married Women Property Act Protection' },
-    { id: 5, title: 'Mutual Funds for Every Family', src: 'assets/gallery_mutual_funds_family.png', caption: 'Mutual Funds for Every Family' },
-    { id: 6, title: 'Top-Up SIP Retirement Illustration', src: 'assets/gallery_sip_retirement.png', caption: 'Top-Up SIP Retirement Illustration' },
-    { id: 7, title: 'SIP Discipline and Wealth', src: 'assets/gallery_sip_resilience.png', caption: 'SIP Discipline and Wealth' },
+    { id: 5, title: 'Mutual Funds for Every Family', src: 'assets/gallery_original_mutual_family.jpg', caption: 'Mutual Funds for Every Family' },
+    { id: 6, title: 'Top-Up SIP Retirement Illustration', src: 'assets/gallery_original_top_up_sip.jpg', caption: 'Top-Up SIP Retirement Illustration' },
+    { id: 7, title: 'SIP Discipline and Wealth', src: 'assets/gallery_original_sip_resilience.jpg', caption: 'SIP Discipline and Wealth' },
     { id: 8, title: 'Kotak Term Insurance Plans', src: 'assets/gallery_kotak_term_plan.png', caption: 'Kotak Term Insurance Plans' },
-    { id: 9, title: 'SIP for Long-Term Growth', src: 'assets/gallery_sip_billboard.png', caption: 'SIP for Long-Term Growth' },
+    { id: 9, title: 'SIP for Long-Term Growth', src: 'assets/gallery_original_sip_billboard.jpg', caption: 'SIP for Long-Term Growth' },
     { id: 10, title: 'Long-Term Savings Illustration', src: 'assets/gallery_savings_illustration.png', caption: 'Long-Term Savings Illustration' },
-    { id: 11, title: 'SIP for Education, Wedding and Retirement', src: 'assets/gallery_sip_life_goals.webp', caption: 'SIP for Education, Wedding and Retirement' },
+    { id: 11, title: 'Start a Mutual Fund SIP', src: 'assets/gallery_original_sip_account.jpg', caption: 'Start a Mutual Fund SIP' },
     { id: 12, title: 'Top-Up SIP for Retirement', src: 'assets/gallery_top_up_sip_new.webp', caption: 'Top-Up SIP for Retirement' }
   ];
   const schemeSlideCount = Math.ceil(galleryFlyers.length / FLYER_SECTIONS.length);
