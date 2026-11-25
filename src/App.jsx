@@ -1310,10 +1310,10 @@ export default function App() {
                   <div className="space-y-2 text-center sm:text-left">
                     <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                       <div className="min-w-0">
-                        <h2 className="text-xl sm:text-2xl font-black text-slate-900 font-heading">
+                        <h2 className="font-heading text-xl font-extrabold leading-tight tracking-tight text-[#000080] sm:text-2xl">
                           Smita Rahul Desai
                         </h2>
-                        <p className="text-[#0047AB] font-bold text-xs sm:text-sm">
+                        <p className="mt-1 font-heading text-xs font-semibold leading-snug text-[#000080] sm:text-sm">
                           Founder & Principal Financial Consultant
                         </p>
                       </div>
@@ -1323,10 +1323,10 @@ export default function App() {
                         <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
                         <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
                         <Icon name="star" className="w-4 h-4 shrink-0 fill-yellow-400"></Icon>
-                        <span className="shrink-0 text-xs font-bold text-slate-700 ml-1">5.0</span>
+                        <span className="ml-1 shrink-0 font-heading text-xs font-bold text-[#000080]">5.0</span>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-500">
+                    <p className="font-heading text-xs font-medium leading-relaxed text-[#000080]">
                       Smita's Financial Consultancy Services • 8+ Years of Financial Excellence
                     </p>
                   </div>
