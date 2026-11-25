@@ -1033,11 +1033,11 @@ export default function App() {
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white absolute -bottom-0.5 -right-0.5 animate-pulse"></span>
             </div>
             <div>
-              <div className="font-heading flex items-center gap-1 text-base font-black leading-tight tracking-tight text-[#000080] transition-colors group-hover:text-[#0047AB] sm:text-lg">
+              <div className="nav-brand-wordmark">
                 <span>Smita's</span>
                 <span>Financial</span>
               </div>
-              <p className="font-heading -mt-0.5 text-[10px] font-bold uppercase tracking-wider text-[#000080]/70">
+              <p className="nav-brand-descriptor">
                 Consultancy Services • Sangli
               </p>
             </div>

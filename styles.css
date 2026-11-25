@@ -92,6 +92,48 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   font-style: italic;
 }
 
+/* Match the logo's serif/sans wordmark while keeping both words one color. */
+.nav-brand-wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 0.22rem;
+  color: #000080;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.nav-brand-wordmark span:first-child {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+}
+
+.nav-brand-wordmark span:last-child {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.04rem;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+}
+
+.nav-brand-descriptor {
+  margin-top: 0.2rem;
+  color: #000080;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .nav-brand-wordmark span:first-child { font-size: 1.2rem; }
+  .nav-brand-wordmark span:last-child { font-size: 1.15rem; }
+  .nav-brand-descriptor { font-size: 0.62rem; }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
