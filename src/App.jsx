@@ -7,7 +7,7 @@ const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
 const SITE_SHARE_URL = 'https://smitasfinancialconsultancyservices.vercel.app/?share=profile';
 const FLYER_SECTIONS = [
   { tag: 'Mutual Funds & SIP', flyerIds: [1, 3, 5, 6, 7, 9, 11, 12] },
-  { tag: 'Kotak Life Insurance', flyerIds: [2, 4, 8, 10] },
+  { tag: 'Kotak Life Insurance', flyerIds: [2, 4, 8, 10, 18] },
   { tag: 'Tata AIG Health Insurance', flyerIds: [13, 14, 15, 16, 17] }
 ];
 const INITIAL_REVIEWS = [
@@ -874,7 +874,8 @@ export default function App() {
     { id: 14, title: 'Tata AIG MediCare Select: Waiting Periods', src: 'assets/gallery_tata_aig_waiting_periods.jpg', caption: 'Tata AIG MediCare Select: Waiting Periods' },
     { id: 15, title: 'Tata AIG MediCare Select: Supercharge Bonus', src: 'assets/gallery_tata_aig_supercharge_bonus.jpg', caption: 'Tata AIG MediCare Select: Supercharge Bonus' },
     { id: 16, title: 'Tata AIG MediCare Select: Twin Sharing Benefit', src: 'assets/gallery_tata_aig_twin_sharing.jpg', caption: 'Tata AIG MediCare Select: Twin Sharing Benefit' },
-    { id: 17, title: 'Tata AIG MediCare Select: Preventive Health Check-Up', src: 'assets/gallery_tata_aig_preventive_checkup.jpg', caption: 'Tata AIG MediCare Select: Preventive Health Check-Up' }
+    { id: 17, title: 'Tata AIG MediCare Select: Preventive Health Check-Up', src: 'assets/gallery_tata_aig_preventive_checkup.jpg', caption: 'Tata AIG MediCare Select: Preventive Health Check-Up' },
+    { id: 18, title: 'Kotak TULIP: Term With Unit Linked Insurance Plan', src: 'assets/gallery_kotak_tulip.png', caption: 'Kotak TULIP: Term With Unit Linked Insurance Plan' }
   ];
   const schemeSlideCount = Math.max(...FLYER_SECTIONS.map(section => section.flyerIds.length));
   useEffect(() => {
