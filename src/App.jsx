@@ -870,7 +870,12 @@ export default function App() {
     { id: 9, title: 'SIP for Long-Term Growth', src: 'assets/gallery_original_sip_billboard.jpg', caption: 'SIP for Long-Term Growth' },
     { id: 10, title: 'Long-Term Savings Illustration', src: 'assets/gallery_savings_illustration.png', caption: 'Long-Term Savings Illustration' },
     { id: 11, title: 'Start a Mutual Fund SIP', src: 'assets/gallery_original_sip_account.jpg', caption: 'Start a Mutual Fund SIP' },
-    { id: 12, title: 'Top-Up SIP for Retirement', src: 'assets/gallery_top_up_sip_new.webp', caption: 'Top-Up SIP for Retirement' }
+    { id: 12, title: 'Top-Up SIP for Retirement', src: 'assets/gallery_top_up_sip_new.webp', caption: 'Top-Up SIP for Retirement' },
+    { id: 13, title: 'Tata AIG MediCare Reserve: Hospitalisation Expenses', src: 'assets/gallery_tata_aig_medicare_reserve.jpg', caption: 'Tata AIG MediCare Reserve: Hospitalisation Expenses' },
+    { id: 14, title: 'Tata AIG MediCare Select: Waiting Periods', src: 'assets/gallery_tata_aig_waiting_periods.jpg', caption: 'Tata AIG MediCare Select: Waiting Periods' },
+    { id: 15, title: 'Tata AIG MediCare Select: Supercharge Bonus', src: 'assets/gallery_tata_aig_supercharge_bonus.jpg', caption: 'Tata AIG MediCare Select: Supercharge Bonus' },
+    { id: 16, title: 'Tata AIG MediCare Select: Twin Sharing Benefit', src: 'assets/gallery_tata_aig_twin_sharing.jpg', caption: 'Tata AIG MediCare Select: Twin Sharing Benefit' },
+    { id: 17, title: 'Tata AIG MediCare Select: Preventive Health Check-Up', src: 'assets/gallery_tata_aig_preventive_checkup.jpg', caption: 'Tata AIG MediCare Select: Preventive Health Check-Up' }
   ];
   const schemeSlideCount = Math.ceil(galleryFlyers.length / FLYER_SECTIONS.length);
   useEffect(() => {
