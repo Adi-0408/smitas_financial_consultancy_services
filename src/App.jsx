@@ -6,10 +6,9 @@ const STORAGE_KEY_MY_REVIEWS = 'sfcs_my_review_ids_v1';
 const SIP_ACCOUNT_URL = 'http://p.njw.bz/28795';
 const SITE_SHARE_URL = 'https://smitasfinancialconsultancyservices.vercel.app/?share=profile';
 const FLYER_SECTIONS = [
-  { tag: 'Flyer collection 1' },
-  { tag: 'Flyer collection 2' },
-  { tag: 'Flyer collection 3' },
-  { tag: 'Flyer collection 4' }
+  { tag: 'Mutual Funds & SIP', flyerIds: [1, 3, 5, 6, 7, 9, 10, 11, 12] },
+  { tag: 'Kotak Life Insurance', flyerIds: [2, 4, 8] },
+  { tag: 'Tata AIG Health Insurance', flyerIds: [13, 14, 15, 16, 17] }
 ];
 const INITIAL_REVIEWS = [
   {
@@ -877,7 +876,7 @@ export default function App() {
     { id: 16, title: 'Tata AIG MediCare Select: Twin Sharing Benefit', src: 'assets/gallery_tata_aig_twin_sharing.jpg', caption: 'Tata AIG MediCare Select: Twin Sharing Benefit' },
     { id: 17, title: 'Tata AIG MediCare Select: Preventive Health Check-Up', src: 'assets/gallery_tata_aig_preventive_checkup.jpg', caption: 'Tata AIG MediCare Select: Preventive Health Check-Up' }
   ];
-  const schemeSlideCount = Math.ceil(galleryFlyers.length / FLYER_SECTIONS.length);
+  const schemeSlideCount = Math.max(...FLYER_SECTIONS.map(section => section.flyerIds.length));
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || schemeSlideCount < 2) return;
     const timer = window.setInterval(() => {
@@ -2292,13 +2291,13 @@ export default function App() {
                 Authentic Scheme Catalogues & Flyers
               </h2>
               <p className="text-slate-600 text-xs sm:text-sm mt-2">
-                Explore the latest insurance, investment and financial planning flyers across four collections.
+                Explore investment and insurance flyers grouped by provider and subject.
               </p>
             </div>
 
-            <div className="space-y-0" aria-label="Scheme flyer collections">
-              {FLYER_SECTIONS.map((category, sectionIndex) => {
-                const categoryItems = galleryFlyers.filter((item, flyerIndex) => flyerIndex % FLYER_SECTIONS.length === sectionIndex);
+            <div className="space-y-8" aria-label="Scheme flyer collections">
+              {FLYER_SECTIONS.map(category => {
+                const categoryItems = galleryFlyers.filter(item => category.flyerIds.includes(item.id));
                 const categoryLength = categoryItems.length;
                 const categoryOffset = schemeSlideOffsets[category.tag] || 0;
                 const activeIndex = categoryLength
@@ -2306,19 +2305,21 @@ export default function App() {
                   : 0;
 
                 return (
-                  <SchemeFlyerCarousel
-                    key={category.tag}
-                    category={category}
-                    items={categoryItems}
-                    activeIndex={activeIndex}
-                    onManualIndexChange={index => setSchemeSlideOffsets(offsets => ({
-                      ...offsets,
-                      [category.tag]: categoryLength
-                        ? (index - (schemeSlideIndex % categoryLength) + categoryLength) % categoryLength
-                        : 0
-                    }))}
-                    onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
-                  />
+                  <div key={category.tag} className="rounded-3xl border border-slate-200 bg-white px-4 pb-3 shadow-lg sm:px-6">
+                    <h3 className="border-b border-slate-200 py-5 font-heading text-xl font-extrabold text-[#000080] sm:text-2xl">{category.tag}</h3>
+                    <SchemeFlyerCarousel
+                      category={category}
+                      items={categoryItems}
+                      activeIndex={activeIndex}
+                      onManualIndexChange={index => setSchemeSlideOffsets(offsets => ({
+                        ...offsets,
+                        [category.tag]: categoryLength
+                          ? (index - (schemeSlideIndex % categoryLength) + categoryLength) % categoryLength
+                          : 0
+                      }))}
+                      onOpen={item => setLightboxData({ open: true, src: item.src, caption: item.caption })}
+                    />
+                  </div>
                 );
               })}
             </div>
