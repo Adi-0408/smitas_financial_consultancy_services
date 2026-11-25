@@ -134,6 +134,20 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   .nav-brand-descriptor { font-size: 0.62rem; }
 }
 
+.about-brand-wordmark {
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.about-brand-wordmark span:first-child { font-size: 1.55rem; }
+.about-brand-wordmark span:last-child { font-size: 1.48rem; }
+
+.about-brand-descriptor {
+  margin-top: 0.4rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -2151,8 +2151,8 @@ export default function App() {
                     className="mx-auto h-36 w-36 object-contain drop-shadow-sm"
                   />
                   <div className="mt-3">
-                    <p className="text-2xl font-black tracking-tight text-slate-900">Smita's <span className="text-[#0047AB]">Financial</span></p>
-                    <p className="mt-1 text-[11px] font-extrabold uppercase tracking-[0.2em] text-slate-500">Consultancy Services · Sangli</p>
+                    <p className="nav-brand-wordmark about-brand-wordmark"><span>Smita's</span><span>Financial</span></p>
+                    <p className="nav-brand-descriptor about-brand-descriptor">Consultancy Services · Sangli</p>
                     <p className="mt-3 text-sm font-semibold italic text-[#0047AB]">Your Trust, Our Commitment.</p>
                   </div>
                 </div>
